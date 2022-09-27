@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionC.3.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+<head>
+<title>取得命令行參數</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='SectionC.2.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionC.4.html'>下一頁</a></p>
+<a name="C.3"></a>
+<h2>C.3 取得命令行參數</h2>
+<pre> ; GetParameters
+ ; 輸入，無
+ ; 輸出，堆棧頂 (替換，例如 whatever)
+ ; 不改變其它變量值。
+ 
+ Function GetParameters
+ 
+   Push $R0
+   Push $R1
+   Push $R2
+   Push $R3
+   
+   StrCpy $R2 1
+   StrLen $R3 $CMDLINE
+   
+   ;Check for quote or space
+   StrCpy $R0 $CMDLINE $R2
+   StrCmp $R0 '&quot;' 0 +3
+     StrCpy $R1 '&quot;'
+     Goto loop
+   StrCpy $R1 &quot; &quot;
+   
+   loop:
+     IntOp $R2 $R2 + 1
+     StrCpy $R0 $CMDLINE 1 $R2
+     StrCmp $R0 $R1 get
+     StrCmp $R2 $R3 get
+     Goto loop
+   
+   get:
+     IntOp $R2 $R2 + 1
+     StrCpy $R0 $CMDLINE 1 $R2
+     StrCmp $R0 &quot; &quot; get
+     StrCpy $R0 $CMDLINE &quot;&quot; $R2
+   
+   Pop $R3
+   Pop $R2
+   Pop $R1
+   Exch $R0
+ 
+ FunctionEnd
+</pre>
+<p><a href='SectionC.2.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionC.4.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionC.3.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+</html>

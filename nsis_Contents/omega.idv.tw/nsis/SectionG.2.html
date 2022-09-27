@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionG.2.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:40 GMT -->
+<head>
+<title>Building on Windows</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='SectionG.1.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionG.3.html'>下一頁</a></p>
+<a name="G.2"></a>
+<h2>G.2 在 Windows 上構建</h2>
+
+<p>如果你安裝了 Microsoft Visual C++。SCons 將會自動地檢測到並使用。如果你沒有的話你可以下載免費的 <a href="http://msdn.microsoft.com/visualc/vctoolkit2003/">Visual C++ Toolkit</a> 和 <a href="http://www.microsoft.com/msdownload/platformsdk/sdkupdate/">Platform SDK</a>。構建系統並不會自動地認出這些工具包，所以你要做一些額外的工作:</p>
+<pre>scons MSTOOLKIT=yes
+</pre>
+
+<p>如果你得到關於編譯器的錯誤或找不到 Platform SDK，使用:</p>
+<pre>set MSSDK=C:\Path\To\Platform SDK
+set VCToolkitInstallDir=C:\Path\To\VCToolkit
+scons MSTOOLKIT=yes
+</pre>
+
+<p>你也可以使用開源的 <a href="http://www.mingw.org/">MinGW</a> 來構建，但是這會使編譯的程式體積增大。Borland C++ 或 Open Watcom C/C++ 可能可以工作，但並沒有經過測試。</p>
+
+<p> <strong>對於 Microsoft Visual C++ 6.0 用戶的重要提示: </strong> 你應當安裝最新的 <a href="http://www.microsoft.com/msdownload/platformsdk/sdkupdate/">Platform SDK </a>。因為 Microsoft Visual C++ 6.0 發表的庫檔案中有缺陷，如果不安裝 Platform SDK，那麼當使用 CopyFiles 命令時會導致系統崩潰，更多相關訊息請觀看 <a href="http://forums.winamp.com/showthread.php?s=&amp;threadid=131964">這個論壇主題 </a>。同時也強烈推薦安裝 <a href="http://msdn.microsoft.com/vstudio/downloads/tools/ppack/download.aspx">Processor Pack </a>以減少安裝程式的可執行頭部。 </p>
+<p><a href='SectionG.1.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionG.3.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionG.2.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:40 GMT -->
+</html>

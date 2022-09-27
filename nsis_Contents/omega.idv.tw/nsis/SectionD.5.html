@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionD.5.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+<head>
+<title>如何讀取 REG_MULTI_SZ 值</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='SectionD.4.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='AppendixE.html'>下一頁</a></p>
+<a name="D.5"></a>
+<h2>D.6 如何讀取 REG_MULTI_SZ 值 </h2>
+
+<p>我寫這個腳本來幫助<a href="http://forums.winamp.com/showthread.php?s=&amp;threadid=131154">這個帖子</a>裡的 rpetges。它可以讀取一個註冊表 REG_MULTI_SZ 類型的鍵值並輸出。當然不要忘了修改標有 「修改這裡」 的地方。該註冊表鍵必須為 REG_MULTI_SZ 類型，否則將顯示錯誤。</p>
+<pre>OutFile &quot;REG_MULTI_SZ Reader.exe&quot;
+
+Name &quot;REG_MULTI_SZ Reader&quot;
+
+ShowInstDetails show
+
+!define HKEY_CLASSES_ROOT        0x80000000
+!define HKEY_CURRENT_USER        0x80000001
+!define HKEY_LOCAL_MACHINE       0x80000002
+!define HKEY_USERS               0x80000003
+!define HKEY_PERFORMANCE_DATA    0x80000004
+!define HKEY_PERFORMANCE_TEXT    0x80000050
+!define HKEY_PERFORMANCE_NLSTEXT 0x80000060
+!define HKEY_CURRENT_CONFIG      0x80000005
+!define HKEY_DYN_DATA            0x80000006
+
+!define KEY_QUERY_VALUE          0x0001
+!define KEY_ENUMERATE_SUB_KEYS   0x0008
+
+!define REG_NONE                 0
+!define REG_SZ                   1
+!define REG_EXPAND_SZ            2
+!define REG_BINARY               3
+!define REG_DWORD                4
+!define REG_DWORD_LITTLE_ENDIAN  4
+!define REG_DWORD_BIG_ENDIAN     5
+!define REG_LINK                 6
+!define REG_MULTI_SZ             7
+
+!define RegOpenKeyEx     &quot;Advapi32::RegOpenKeyExA(i, t, i, i, i) i&quot;
+!define RegQueryValueEx  &quot;Advapi32::RegQueryValueExA(i, t, i, i, i, i) i&quot;
+!define RegCloseKey      &quot;Advapi32::RegCloseKeyA(i) i&quot;
+
+####### 編輯這裡!
+
+!define ROOT_KEY         ${HKEY_CURRENT_USER}
+!define SUB_KEY          &quot;Software\Joe Software&quot;
+!define VALUE            &quot;Strings&quot;
+
+####### 停止編輯
+
+Section &quot;Read&quot;
+  StrCpy $0 &quot;&quot;
+  StrCpy $1 &quot;&quot;
+  StrCpy $2 &quot;&quot;
+  StrCpy $3 &quot;&quot;
+  SetPluginUnload alwaysoff ;插件調用設定為全部不卸載以提高速度
+  System::Call &quot;*(i) i (0) .r0&quot;
+  System::Call &quot;*(i) i (0) .r1&quot;
+  System::Call &quot;*(i) i (0) .r2&quot;
+  System::Call &quot;${RegOpenKeyEx}(${ROOT_KEY}, '${SUB_KEY}', \
+    0, ${KEY_QUERY_VALUE}|${KEY_ENUMERATE_SUB_KEYS}, r0) .r3&quot;
+
+  StrCmp $3 0 goon
+    MessageBox MB_OK|MB_ICONSTOP &quot;不能開啟註冊表鍵! ($3)&quot;
+    Goto done
+goon:
+
+  System::Call &quot;*$0(&amp;i4 .r4)&quot;
+  System::Call &quot;${RegQueryValueEx}(r4, '${VALUE}', 0, r1, 0, r2) .r3&quot;
+
+  StrCmp $3 0 read
+    MessageBox MB_OK|MB_ICONSTOP &quot;不能搜尋註冊表值! ($3)&quot;
+    Goto done
+
+read:
+
+  System::Call &quot;*$1(&amp;i4 .r3)&quot;
+
+  StrCmp $3 ${REG_MULTI_SZ} multisz
+    MessageBox MB_OK|MB_ICONSTOP &quot;註冊表值不是 SZ_MULTI_SZ! ($3)&quot;
+    Goto done
+
+multisz:
+
+  System::Call &quot;*$2(&amp;i4 .r3)&quot;
+
+  StrCmp $3 0 0 multiszalloc
+    MessageBox MB_OK|MB_ICONSTOP &quot;註冊表值為空! ($3)&quot;
+    Goto done
+
+multiszalloc:
+
+  System::Free $1
+  System::Alloc $3
+  Pop $1
+
+  StrCmp $1 0 0 multiszget
+    MessageBox MB_OK|MB_ICONSTOP &quot;不能分配足夠的記憶體! ($3)&quot;
+    Goto done
+
+multiszget:
+
+  System::Call &quot;${RegQueryValueEx}(r4, '${VALUE}', 0, 0, r1, r2) .r3&quot;
+
+  StrCmp $3 0 multiszprocess
+    MessageBox MB_OK|MB_ICONSTOP &quot;不能搜尋註冊表值! ($3)[2]&quot;
+    Goto done
+
+multiszprocess:
+
+  StrCpy $4 $1
+
+  loop:
+
+    System::Call &quot;*$4(&amp;t${NSIS_MAX_STRLEN} .r3)&quot;
+    StrCmp $3 &quot;&quot; done
+    DetailPrint $3
+    StrLen $5 $3
+    IntOp $4 $4 + $5
+    IntOp $4 $4 + 1 ;REG_MULTI_SZ 類型以一個 NULL 來分隔
+    Goto loop
+
+done:
+
+  System::Free $2
+  System::Free $1
+
+  StrCmp $0 0 noClose
+    System::Call &quot;${RegCloseKey}(r0)&quot;
+
+noClose:
+
+  SetPluginUnload manual ;插件調用改為正常
+  System::Free $0 ;最後一次插件調用必須卸載
+SectionEnd
+</pre>
+
+<p>written by KiCHiK</p>
+<p><a href='SectionD.4.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='AppendixE.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionD.5.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+</html>

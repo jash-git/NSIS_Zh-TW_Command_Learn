@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/AppendixE.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+<head>
+<title>常用頭檔案</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='SectionD.5.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionE.1.html'>下一頁</a></p>
+<a name="E"></a>
+<h1>附錄 E: 常用頭檔案</h1>
+<ul>
+<li><a href="SectionE.1.html#E.1">檔案函數</a></li>
+<ul>
+<li><a href="SectionE.1.html#E.1.1">介紹</a></li>
+<li><a href="SectionE.1.html#E.1.2">Locate</a></li>
+<li><a href="SectionE.1.html#E.1.3">GetSize</a></li>
+<li><a href="SectionE.1.html#E.1.4">DriveSpace</a></li>
+<li><a href="SectionE.1.html#E.1.5">GetDrives</a></li>
+<li><a href="SectionE.1.html#E.1.6">GetTime</a></li>
+<li><a href="SectionE.1.html#E.1.7">GetFileAttributes</a></li>
+<li><a href="SectionE.1.html#E.1.8">GetFileVersion</a></li>
+<li><a href="SectionE.1.html#E.1.9">GetExeName</a></li>
+<li><a href="SectionE.1.html#E.1.10">GetExePath</a></li>
+<li><a href="SectionE.1.html#E.1.11">GetParameters</a></li>
+<li><a href="SectionE.1.html#E.1.12">GetOptions</a></li>
+<li><a href="SectionE.1.html#E.1.13">GetRoot</a></li>
+<li><a href="SectionE.1.html#E.1.14">GetParent</a></li>
+<li><a href="SectionE.1.html#E.1.15">GetFileName</a></li>
+<li><a href="SectionE.1.html#E.1.16">GetBaseName</a></li>
+<li><a href="SectionE.1.html#E.1.17">GetFileExt</a></li>
+<li><a href="SectionE.1.html#E.1.18">BannerTrimPath</a></li>
+<li><a href="SectionE.1.html#E.1.19">DirState</a></li>
+<li><a href="SectionE.1.html#E.1.20">RefreshShellIcons</a></li>
+</ul>
+<li><a href="SectionE.2.html#E.2">文字函數</a></li>
+<ul>
+<li><a href="SectionE.2.html#E.2.1">介紹</a></li>
+<li><a href="SectionE.2.html#E.2.2">LineFind</a></li>
+<li><a href="SectionE.2.html#E.2.3">LineRead</a></li>
+<li><a href="SectionE.2.html#E.2.4">FileReadFromEnd</a></li>
+<li><a href="SectionE.2.html#E.2.5">LineSum</a></li>
+<li><a href="SectionE.2.html#E.2.6">FileJoin</a></li>
+<li><a href="SectionE.2.html#E.2.7">TextCompare</a></li>
+<li><a href="SectionE.2.html#E.2.8">ConfigRead</a></li>
+<li><a href="SectionE.2.html#E.2.9">ConfigWrite</a></li>
+<li><a href="SectionE.2.html#E.2.10">FileRecode</a></li>
+<li><a href="SectionE.2.html#E.2.11">TrimNewLines</a></li>
+</ul>
+<li><a href="SectionE.3.html#E.3">句子函數</a></li>
+<ul>
+<li><a href="SectionE.3.html#E.3.1">介紹</a></li>
+<li><a href="SectionE.3.html#E.3.2">WordFind</a></li>
+<li><a href="SectionE.3.html#E.3.3">WordFind2X</a></li>
+<li><a href="SectionE.3.html#E.3.4">WordFind3X</a></li>
+<li><a href="SectionE.3.html#E.3.5">WordReplace</a></li>
+<li><a href="SectionE.3.html#E.3.6">WordAdd</a></li>
+<li><a href="SectionE.3.html#E.3.7">WordInsert</a></li>
+<li><a href="SectionE.3.html#E.3.8">StrFilter</a></li>
+<li><a href="SectionE.3.html#E.3.9">VersionCompare</a></li>
+<li><a href="SectionE.3.html#E.3.10">VersionConvert</a></li>
+</ul>
+<li><a href="SectionE.4.html#E.4">邏輯函數庫</a></li>
+<ul>
+<li><a href="SectionE.4.html#E.4.1">介紹</a></li>
+<li><a href="SectionE.4.html#E.4.2">基本語句</a></li>
+<li><a href="SectionE.4.html#E.4.3">表達式</a></li>
+<li><a href="SectionE.4.html#E.4.4">例子</a></li>
+</ul>
+<li><a href="SectionE.5.html#E.5">常用函數庫</a></li>
+<ul>
+<li><a href="SectionE.5.html#E.5.1">介紹</a></li>
+<li><a href="SectionE.5.html#E.5.2">字串處理函數</a></li>
+<ul>
+<li><a href="SectionE.5.html#E.5.2.1">Find</a></li>
+<li><a href="SectionE.5.html#E.5.2.2">FindI</a></li>
+<li><a href="SectionE.5.html#E.5.2.3">FindLast</a></li>
+<li><a href="SectionE.5.html#E.5.2.4">FindLastI</a></li>
+<li><a href="SectionE.5.html#E.5.2.5">StrStr</a></li>
+<li><a href="SectionE.5.html#E.5.2.6">StrStrI</a></li>
+<li><a href="SectionE.5.html#E.5.2.7">StrRStrI</a></li>
+<li><a href="SectionE.5.html#E.5.2.8">TrimLine</a></li>
+<li><a href="SectionE.5.html#E.5.2.9">TrimLineEx</a></li>
+<li><a href="SectionE.5.html#E.5.2.10">Replace</a></li>
+<li><a href="SectionE.5.html#E.5.2.11">ReplaceEx</a></li>
+<li><a href="SectionE.5.html#E.5.2.12">VerCmp</a></li>
+<li><a href="SectionE.5.html#E.5.2.13">StrCase</a></li>
+<li><a href="SectionE.5.html#E.5.2.14">StrToHex</a></li>
+<li><a href="SectionE.5.html#E.5.2.15">ConvertANSIToUTF8</a></li>
+<li><a href="SectionE.5.html#E.5.2.16">ConvertUTF8ToANSI</a></li>
+</ul>
+<li><a href="SectionE.5.html#E.5.3">檔案、磁碟處理函數</a></li>
+<ul>
+<li><a href="SectionE.5.html#E.5.3.1">GetParent</a></li>
+<li><a href="SectionE.5.html#E.5.3.2">GetChild</a></li>
+<li><a href="SectionE.5.html#E.5.3.3">GetFileExt</a></li>
+<li><a href="SectionE.5.html#E.5.3.4">DumpLog</a></li>
+<li><a href="SectionE.5.html#E.5.3.5">AppendFile</a></li>
+<li><a href="SectionE.5.html#E.5.3.6">DelFileByLog</a></li>
+<li><a href="SectionE.5.html#E.5.3.7">RMDir</a></li>
+<li><a href="SectionE.5.html#E.5.3.8">ForEachFile</a></li>
+<li><a href="SectionE.5.html#E.5.3.9">ForEachFileEx</a></li>
+<li><a href="SectionE.5.html#E.5.3.10">SearchFile</a></li>
+<li><a href="SectionE.5.html#E.5.3.11">IsWritable</a></li>
+<li><a href="SectionE.5.html#E.5.3.12">GetVolume</a></li>
+<li><a href="SectionE.5.html#E.5.3.13">TrimDir</a></li>
+<li><a href="SectionE.5.html#E.5.3.14">FileTimeCmp</a></li>
+<li><a href="SectionE.5.html#E.5.3.15">GetFileSize</a></li>
+<li><a href="SectionE.5.html#E.5.3.16">CompactPathEx</a></li>
+<li><a href="SectionE.5.html#E.5.3.17">RenameExtension</a></li>
+<li><a href="SectionE.5.html#E.5.3.18">RelativePathTo</a></li>
+<li><a href="SectionE.5.html#E.5.3.19">PathCanonicalize</a></li>
+<li><a href="SectionE.5.html#E.5.3.20">RemoveArgs</a></li>
+<li><a href="SectionE.5.html#E.5.3.21">CheckFileEncoding</a></li>
+</ul>
+<li><a href="SectionE.5.html#E.5.4">註冊表處理函數</a></li>
+<ul>
+<li><a href="SectionE.5.html#E.5.4.1">CopyReg</a></li>
+<li><a href="SectionE.5.html#E.5.4.2">ReadRegBin</a></li>
+<li><a href="SectionE.5.html#E.5.4.3">ReadRegMultiStr</a></li>
+<li><a href="SectionE.5.html#E.5.4.4">WriteRegBin</a></li>
+<li><a href="SectionE.5.html#E.5.4.5">WriteRegStrW</a></li>
+<li><a href="SectionE.5.html#E.5.4.6">SHCopyKey</a></li>
+<li><a href="SectionE.5.html#E.5.4.7">SHRegGetPath</a></li>
+<li><a href="SectionE.5.html#E.5.4.8">GetRegKeyCount</a></li>
+<li><a href="SectionE.5.html#E.5.4.9">GetRegValueCount</a></li>
+</ul>
+<li><a href="SectionE.5.html#E.5.5">雜項函數</a></li>
+<ul>
+<li><a href="SectionE.5.html#E.5.5.1">CloseApp</a></li>
+<li><a href="SectionE.5.html#E.5.5.2">IsWinNT</a></li>
+<li><a href="SectionE.5.html#E.5.5.3">GetComputerName</a></li>
+<li><a href="SectionE.5.html#E.5.5.4">GetInstallerName</a></li>
+<li><a href="SectionE.5.html#E.5.5.5">GetLocaleInfo</a></li>
+<li><a href="SectionE.5.html#E.5.5.6">GetWinName</a></li>
+<li><a href="SectionE.5.html#E.5.5.7">GetUserName</a></li>
+<li><a href="SectionE.5.html#E.5.5.8">RefreshIcon</a></li>
+<li><a href="SectionE.5.html#E.5.5.9">ClearDetail</a></li>
+<li><a href="SectionE.5.html#E.5.5.10">GetDllVersion</a></li>
+<li><a href="SectionE.5.html#E.5.5.11">LoadImage</a></li>
+<li><a href="SectionE.5.html#E.5.5.12">DeleteObject</a></li>
+<li><a href="SectionE.5.html#E.5.5.13">DestroyCursor</a></li>
+<li><a href="SectionE.5.html#E.5.5.14">DestroyIcon</a></li>
+<li><a href="SectionE.5.html#E.5.5.15">MessageBox</a></li>
+<li><a href="SectionE.5.html#E.5.5.16">WriteEnvStr</a></li>
+<li><a href="SectionE.5.html#E.5.5.17">DeleteEnvStr</a></li>
+</ul>
+</ul>
+</ul>
+<p><a href='SectionD.5.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionE.1.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/AppendixE.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+</html>

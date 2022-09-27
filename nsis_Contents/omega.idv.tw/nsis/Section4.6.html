@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.6.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:32 GMT -->
+<head>
+<title>區段</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8"></head>
+
+<body>
+<p><a href='Section4.5.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.7.html'>下一頁</a></p>
+<a name="4.6"></a>
+<h2>4.6 區段</h2>
+
+<p>每一個 NSIS 安裝程式包含一個或多個區段。所有的這些區段都使用下面的這些命令來建立、修改和結束。</p>
+<ul>
+<li>每一個區段包含零個或多個指令。</li>
+<li>區段是安裝程式執行的實體，並且如果設定了 ComponentText，那麼用戶就可以選擇禁止或允許每一個可見的區段。</li>
+<li>如果一個區段名為 「Uninstall」 或以 「un.」 為前綴，那麼它就是一個卸載程式區段。</li>
+</ul>
+<a name="4.6.1"></a>
+<h3>4.6.1 區段命令</h3>
+<a name="4.6.1.1"></a><h4>4.6.1.1 AddSize</h4>
+<pre>大小_KB</pre>
+
+<p>告訴安裝程式目前的區段需要一個額外的 「大小_KB」 KB 磁碟空間。僅在一個區段裡有效(在區段外或函數里無效)。</p>
+<pre>Section
+AddSize 500
+SectionEnd
+</pre>
+<a name="4.6.1.2"></a><h4>4.6.1.2 Section</h4>
+<pre>[/o] [([!]|[-])區段名] [區段索引輸出]
+</pre>
+
+<p>開始並且開啟一個新的區段。如果區段名為空、遺漏或者以一個 - 開頭，那麼它將是一個隱藏的區段，用戶也不能選擇禁止它。如果一個區段名為「Uninstall」 或以 「un.」 為前綴，那麼它就是一個卸載程式區段。如果指定了區段索引輸出，該參數將被定義 (!defined) 為區段索引(然後可以對它使用 <a href="Section4.9.html#4.9.13.3">SectionSetText</a> 等)。如果區段名以一個 ! 開頭，那麼該區段的顯示名稱將以粗體字顯示。如果指定了 /o 開關，則該區段預設為不選。</p>
+<pre>Section &quot;-隱藏區段&quot;
+SectionEnd
+
+Section # 隱藏區段
+SectionEnd
+
+Section &quot;!描黑區段&quot;
+SectionEnd
+
+Section /o &quot;可選區段&quot;
+SectionEnd
+
+Section &quot;某些安裝&quot; SEC_IDX
+SectionEnd
+</pre>
+<a name="4.6.1.3"></a><h4>4.6.1.3 SectionEnd</h4>
+
+<p>該命令關閉目前開啟的區段。</p>
+<a name="4.6.1.4"></a><h4>4.6.1.4 SectionIn</h4>
+<pre>安裝類型索引 [安裝類型索引] [RO]
+</pre>
+
+<p>該命令指定目前區段預設為哪一種安裝類型(詳細訊息看 <a href="Section4.8.html#4.8.1.24">InstType</a>)允許的狀態入口。可以指定多個 SectionIn 命令(它們會被組合起來)。如果指定 RO 作為一個參數，則該區段將被設為只讀區段，意味著用戶不能去改變它的狀態。</p>
+<pre>InstType &quot;完全&quot;
+InstType &quot;最小化&quot;
+
+Section &quot;區段 1&quot;
+SectionIn 1 2
+SectionEnd
+
+Section &quot;區段 2&quot;
+SectionIn 1
+SectionEnd
+</pre>
+<a name="4.6.1.5"></a><h4>4.6.1.5 SectionGroup</h4>
+<pre>[/e] 標題 [區段組名索引輸出]
+</pre>
+
+<p>該命令插入一個區段組。區段組必須以 <a href="Section4.6.html#4.6.1.6">SectionGroupEnd</a> 來關閉，並且可以包含一個或多個區段。如果區段組名稱以一個 ! 開頭，則區段組名稱以粗體字顯示。如果指定了 /e，該區段組的所有區段預設將被展開。如果指定區段組索引輸出，該參數將被定義(!defined)為區段索引(然後可以對它使用 <a href="Section4.9.html#4.9.13.3">SectionSetText</a> 等)。如果名字以「un.」為前綴，則該區段組為卸載程式區段組。</p>
+<pre>SectionGroup &quot;區段組&quot;
+Section &quot;區段 1&quot;
+SectionEnd
+Section &quot;區段 2&quot;
+SectionEnd
+SectionGroupEnd
+</pre>
+<a name="4.6.1.6"></a><h4>4.6.1.6 SectionGroupEnd</h4>
+
+<p>關閉一個以 <a href="Section4.6.html#4.6.1.5">SectionGroup</a> 開啟的區段組。</p>
+<a name="4.6.2"></a>
+<h3>4.6.2 卸載區段</h3>
+
+<p>一個特別的名為 「Uninstall」 的區段只能是被建立用於產生一個卸載程式。該區段應該用來從系統裡移除由安裝程式安裝的所有檔案、註冊表健等等。這裡有一個簡單的卸載區段例子:</p>
+<pre>Section &quot;Uninstall&quot;
+  Delete $INSTDIR\Uninst.exe ; 刪除自己(看下面的解釋為什麼可以這樣)
+  Delete $INSTDIR\myApp.exe
+  RMDir $INSTDIR
+  DeleteRegKey HKLM SOFTWARE\myApp
+SectionEnd
+</pre>
+
+<p>第一個 <a href="Section4.9.html#4.9.1.1">Delete</a> 指令是可以正常執行的(刪除卸載程式本身)，因為執行卸載程式的時候它會複製一個副本到系統臨時目錄並執行副本來完成卸載。</p>
+<p>需要注意的是在卸載程式的代碼裡，$INSTDIR 包含了卸載程式所在的位置。你不需要在安裝程式裡給該變量重複賦值。</p>
+<p><a href='Section4.5.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.7.html'>下一頁</a></p>
+
+<hr />
+<div align="left">
+<script async src="../../pagead2.googlesyndication.com/pagead/js/f.txt"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2153907722668011"
+     data-ad-slot="3767461681"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.6.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:32 GMT -->
+</html>

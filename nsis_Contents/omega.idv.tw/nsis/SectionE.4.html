@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionE.4.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+<head>
+<title>邏輯函數庫</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='SectionE.3.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionE.5.html'>下一頁</a></p>
+<a name="E.4"></a><h2>E.4 邏輯函數庫</h2>
+<a name="E.4.1"></a>
+<h3>E.4.1 介紹</h3>
+
+<p>包含檔案:</p>
+<pre>!include &quot;LogicLib.nsh&quot;
+</pre>
+
+<p>使用 NSIS 的宏來提供各種邏輯基本語句，不需要預先新增函數。</p>
+<a name="E.4.2"></a>
+<h3>E.4.2 基本語句</h3>
+<ul>
+<li>If|Unless..{ElseIf|ElseUnless}..[Else]..EndIf|EndUnless<br />
+- 有條件的執行一個語句區塊，取決於表達式。<br />
+<li>AndIf|AndUnless|OrIf|OrUnless<br />
+- 給 If, Unless, ElseIf 和 ElseUnless 增加額外的條件語句。<br /></li>
+<li>IfThen..|..|<br />
+- 有條件的執行一個內聯語句，取決於表達式。<br /></li>
+<li>IfCmd..||..|<br />
+- 條件的執行一個內聯語句，取決於 NSIS 函數提供的真值。<br /></li>
+<li>Select..{Case[2|3|4|5]}..[CaseElse|Default]..EndSelect<br />
+- 執行多個語句區塊之一，取決於表達式的值。<br /></li>
+<li>Switch..{Case|CaseElse|Default}..EndSwitch<br />
+- 轉移到多個標記之一，取決於表達式的值。<br /></li>
+<li>Do[While|Until]..{ExitDo|Continue|Break}..Loop[While|Until]<br />
+- 重複一個語句區塊直到停止 取決於表達式的值。<br /></li>
+<li>While..{ExitWhile|Continue|Break}..EndWhile<br />
+- DoWhile..Loop 的別名 (向後兼容)<br /></li>
+<li>For[Each]..{ExitFor|Continue|Break}..Next<br />
+- 重複語句區塊來連續改變變量的值。</li></ul>
+
+
+<a name="E.4.3"></a><h3>E.4.3 表達式</h3>
+<ul>
+<li>標準 (內建的) 字串判斷 (不區分大小寫):<br />
+a == b; a != b<br /></li>
+<li>另外的不區分大小寫的字串判斷 (使用 System.dll):<br />
+a S&lt; b; a S&gt;= b; a S&gt; b; a S&lt;= b<br />
+- 需要在 !include LogicLib.nsh 之前 !define LOGICLIB_STRCMP<br /></li>
+<li>區分大小寫字串判斷 (使用 System.dll):<br />
+a S== b; a S!= b<br />
+- 需要在 !include LogicLib.nsh 之前 !define LOGICLIB_STRCMP<br /></li>
+<li>標準 (內建的) 有符號整數判斷:<br />
+a = b; a &lt;&gt; b; a &lt; b; a &gt;= b; a &gt; b; a &lt;= b<br /></li>
+<li>標準 (內建的) 無符號整數判斷:<br />
+a U&lt; b; a U&gt;= b; a U&gt; b; a U&lt;= b<br /></li>
+<li>64 位整數判斷 (使用 System.dll):<br />
+a L= b; a L&lt;&gt; b; a L&lt; b; a L&gt;= b; a L&gt; b; a L&lt;= b<br />
+- 需要在 !include LogicLib.nsh 之前 !define LOGICLIB_INT64CMP<br /></li>
+<li>內建的 NSIS 標記判斷:<br />
+${Abort}; ${Errors}; ${RebootFlag}; ${Silent}<br /></li>
+<li>內建的 NSIS 其它判斷:<br />
+${FileExists} a<br /></li>
+<li>任何有條件的 NSIS 指令判斷:<br />
+${Cmd} a<br /></li>
+<li>區段標記判斷:<br />
+${SectionIsSelected} a; ${SectionIsSectionGroup} a;<br />
+${SectionIsSectionGroupEnd} a; ${SectionIsBold} a;<br />
+${SectionIsReadOnly} a; ${SectionIsExpanded} a;<br />
+${SectionIsPartiallySelected} a<br />
+- 需要在 !include LogicLib.nsh 之前 !define LOGICLIB_SECTIONCMP</li></ul>
+
+<a name="E.4.4"></a><h3>E.4.4 例子</h3>
+<ul>
+<pre>;見 Examples\LogicLib.nsi</pre>
+</ul>
+
+<p><a href='SectionE.3.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionE.5.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionE.4.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section5.1.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+<head>
+<title>編譯器實用命令</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8"></head>
+
+<body>
+<p><a href='Chapter5.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section5.2.html'>下一頁</a></p>
+<a name="5.1"></a><h2>5.1 編譯器命令</h2>
+
+<p>這些命令在用途和功能性方面與 C 預處理器很相似。它們都允許檔案內含，條件編譯，可執行的頭部封包，以及在構建程序期間處理執行。注意：這些命令都不允許使用變量。</p>
+<a name="5.1.1"></a><h3>5.1.1 !include</h3>
+<pre>檔案</pre>
+
+<p>這個命令可以將一個檔案包含到腳本中，就像是腳本的一部分一樣。請注意，如果一個檔案包含在了另一個目錄中，那麼目前目錄仍是編譯腳本的地方（不是要包含的檔案所在的目錄）。如果編譯器無法找到檔案，那麼它將會在每一個包含目錄中尋找。若要得到更多訊息，請觀看 <a href="Section5.1.html#5.1.2">!addincludedir</a>。</p>
+<pre>!include WinMessages.nsh
+!include Library.nsh
+!include MyConfig.nsh
+!include ..\MyConfig.nsh
+</pre>
+<a name="5.1.2"></a><h3>5.1.2 !addincludedir</h3>
+<pre>目錄</pre>
+
+<p>向包含目錄列表中新增另一個包含目錄。當使用 !include 時，將會按這個列表搜尋。這個列表的初始值只有 ${NSISDIR}\Include。</p>
+<pre>!addincludedir ..\include
+!include something.nsh
+</pre>
+<a name="5.1.3"></a><h3>5.1.3 !addplugindir</h3>
+<pre>目錄</pre>
+
+<p>NSIS 編譯器用於搜尋插件 DLL 的目錄。</p>
+<pre>!addplugindir myplugin
+MyPlugin::SomeFunction
+</pre>
+<a name="5.1.4"></a><h3>5.1.4 !cd</h3>
+<pre>新路徑</pre>
+
+<p>這個命令將會令編譯器更改為一個新路徑 —— 「新路徑」。新路徑可以為相對路徑或絕對路徑。</p>
+<pre>!cd ..\more-scripts\new
+</pre>
+<a name="5.1.5"></a><h3>5.1.5 !echo</h3>
+<pre>訊息</pre>
+
+<p>這個命令將會回顯一條用戶編譯腳本的消息。</p>
+<pre>!echo &quot;hello world&quot;
+</pre>
+<a name="5.1.6"></a><h3>5.1.6 !error</h3>
+<pre>[訊息]
+</pre>
+
+<p>這個命令將會發表一個腳本編譯器的錯誤，並停止執行腳本。你也可以向這個錯誤新增一條消息。</p>
+<pre>!ifdef VERSION &amp; NOVERSION
+  !error &quot;不能同時定義 VERSION 和 NOVERSION&quot;
+!endif
+</pre>
+<a name="5.1.7"></a><h3>5.1.7 !execute</h3>
+<pre>命令</pre>
+
+<p>這個指令將調用 CreateProcess() 來執行一個命令。和 <a href="Section5.1.html#5.1.9">!system</a> 不一樣，它不使用命令行處理程式，所以輸如輸出都被重定向並且命令行裡的 cd、dir、type 等命令都不能使用。!execute 同時也不接受執行命令的返回值。目前 !execute 對於 <a href="Section5.1.html#5.1.9">!system</a> 的好處就是當目前工作路徑為 UNC 的時候不會引起問題。</p>
+
+<p>在 POSIX 平台，!execute 使用 system() 就和<a href="Section5.1.html#5.1.9">!system</a> 一樣。</p>
+<pre>!execute '&quot;%WINDIR%\notepad.exe&quot; &quot;${NSISDIR}\license.txt&quot;'
+</pre>
+<a name="5.1.8" id="5.1.8"></a>
+<h3>5.1.8 !packhdr</h3>
+<pre>臨時檔案 命令</pre>
+
+<p>這個選項可以讓編譯器使用 EXE 加殼軟體（例如 <a href="http://www.un4seen.com/petite/">Petite</a> 或 <a href="http://upx.sourceforge.net/">UPX</a>）壓縮可執行檔案。請先指定一個臨時檔案名稱（例如 &quot;temp.dat&quot;）以及命令行（例如 &quot;C:\program files\upx\upx -9 temp.dat&quot;）壓縮檔案。</p>
+<pre>!packhdr &quot;$%TEMP%\exehead.tmp&quot; '&quot;C:\Program Files\UPX\upx.exe&quot; &quot;$%TEMP%\exehead.tmp&quot;'
+</pre>
+<a name="5.1.9"></a><h3>5.1.9 !system</h3>
+<pre>命令 [比較運算符 比較值]
+</pre>
+
+<p>這個命令將會通過調用 system() 來執行，並且如果比較過 「比較值」 以後的返回值為 false，那麼編譯將會被結束。「比較運算符」 可以為 &lt; 、&gt; 、&lt;&gt; 或 =。</p>
+<pre>!system '&quot;%WINDIR%\notepad.exe&quot; &quot;${NSISDIR}\license.txt&quot;'
+!system 'echo !define something &gt; newinclude.nsh'
+!include newinclude.nsh
+!ifdef something
+  !echo &quot;something is defined&quot;
+!endif
+;僅當 VPatch 返回 0(表示完成) 時繼續，否則停止編譯。<br />!system '&quot;&quot;${NSISDIR}\Contrib\VPatch\GenPat.exe&quot; &quot;C:\old-file.exe&quot; &quot;C:\new-file.exe&quot; &quot;C:\patch.pat&quot;&quot;' = 0
+</pre>
+<a name="5.1.10"></a>
+<h3>5.1.10 !warning</h3>
+<pre>[訊息]
+</pre>
+
+<p>這個命令將會輸出一個腳本編譯器的警告，但不會停止執行腳本。你也可以向這個警告新增一條消息。</p>
+<pre>!ifdef USE_DANGEROUS_STUFF
+  !warning &quot;using dangerous stuff&quot;
+!endif
+</pre>
+<a name="5.1.11"></a><h3>5.1.11 !verbose</h3>
+<pre>等級 | push | pop
+</pre>
+
+<p>這個命令將會設定編譯輸出訊息的等級。 4=全部訊息, 3=沒有腳本訊息, 2=沒有訊息, 1=沒有警告訊息, 0=無輸出。</p>
+
+<p>通過 push 可以把 !verbose 目前的等級壓入一個特殊的堆棧。通過 pop 可以把 !verbose 儲存在堆棧中的等級彈出並使用該等級。</p>
+<p>如果你的腳本比較大你可以在腳本開頭設定 !verbose 3 來減少編譯訊息輸出耗時，從而加快編譯速度。</p>
+<pre>!verbose push
+!verbose 1
+!include WinMessages.nsh
+!verbose pop
+</pre>
+<p><a href='Chapter5.html'>上一步</a> | <a href='Contents.html'>目錄</a> | <a href='Section5.2.html'>下一步</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section5.1.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+</html>

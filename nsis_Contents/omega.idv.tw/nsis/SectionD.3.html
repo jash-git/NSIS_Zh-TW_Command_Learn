@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionD.3.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+<head>
+<title>使用 System.dll 來調用一個外部 DLL</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='SectionD.2.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionD.4.html'>下一頁</a></p>
+<a name="D.3"></a><h2>D.3 使用 System.dll 來調用一個外部 DLL</h2>
+
+<p> 某些安裝程序需要調用包含於第三方開發的 DLL 中的函數。最佳的例子就是安裝一個 Palm(TM) 通道。</p>
+<p> <strong>一些關於 System.dll 的背景資料 </strong>  <br> 
+System.dll 插件 (由 Brainsucker 開發) 使你可以通過提供 Call 函數來調用外部 DLL。有大量的由 System.dll 提供的函數，但是它們並不適合放在這裡。若要得到更多關於其它函數的詳細訊息，請鎖上門，取下電話，<a href="#" onclick="parser('https://omega.idv.tw/Docs/System/System.html')">System 說明文件</a>，並閱讀。</p>
+
+<p><u>資料類型</u> <br>
+ System.dll 可以識別一下資料類型
+
+:</p>
+<ul>
+<li>v - void (常用於返回)</li>
+<li>i - int (包括 char、byte、short、句柄、指針等等)</li>
+<li>l - long 型整數 (已知的為 int64)</li>
+<li>t - 文字、字串 (LPCSTR、第一個字元的指針)</li>
+<li>b - 布爾 (需要返回 true 或 false) - 
+
+
+ 事實上這種類型沒有什麼意義 -&gt; 通常可以用整數來代替 ('0':'1') </li>
+<li>k - 回調。觀看 system.html 的回調章節。</li>
+<li>* - 指針 -&gt; Proc 需要這種類型的指針，這會影響下一個字元 (參數) [例如: '*i' - 整數指針]</li>
+</ul>
+
+<p><u> 將 System.dll 變量映射為 NSIS 裡的內置變量</u> <br> 
+如果你不需要返回任何資料，那麼這裡沒有什麼可以用來調用一個外部函數的指向。System.dll 可以通過以下方式將函數變量映射為 NSIS 腳本變量:</p>
+
+<p> NSIS $0..$9 可與 System.dll r0..r9 相對應；NSIS $R0..$R9 也可與 System.dll r10..r19 相對應 </p>
+
+<p> 每個參數由類型，輸入和輸出指定。可以用一個點跳過輸入或輸出。例如:</p>
+
+<p> 字元串 (一個字元數組的指針)，輸入為 '輕鬆調用' :</p>
+<pre>t '輕鬆調用'
+</pre>
+
+<p> 字元串 (一個字元數組的指針), 輸入從 $5 取值，並且經轉換為由調用產生的數組後，最後儲存到 $R8 :</p>
+<pre>t r5R8
+</pre>
+
+<p> 一個整數指針，從 $1 取值並放入 $2 :</p>
+<pre>*i r1r2
+</pre>
+
+<p> 一個 64-bit 整數指針，輸出送入堆棧，沒有輸入 :</p>
+<pre>*l .s
+</pre>
+
+<p> 通過 System.dll::Call 調用第三方 DLL 中的一個函數，Call 的用法如下 :</p>
+<pre>System::Call 'YourDllName::YourDllFunction(i, *i, t) i(r0, .r1, r2) .r3'
+</pre>
+
+<p> 後面的的 (r0, .r1, r2) .r3 段是用來傳送 DLL 和 NSIS 腳本之間的參數。就像在這個參數列表中看到的一樣，類型和輸入、輸出是可以分開的。每個 &quot;(參數列表) 返回值&quot; 塊不用考慮和/或新增上一個。在這裡，第一塊指定類型而第二塊指定輸入和輸出。</p>
+
+<p> <strong>開始編輯 NSIS 腳本之前 </strong>  <br> 
+在開始編輯 NSIS 代碼之前，首先需要瞭解要調用函數的原型。在這個例子裡，我們使用 Palm 'CondMgr.dll' 中的'CmGetHotSyncExecPath' 函數。這個函數用來返回 'HotSync.exe' 的完整路徑。</p>
+
+<p> 函數定義  <br></p>
+
+<p>int CmGetHotSyncExecPath(TCHAR *pPath, int *piSize);</p>
+
+<p>參數</p>
+<ul>
+<li>pPath 是一個指向字元 buffer 的指針。在返回前這是已安裝的 HotSync manager 的路徑檔案名稱。</li>
+<li>piSize 
+
+
+ 是一個指向由 pPath 參數引用的 buffer 大小 (TCHAR 類型) 的整數指針。</li>
+</ul>
+
+<p>返回值:</p>
+<ul>
+<li>0: 無措誤</li>
+<li>-1: 產生不明確的錯誤</li>
+<li>ERR_REGISTRY_ACCESS(-1006):
+
+
+不能瀏覽 Palm 配置項</li>
+<li>ERR_BUFFER_TOO_SMALL(-1010): 
+
+
+buffer 太小而不能儲存請求的訊息</li><li>ERR_INVALID_POINTER(-1013):
+
+
+ 指定的指針不是一個有效的指針
+
+</li></ul>
+
+<p>同樣的，如果 buffer 太小，*int 中的值為緩衝應當的大小 (TCHAR 類型)。</p>
+
+<p>上面的函數的定義轉換到 System.dll 定義:</p>
+
+<p>CmGetHotSyncExecPath(t, *i) i</p>
+
+<p> 也就是，它有一個文字變量，一個整數指針，並返回一個整數值。</p>
+
+<p> 使用外部 DLL 函數  <br> 
+在選出了函數所要做的事情，以及它是如何轉換到 System.dll 格式之後，就可以在 NSIS 腳本中使用這個函數了。</p>
+
+<p> 首先，推薦在需要多次調用 System.dll 時，禁止插件卸載。 根據 Brainsucker (以及其他人) 的說法，這樣可以提高安裝包的執行速度 (減少了卸載 - 重新裝載的時間)。 </p>
+
+<p> 其次，你必須將輸出目錄更改為你要用的 DLL 所在的目錄。如果 DLL 在系統路徑中，那麼它也能工作，但並沒有經過測試。</p>
+
+<p> 下面的代碼段會將 condmgr.dll 釋放到一個臨時目錄中，然後執行 CmGetHotSyncExecPath 函數，顯示返回的資料並最終卸載 System.dll 插件。</p>
+<pre>; **** snip ****
+SetPluginUnload  alwaysoff
+
+Function loadDll
+
+  SetOutPath $TEMP\eInspect             ; 建立臨時目錄
+  File bin\CondMgr.dll                  ; 釋放 DLL
+  StrCpy $1 ${NSIS_MAX_STRLEN}          ; assign memory to $0
+  System::Call 'CondMgr::CmGetHotSyncExecPath(t, *i) i(.r0, r1r1).r2'
+  DetailPrint '路徑: &quot;$0&quot;'
+  DetailPrint &quot;路徑長度: $1&quot;
+  DetailPrint &quot;返回值: $2&quot;
+
+; 最後一次插件調用必須沒有 /NOUNLOAD 參數，否則 NSIS 將不能在安裝結束後刪除
+; 臨時的 DLL 檔案
+
+  SetPluginUnload manual
+; 什麼都不作 (目的就是為了卸載 System.dll)
+  System::Free 0
+FunctionEnd
+; **** snip ****
+</pre>
+
+<p>這個函數將在觀看詳細訊息頁面產生下面的輸出:</p>
+
+<p>輸出目錄: c:\windows\TEMP\eInspect <br>
+   解壓: CondMgr.dll <br>
+    路徑: &quot;C:\Dave\palm\Hotsync.exe&quot; <br>
+     路徑長度: 24 <br>
+      返回值: 0</p>
+
+<p>Written by <a href="http://nsis.sourceforge.net/archive/profile.php?userid=78">djc</a></p>
+
+<p><u>感謝</u> <br>
+ 在此感謝 <strong>kichik </strong> 和 <strong>Sunjammer </strong> 花費了大量時間解決這些問題。同時感謝 <strong>brainsucker </strong> 首先做了這個 System.dll 插件。祝你好運！ </p>
+<p><a href='SectionD.2.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionD.4.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionD.3.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+</html>

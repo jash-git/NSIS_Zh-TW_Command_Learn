@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionG.3.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:40 GMT -->
+<head>
+<title>Building on POSIX</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='SectionG.2.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionG.4.html'>下一頁</a></p>
+<a name="G.3"></a><h2>G.3 Building on POSIX</h2>
+
+<p>As of NSIS 2.01, the compiler, makensis, also compiles on POSIX platforms. POSIX platforms include Linux, *BSD, Mac OS X and others. Since the generated installer will eventually run on Windows, you need a <a href="http://www.libsdl.org/extras/win32/cross/README.txt">cross-compiler</a> in order to compile them.</p>
+
+<p>If you don't have a cross compiler, you can use:</p>
+<pre>scons SKIPSTUBS=all SKIPPLUGINS=all SKIPUTILS=all SKIPMISC=all
+</pre>
+
+<p>This should only build makensis. Once you have makensis, you can drop it in a downloaded precompiled package such as the nightly build. Note that the in order for this to work, the precompiled package must be compiled using the exact same sources as makensis. In particular, <code>Source\exehead\config.h</code> and <code>Source\exehead\fileform.h</code> must be identical.</p>
+<p><a href='SectionG.2.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionG.4.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionG.3.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:40 GMT -->
+</html>

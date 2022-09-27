@@ -1,0 +1,234 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.7.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+<head>
+<title>函數</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='Section4.6.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.8.html'>下一頁</a></p>
+<a name="4.7"></a>
+<h2>4.7 函數</h2>
+
+<p>函數類似於區段因為他們可以包含零個或多個指令。用戶函數不會被安裝程式直接調用，而必須在區段裡使用 Call 指令來調用。而當一個必然事件發生時回調函數將由安裝程式調用。</p>
+
+<p>函數必須在區段或其他函數之外聲明。</p>
+<a name="4.7.1"></a>
+<h3>4.7.1 函數命令</h3>
+<a name="4.7.1.1"></a><h4>4.7.1.1 Function</h4>
+<pre>[函數名]
+</pre>
+
+<p>開始並開啟一個新的函數。一般函數名以 . 開頭的(例如 &quot;.Whatever&quot;)作為回調函數保留。函數名以 un. 開頭的函數將會被建立在卸載程式裡。因此，普通安裝區段和函數不能調用卸載函數，而卸載區段和卸載函數也不能調用普通安裝程式的函數。</p>
+<pre>Function func
+  # 一些命令
+FunctionEnd
+
+Section
+  Call func
+SectionEnd
+</pre>
+<a name="4.7.1.2"></a><h4>4.7.1.2 FunctionEnd</h4>
+
+<p>該命令關閉目前開啟的函數。</p>
+<a name="4.7.2"></a>
+<h3>4.7.2 回調函數</h3>
+
+<p>你可以建立特殊名稱的回調函數。這些函數將會由安裝程式在安裝時需要某些用途時調用。下面是目前可用的回調函數列表:</p>
+<a name="4.7.2.1"></a>
+<h4>4.7.2.1 安裝回調</h4>
+<a name="4.7.2.1.1"></a><h5>4.7.2.1.1 .onGUIInit</h5>
+
+<p>該回調將會在第一個頁面被載入並且顯示安裝程式對話框前被調用，允許你來調整用戶介面。</p>
+
+<p>例子:</p>
+<pre> !include &quot;${NSISDIR}\Include\WinMessages.nsh&quot;
+
+ Function .onGUIInit
+   # 1028 是標誌文字控件的 ID
+   GetDlgItem $R0 $HWNDPARENT 1028
+   CreateFont $R1 &quot;Tahoma&quot; 10 700
+   SendMessage $R0 ${WM_SETFONT} $R1 0
+   # 設定背景顏色為白色，文字顏色為紅色
+   SetCtlColors $R0 FFFFFF FF0000
+ FunctionEnd
+</pre>
+<a name="4.7.2.1.2"></a><h5>4.7.2.1.2 .onInit</h5>
+
+<p>該回調將會在當安裝程式接近完成初始化時調用。如果 .onInit 函數調用了 <a href="Section4.9.html#4.9.4.1">Abort</a>，則安裝程式立即登出。</p>
+
+<p>這裡有兩個例子說明了怎麼使用:</p>
+<pre> Function .onInit
+   MessageBox MB_YESNO &quot;即將安裝。繼續？?&quot; IDYES NoAbort
+     Abort ; 使得安裝程式登出。
+   NoAbort:
+ FunctionEnd
+</pre>
+
+<p>或:</p>
+<pre> Function .onInit
+   ReadINIStr $INSTDIR $WINDIR\wincmd.ini Configuration InstallDir
+   StrCmp $INSTDIR &quot;&quot; 0 NoAbort
+     MessageBox MB_OK &quot;未找到 Windows Commander。未能取得安裝路徑。&quot;
+     Abort ; 使得安裝程式登出。
+   NoAbort:
+ FunctionEnd
+</pre>
+<a name="4.7.2.1.3"></a><h5>4.7.2.1.3 .onInstFailed</h5>
+
+<p>該回調函數當在安裝失敗後用戶按這裡「取消」按鈕時被調用(如果安裝程式不能釋放任何檔案，或安裝腳本使用了 <a href="Section4.9.html#4.9.4.1">Abort</a> 命令)。</p>
+
+<p>例子:</p>
+<pre>  Function .onInstFailed
+    MessageBox MB_OK &quot;祝您下次好運。&quot;
+  FunctionEnd
+</pre>
+<a name="4.7.2.1.4"></a><h5>4.7.2.1.4 .onInstSuccess</h5>
+
+<p>該回調當安裝完成且正當安裝視窗關閉前(如果 <a href="Section4.8.html#4.8.1.3">AutoCloseWindow</a> 或 <a href="Section4.9.html#4.9.14.11">SetAutoClose</a> 被設為 false 時可能在用戶按這裡「關閉」之後)調用。</p>
+
+<p>例子:</p>
+<pre>  Function .onInstSuccess
+    MessageBox MB_YESNO &quot;恭喜，運行正常。觀看說明文件？&quot; IDNO NoReadme
+      Exec notepad.exe ; 觀看說明文件或其他。
+    NoReadme:
+  FunctionEnd
+</pre>
+<a name="4.7.2.1.5"></a><h5>4.7.2.1.5 .onGUIEnd</h5>
+
+<p>該回調正當安裝程式視窗關閉之後被調用。需要時用來釋放任何與用戶介面有關的插件。</p>
+<a name="4.7.2.1.6"></a><h5>4.7.2.1.6 .onMouseOverSection</h5>
+
+<p>該回調只要鼠標在樹形區段選擇框上移動時就被調用。這可以使你給每個區段設定一個樣本描述。鼠標停留所在的目前區段 ID 已被臨時的儲存，為 $0。</p>
+
+<p>例子:</p>
+<pre>  Function .onMouseOverSection
+    FindWindow $R0 &quot;#32770&quot; &quot;&quot; $HWNDPARENT
+    GetDlgItem $R0 $R0 1043 ; 描述項 (必須新增到介面)
+
+    StrCmp $0 0 &quot;&quot; +2
+      SendMessage $R0 ${WM_SETTEXT} 0 &quot;STR:第一個區段描述&quot;
+
+    StrCmp $0 1 &quot;&quot; +2
+      SendMessage $R0 ${WM_SETTEXT} 0 &quot;STR:第二個區段描述&quot;
+  FunctionEnd
+</pre>
+<a name="4.7.2.1.7"></a><h5>4.7.2.1.7 .onRebootFailed</h5>
+
+<p>該回調函數當 <a href="Section4.9.html#4.9.11.1">Reboot</a> 指令失敗時被調用。<a href="Section4.9.html#4.9.6.1">WriteUninstaller</a>, <a href="Section4.11.html#4.11">plug-ins</a>, <a href="Section4.9.html#4.9.1.5">File</a> 和 <a href="Section4.9.html#4.9.2.14">WriteRegBin</a> 不能用於該回調函數。</p>
+
+<p>例子:</p>
+<pre> Function .onRebootFailed
+   MessageBox MB_OK|MB_ICONSTOP &quot;重啟失敗，請手動重啟。&quot; /SD IDOK
+ FunctionEnd
+</pre>
+<a name="4.7.2.1.8"></a><h5>4.7.2.1.8 .onSelChange</h5>
+
+<p>當在<a href="Section4.5.html#4.5">組件選擇頁面</a>選項被改變時被調用。常用於使用 <a href="Section4.9.html#4.9.13.1">SectionSetFlags</a> 和 <a href="Section4.9.html#4.9.13.2">SectionGetFlags</a>。</p>
+<a name="4.7.2.1.9"></a><h5>4.7.2.1.9 .onUserAbort</h5>
+
+<p>該回調當用戶按這裡「取消」按鈕且安裝尚未失敗時被調用。如果該函數調用 <a href="Section4.9.html#4.9.4.1">Abort</a>，則安裝將不登出。</p>
+
+<p>例子:</p>
+<pre> Function .onUserAbort
+   MessageBox MB_YESNO &quot;登出安裝？&quot; IDYES NoCancelAbort
+     Abort ; 使得安裝程式不登出。
+   NoCancelAbort:
+ FunctionEnd
+</pre>
+<a name="4.7.2.1.10"></a><h5>4.7.2.1.10 .onVerifyInstDir</h5>
+
+<p>該回調對於你的安裝程式來說可以允許代為控制安裝路徑是否有效。每次用戶更改安裝路徑的時候這段代碼都會被調用一次，所以不要在這裡使用 <a href="Section4.9.html#4.9.4.15">MessageBox</a> 等傻指令。如果該函數調用 <a href="Section4.9.html#4.9.4.1">Abort</a>，則 $INSTDIR 的路徑被認為無效。</p>
+
+<p>例子:</p>
+<pre>  Function .onVerifyInstDir
+    IfFileExists $INSTDIR\Winamp.exe PathGood
+      Abort ; 如果 $INSTDIR 不是 Winamp 路徑，則不讓用戶安裝在這裡
+    PathGood:
+  FunctionEnd
+</pre>
+<a name="4.7.2.2"></a>
+<h4>4.7.2.2 卸載回調</h4>
+<a name="4.7.2.2.1"></a><h5>4.7.2.2.1 un.onGUIInit</h5>
+
+<p>該回調將會在第一個頁面被載入並且顯示卸載程式對話框前被調用，允許你來調整卸載程式的介面。</p>
+
+<p>例子請看 <a href="Section4.7.html#4.7.2.1.1">.onGUIInit</a>。</p>
+<a name="4.7.2.2.2"></a><h5>4.7.2.2.2 un.onInit</h5>
+
+<p> 該回調將會在當卸載程式接近完成初始化時調用。如果 un.onInit 函數使用了 <a href="Section4.9.html#4.9.4.1">Abort </a>，則卸載程式立即登出。注意如果需要時該函數可以驗證和/或修改 $INSTDIR。</p>
+
+<p> 這裡有兩個例子說明了怎麼使用: </p>
+<pre>  Function un.onInit
+    MessageBox MB_YESNO &quot;即將卸載。繼續？&quot; IDYES NoAbort
+      Abort ; 使得卸載程式登出。
+    NoAbort:
+  FunctionEnd
+</pre>
+
+<p>或:</p>
+<pre>  Function un.onInit
+    IfFileExists $INSTDIR\myfile.exe found
+      Messagebox MB_OK &quot;卸載路徑不正確&quot;
+      Abort
+    found:
+  FunctionEnd
+</pre>
+<a name="4.7.2.2.3"></a><h5>4.7.2.2.3 un.onUninstFailed</h5>
+
+<p> 該回調函數當在卸載失敗後用戶按這裡「取消」按鈕時被調用(如果使用了 <a href="Section4.9.html#4.9.4.1">Abort </a> 命令或其它失敗的命令)。 </p>
+
+<p>例子:</p>
+<pre>  Function un.onUninstFailed
+    MessageBox MB_OK &quot;祝你下次好運。&quot;
+  FunctionEnd
+</pre>
+<a name="4.7.2.2.4"></a><h5>4.7.2.2.4 un.onUninstSuccess</h5>
+
+<p> 該回調當卸載完成且正當卸載程式視窗關閉前(如果 <a href="Section4.9.html#4.9.14.11">SetAutoClose </a> 被設為 false 時可能在用戶按這裡「關閉」之後)調用。</p>
+
+<p>例子:</p>
+<pre>  Function un.onUninstSuccess
+    MessageBox MB_OK &quot;恭喜，已經移除。&quot;
+  FunctionEnd
+</pre>
+<a name="4.7.2.2.5"></a><h5>4.7.2.2.5 un.onGUIEnd</h5>
+
+<p> 該回調正當卸載程式視窗關閉之後被調用。需要時用來釋放任何與用戶介面有關的插件。 </p>
+<a name="4.7.2.2.6"></a><h5>4.7.2.2.6 un.onRebootFailed</h5>
+
+<p> 該回調函數當 <a href="Section4.9.html#4.9.11.1">Reboot </a> 指令失敗時被調用。 <a href="Section4.9.html#4.9.6.1">WriteUninstaller </a>, <a href="Section4.11.html#4.11">plug-ins </a>, <a href="Section4.9.html#4.9.1.5">File </a> 和 <a href="Section4.9.html#4.9.2.14">WriteRegBin </a> 不能用於該回調函數。 </p>
+
+<p> 例子 :</p>
+<pre> Function un.onRebootFailed
+   MessageBox MB_OK|MB_ICONSTOP &quot;重啟失敗，請手動重啟。&quot; /SD IDOK
+ FunctionEnd
+</pre>
+<a name="4.7.2.2.7"></a><h5>4.7.2.2.7 un.onUserAbort</h5>
+
+<p> 該回調當用戶按這裡「取消」按鈕且卸載尚未失敗時被調用。如果該函數調用 <a href="Section4.9.html#4.9.4.1">Abort </a>，則卸載程式將不登出。</p>
+
+<p>例子:</p>
+<pre>  Function un.onUserAbort
+    MessageBox MB_YESNO &quot;登出卸載？&quot; IDYES NoCancelAbort
+      Abort ; 使得卸載程式不能登出。
+    NoCancelAbort:
+  FunctionEnd
+</pre>
+<p><a href='Section4.6.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.8.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.7.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+</html>

@@ -1,0 +1,1142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionE.5.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+<head>
+<title>常用函數庫</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='SectionE.4.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='AppendixF.html'>下一頁</a></p>
+<a name="E.5"></a>
+<h2>E.5 常用函數庫</h2>
+<a name="E.5.1"></a>
+<h3>E.5.1 介紹</h3>
+
+<p>包含檔案:</p>
+<pre>!include &quot;UsefulLib.nsh&quot;
+</pre>
+
+<p>聲明安裝函數 &quot;GetParent&quot; 和卸載函數 &quot;GetParent&quot; (注意: 必須要在使用這個函數之前聲明):</p>
+<pre>${GetFileExt}
+${un.GetParent}
+</pre>
+
+<p>調用函數:</p>
+<pre>Section Install
+     ${GetParent} &quot;C:\My Downloads\Index.html&quot; $R0
+     ; $R0=&quot;C:\My Downloads&quot;
+SectionEnd
+</pre>
+<pre>Section un.Install
+     ${un.GetParent} &quot;C:\My Downloads\Index.html&quot; $R0
+     ; $R0=&quot;C:\My Downloads&quot;
+SectionEnd
+</pre>
+<p> 某些簡短的函數可以不用聲明就直接使用，並可以在任意 Section、Function 中使用，卸載區段中也不需要新增 un. 前綴，比如:
+<pre>Section
+  ${IsWinNT} $0 ;可以直接使用的函數
+  ${If} $0 == 1
+    DetailPrint &quot;你的系統是 NT、2000 平台&quot;
+  ${Else}
+    DetailPrint &quot;你的系統是 9X 平台&quot;
+  ${EndIf}
+SectionEnd</p></pre>
+<p>當函數說明裡註明「使用了 System 插件」而你又在 Function .onInit 裡使用了這個函數
+  那麼你應該增加 ReserveFile "${NSISDIR}\Plugins\System.dll" 指令</p>
+  
+<a name="E.5.2"></a>
+<h3>E.5.2 字串處理函數</h3>
+
+<p><a name="E.5.2.1"></a></p>
+<h4>E.5.2.1 Find                (需要聲明)</h4>
+<ul>
+<li>在一個字串中尋找另一個字串並返回該字串的位置。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${Find} 輸出變量 字串 要尋找的字串
+</pre>
+<p><b>注意:</b> <br>
+-區分大小寫<br>
+-使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${Find} $0 &quot;C:\Windows\explorer.exe&quot; &quot;explorer&quot;
+; 結果: $0 = 11</pre>
+
+<p><a name="E.5.2.2"></a></p>
+<h4>E.5.2.2 FindI                (需要聲明)</h4>
+<ul>
+<li>在一個字串中尋找另一個字串並返回該字串的位置。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${FindI} 輸出變量 字串 要尋找的字串
+</pre>
+<p><b>注意:</b> <br>
+-不區分大小寫<br>
+-使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${FindI} $0 &quot;C:\Windows\explorer.exe&quot; &quot;explorer&quot;
+; 結果: $0 = 11</pre>
+
+<p><a name="E.5.2.3"></a></p>
+<h4>E.5.2.3 FindLast            (需要聲明)</h4>
+<ul>
+<li>在一個字串中尋找另一個字串並返回該字串的位置，從右至左尋找。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${FindLast} 輸出變量 字串 要尋找的字串</pre>
+
+<p><b>注意:</b> <br>
+  -區分大小寫<br>
+  -使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${FindLast} $0 &quot;C:\Windows\explorer.exe&quot; &quot;w&quot; 
+; 結果: $0 = 8</pre>
+
+<p><a name="E.5.2.4"></a></p>
+<h4>E.5.2.4 FindLastI            (需要聲明)</h4>
+<ul>
+<li>在一個字串中尋找另一個字串並返回該字串的位置，從右至左尋找。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${FindLastI} 輸出變量 字串 要尋找的字串</pre>
+
+<p><b>注意:</b> <br>
+  -不區分大小寫<br>
+  -使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${FindLastI} $0 &quot;C:\Windows\explorer.exe&quot; &quot;w&quot; 
+; 結果: $0 = 8</pre>
+
+<p><a name="E.5.2.5"></a></p>
+<h4>E.5.2.5 StrStr</h4>
+<ul>
+<li>在一個字串中尋找並返回第一個匹配的子字串。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${StrStr} 輸出變量 字串 要尋找的子字串</pre>
+
+<p><b>注意:</b> <br>
+  -區分大小寫<br>
+  -使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${StrStr} $0 &quot;C:\Windows\explorer.exe&quot; &quot;Windows&quot; 
+; 結果: $0 = Windows\explorer.exe</pre>
+
+<p><a name="E.5.2.6"></a></p>
+<h4>E.5.2.6 StrStrI</h4>
+<ul>
+<li>在一個字串中尋找並返回第一個匹配的子字串。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${StrStrI} 輸出變量 字串 要尋找的子字串</pre>
+
+<p><b>注意:</b> <br>
+  -區分大小寫<br>
+  -使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${StrStrI} $0 &quot;C:\Windows\explorer.exe&quot; &quot;Windows&quot; 
+; 結果: $0 = Windows\explorer.exe</pre>
+
+<p><a name="E.5.2.7"></a></p>
+<h4>E.5.2.7 StrRStrI</h4>
+<ul>
+<li>在一個字串中尋找第一個匹配的子字串，從右到左尋找。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${StrRStrI} 輸出變量 字串 要尋找的子字串</pre>
+
+<p><b>注意:</b> <br>
+  -不區分大小寫<br>
+  -使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${StrRStrI} $0 &quot;C:\Windows\explorer.exe&quot; &quot;w&quot; 
+; 結果: $0 = ws\explorer.exe</pre>
+
+<p><a name="E.5.2.8"></a></p>
+<h4>E.5.2.8 TrimLine            (需要聲明)</h4>
+<ul>
+<li>去除字串尾部的Enter換行符、去除字串頭部和尾部的空格。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${TrimLine} 輸出變量 字串</pre>
+
+<p><b>注意:</b> </p>
+
+<p><b>例子:</b></p>
+<pre>StrCpy $0 &quot;aaa$\r$\n&quot; 
+${TrimLine} $0
+; 結果: $0 = aaa</pre>
+
+<p><a name="E.5.2.9"></a></p>
+<h4>E.5.2.9 TrimLineEx            (需要聲明)</h4>
+<ul>
+<li>去除字串尾部的Enter換行符、字串前後的空格、製表符。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${TrimLineEx} 輸出變量 字串</pre>
+
+<p><b>注意:</b> </p>
+
+<p><b>例子:</b></p>
+<pre>StrCpy $0 &quot;aaa$\r$\n&quot; 
+${TrimLineEx} $0
+; 結果: $0 = aaa</pre>
+
+<p><a name="E.5.2.10"></a></p>
+<h4>E.5.2.10 Replace             (需要聲明)</h4>
+<ul>
+<li>字元串替換。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${Replace} 輸入(輸出)變量 要尋找的字串 要替換的字串</pre>
+
+<p><b>注意:</b> </p>
+
+<p><b>例子:</b></p>
+<pre>StrCpy $0 12345ff89 
+${Replace} $0 ff firefox
+; 結果: $0 = 12345firefox89</pre>
+
+<p><a name="E.5.2.11"></a></p>
+<h4>E.5.2.11 ReplaceEx           (需要聲明)</h4>
+<ul>
+<li>字元串替換。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${ReplaceEx} 輸入(輸出)變量 要尋找的字串 要替換的字串 字串開始偏移 替換多少次後返回 是否區分大小寫</pre>
+
+<p><b>注意:</b> <br />
+  &quot;是否區分大小寫&quot; 參數接受 ${TRUE} 或 ${FALSE} </p>
+
+<p><b>例子:</b></p>
+<pre>StrCpy $0 12345ff89 
+${ReplaceEx} $0 ff firefox 0 1 ${FALSE}
+; 結果: $0 = 12345firefox89</pre>
+
+<p><a name="E.5.2.12"></a></p>
+<h4>E.5.2.12 VerCmp              (需要聲明)</h4>
+<ul>
+<li>比較帶點的版本號。比如 1.90.2。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${VerCmp} 輸出變量 版本1 版本2</pre>
+
+<p><b>注意:</b> <br />
+  如果相等返回 0，如果 '版本1' 大於 '版本2' 則返回 1 ，否則返回 -1</p>
+
+<p><b>例子:</b></p>
+<pre>${VerCmp} $0 0.8.5 0.8.3
+; 結果: $0 = 1</pre>
+
+<p><a name="E.5.2.13"></a></p>
+<h4>E.5.2.13 StrCase             (需要聲明)</h4>
+<ul>
+<li>轉換字元大小寫。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${StrCase} 輸出變量 字串 大小寫類型</pre>
+
+<p><b>注意:</b> <br />
+  大小寫類型:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;- &quot;&quot; = 無轉換<br />
+&nbsp;&nbsp;&nbsp;&nbsp;- L = 全部小寫 (this is just an example. a very simple one.)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;- U = 全部大寫 (THIS IS JUST AN EXAMPLE. A VERY SIMPLE ONE.)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;- T = 單詞首字母大寫 (This Is Just An Example. A Very Simple One.)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;- S = 句子首字母大寫 (This is just an example. A very simple one.)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;- &lt;&gt; = 切換大小寫 (This is just an example. A very simple one.)<br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${StrCase} $0 &quot;This Is Just An Example&quot; U
+; 結果: $0 = THIS IS JUST AN EXAMPLE</pre>
+
+<p><a name="E.5.2.14"></a></p>
+<h4>E.5.2.14 StrToHex            (需要聲明)</h4>
+<ul>
+<li>把字元串轉換為十六進制 ASCII 編碼。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${StrToHex} 輸出變量 輸入字串</pre>
+
+<p><b>注意:</b> <br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${StrToHex} $0 &quot;a 20 你好&quot;
+; 結果: $0 = 6120323020C4E3BAC3</pre>
+
+<p><a name="E.5.2.15"></a></p>
+<h4>E.5.2.15 TrimRN</h4>
+<ul>
+<li>去除字串尾部的Enter換行符。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${TrimRN} 輸出(輸出)變量</pre>
+
+<p><b>注意:</b> <br />
+</p>
+
+<p><b>例子:</b></p>
+<pre>StrCpy $0 &quot;aaa$\r$\n&quot;
+; 結果: $0 = aaa</pre>
+
+<p><a name="E.5.2.16"></a></p>
+<h4>E.5.2.16 ConvertANSIToUTF8	(需要聲明)</h4>
+<ul>
+<li>把 ANSI 字元轉換為 UTF-8 字元。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${ConvertANSIToUTF8} 輸出 代碼頁 要轉換的字元</pre>
+
+<p><b>注意:</b> <br />
+要使用預設的代碼頁請使用 ${CP_ACP}，或者指定一個代碼頁，比如簡體中文 - 936、繁體中文 - 950<br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${ConvertANSIToUTF8} $0 936 &quot;中國&quot;
+; 結果: $0 的內碼為 E4B8ADE59BBD</pre>
+
+<p><a name="E.5.2.17"></a></p>
+<h4>E.5.2.17 ConvertUTF8ToANSI	(需要聲明)</h4>
+<ul>
+<li>把 UTF-8 字元轉換為 ANSI 字元。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${ConvertANSIToUTF8} 輸出 代碼頁 要轉換的字元</pre>
+
+<p><b>注意:</b> <br />
+要使用預設的代碼頁請使用 ${CP_ACP}，或者指定一個代碼頁，比如簡體中文 - 936、繁體中文 - 950<br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>&nbsp;</pre>
+
+<a name="E.5.3"></a>
+<h3>E.5.3 檔案、磁碟處理函數</h3>
+
+<p><a name="E.5.3.1"></a></p>
+<h4>E.5.3.1 GetParent           (需要聲明)</h4>
+<ul>
+<li>取得上層目錄。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${GetParent} 輸出變量 字串</pre>
+
+<p><b>注意:</b> <br />
+</p>
+
+<p><b>例子:</b></p>
+<pre>${GetParent} $0 &quot;C:\Windows\explorer.exe&quot;
+; 結果: $0 = C:\Windows</pre>
+
+<p><a name="E.5.3.2"></a></p>
+<h4>E.5.3.2 GetChild            (需要聲明)</h4>
+<ul>
+<li>取得同級名稱。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${GetChild} 輸出變量 字串</pre>
+
+<p><b>注意:</b> <br />
+</p>
+
+<p><b>例子:</b></p>
+<pre>${GetChild} $0 &quot;C:\Windows\explorer.exe&quot;
+; 結果: $0 = explorer.exe</pre>
+
+<p><a name="E.5.3.3"></a></p>
+<h4>E.5.3.3 GetFileExt          (需要聲明)</h4>
+<ul>
+<li>取得檔案的副檔名。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${GetFileExt} 輸出變量 字串</pre>
+
+<p><b>注意:</b> <br />
+</p>
+
+<p><b>例子:</b></p>
+<pre>${GetFileExt} $0 &quot;explorer.exe&quot;
+; 結果: $0 = exe</pre>
+
+<p><a name="E.5.3.4"></a></p>
+<h4>E.5.3.4 DumpLog             (需要聲明)</h4>
+<ul>
+<li>把安裝訊息視窗的訊息提取到檔案。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${DumpLog} 要寫入的檔案</pre>
+
+<p><b>注意:</b> <br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${DumpLog} &quot;C:\log.txt&quot;</pre>
+
+<p><a name="E.5.3.5"></a></p>
+<h4>E.5.3.5 AppendFile			(需要聲明)</h4>
+<ul>
+<li>把一個檔案的內容附加到另一個檔案。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${AppendFile} 源檔案 目標檔案</pre>
+
+<p><b>注意:</b> <br />
+</p>
+
+<p><b>例子:</b></p>
+<pre>${AppendFile} &quot;C:\log.txt&quot; &quot;D:\log.txt&quot;</pre>
+
+<p><a name="E.5.3.6"></a></p>
+<h4>E.5.3.6 DelFileByLog        (需要聲明)</h4>
+<ul>
+<li>根據 LogSet 指令的記錄刪除安裝過程中釋放的檔案。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${DelFileByLog} 記錄檔案</pre>
+
+<p><b>注意:</b> <br />
+</p>
+
+<p><b>例子:</b></p>
+<pre>${DelFileByLog} &quot;$INSDIR\install.log&quot;</pre>
+
+<p><a name="E.5.3.7"></a></p>
+<h4>E.5.3.7 RMDir               (需要聲明)</h4>
+<ul>
+<li>如果指定的檔案夾為空則刪除，並刪除所有空子檔案夾(遞歸)。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${RMDir} 檔案夾</pre>
+
+<p><b>注意:</b> <br />
+</p>
+
+<p><b>例子:</b></p>
+<pre>${RMDir} $INSTDIR</pre>
+
+<p><a name="E.5.3.8"></a></p>
+<h4>E.5.3.8 ForEachFile			(需要聲明)</h4>
+<ul>
+<li>對指定檔案夾下的檔案執行指定的回調函數。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${ForEachFile} 檔案夾 回調函數位置</pre>
+
+<p><b>注意:</b> <br />
+在回調函數中，堆棧頂儲存了要處理的檔案全路徑</p>
+
+<p><b>例子:</b></p>
+<pre>GetFunctionAddress $0 CallBackProc<br />${ForEachFile} $SYSDIR $0
+
+; 回調函數<br />Function CallBackProc<br />	Exch $R0<br />	DetailPrint $R0 ;或者其它處理指令<br />	Pop $R0 ;還原 $R0<br />FunctionEnd</pre>
+
+<p><a name="E.5.3.9"></a></p>
+<h4>E.5.3.9 ForEachFileEx		(需要聲明)</h4>
+<ul>
+<li>對指定檔案夾下的檔案執行指定的回調函數，和 ForEachFile 一樣，但是函數是遞歸的。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${ForEachFileEx} 檔案夾 回調函數位置</pre>
+
+<p><b>注意:</b> <br />
+在回調函數中，堆棧頂儲存了要處理的檔案全路徑</p>
+
+<p><b>例子:</b></p>
+<pre>GetFunctionAddress $0 CallBackProc<br />${ForEachFileEx} $SYSDIR $0
+
+; 回調函數<br />Function CallBackProc<br />	Exch $R0<br />	DetailPrint $R0 ;或者其它處理指令<br />	Pop $R0 ;還原 $R0<br />FunctionEnd</pre>
+
+<p><a name="E.5.3.10"></a></p>
+<h4>E.5.3.10 SearchFile			(需要聲明)</h4>
+<ul>
+<li>尋找檔案夾下的檔案(遞歸)。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${SearchFile} 尋找結果 檔案夾 檔案</pre>
+
+<p><b>注意:</b> <br />
+尋找結果返回找到的第一個匹配檔案全路徑名，找不到時返回空字串。不支援通配符</p>
+
+<p><b>例子:</b></p>
+<pre>${SearchFile} $0 &quot;$WINDIR&quot; &quot;shell32.dll&quot;</pre>
+
+<p><a name="E.5.3.11"></a></p>
+<h4>E.5.3.11 IsWritable</h4>
+<ul>
+<li>檢測檔案是否可寫，1 為可寫，0 為不可寫，-1 為檔案不存在。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${IsWritable} 輸出變量 測試檔案</pre>
+<p><b>注意:</b> <br />
+</p>
+
+<p><b>例子:</b></p>
+<pre>${IsWritable} $0 &quot;$WINDIR\explorer.exe&quot;</pre>
+
+<p><a name="E.5.3.12"></a></p>
+<h4>E.5.3.12 GetVolume</h4>
+<ul>
+<li>取得驅動器的卷標。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${GetVolume} 輸出變量 驅動器名</pre>
+
+<p><b>注意:</b> <br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${GetVolume} $0 &quot;C:\&quot;</pre>
+
+<p><a name="E.5.3.13"></a></p>
+<h4>E.5.3.13 TrimDir</h4>
+<ul>
+<li>如果目錄的最後有 \ 則去掉。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${TrimDir} 輸入(輸出)變量</pre>
+
+<p><b>注意:</b> <br />
+</p>
+
+<p><b>例子:</b></p>
+<pre>${TrimDir} $0 &quot;C:\&quot;
+; 結果: $0 = C:</pre>
+
+<p><a name="E.5.3.14"></a></p>
+<h4>E.5.3.14 FileTimeCmp</h4>
+<ul>
+<li>比較兩個檔案的時間戳(修改時間)。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${FileTimeCmp} 返回值 檔案1 檔案2</pre>
+
+<p><b>注意:</b> <br />
+  如果『檔案1』修改時間比『檔案2』早，返回 -1，相等則返回 0，遲則返回 1<br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>&nbsp;</pre>
+
+<p><a name="E.5.3.15"></a></p>
+<h4>E.5.3.15 GetFileSize</h4>
+<ul>
+<li>取得檔案大小。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${GetFileSize} 輸出變量 檔案</pre>
+
+<p><b>注意:</b> <br />
+  如果函數失敗，則返回 ${INVALID_FILE_SIZE}<br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${GetFileSize} $0 &quot;$WINDIR\explorer.exe&quot;</pre>
+
+<p><a name="E.5.3.16"></a></p>
+<h4>E.5.3.16 CompactPathEx</h4>
+<ul>
+<li>根據指定的數字截去中間的字元。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${CompactPathEx} 輸出變量 輸入 輸出的最大字元長度</pre>
+
+<p><b>注意:</b> <br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${CompactPathEx} $0 &quot;C:\Documents and Settings\會員名稱\Local Settings\Application Data\Microsoft\Internet Explorer&quot; 70
+; 結果: $0 = C:\Documents and Settings\會員名稱\Local Settings\...\Internet Explorer</pre>
+
+<p><a name="E.5.3.17"></a></p>
+<h4>E.5.3.17 RenameExtension</h4>
+<ul>
+<li>重命名檔案副檔名。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${RenameExtension} 輸入(輸出)變量 .副檔名</pre>
+
+<p><b>注意:</b> <br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>StrCpy $0 &quot;C:\TEST\sample.txt&quot;
+${RenameExtension} $0 &quot;.bin&quot;
+; 結果: $0 = C:\TEST\sample.bin</pre>
+
+<p><a name="E.5.3.18"></a></p>
+<h4>E.5.3.18 RelativePathTo</h4>
+<ul>
+<li>把絕對路徑轉換為相對路徑。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${RelativePathTo} 輸出變量 參考路徑 要轉換的路徑</pre>
+
+<p><b>注意:</b> <br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${RelativePathTo} $0 &quot;c:\a\b\path&quot; &quot;c:\a\x\y\file&quot;
+; 結果: $0 = ..\..\x\y\file</pre>
+
+<p><a name="E.5.3.19"></a></p>
+<h4>E.5.3.19 PathCanonicalize</h4>
+<ul>
+<li>把相對路徑轉換為絕對路徑。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${PathCanonicalize} 輸出變量 路徑</pre>
+
+<p><b>注意:</b> <br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${PathCanonicalize} $0 &quot;A:\name_1\.\name_2\..\name_3&quot;
+; 結果: $0 = A:\name_1\name_3</pre>
+
+<p><a name="E.5.3.20"></a></p>
+<h4>E.5.3.20 RemoveArgs</h4>
+<ul>
+<li>移除路徑裡的變量。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${RemoveArgs} 輸出(輸出)變量</pre>
+
+<p><b>注意:</b> <br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>StrCpy $0 &quot;c:\a\b\FileA Arg1 Arg2&quot;
+${RemoveArgs} $0
+; 結果: $0 = c:\a\b\FileA</pre>
+
+<p><a name="E.5.3.21"></a></p>
+<h4>E.5.3.21 CheckFileEncoding</h4>
+<ul>
+<li>根據 BOM (字元順序標誌) 取得檔案所使用的編碼。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${CheckFileEncoding} 輸出變量 檔案</pre>
+
+<p><b>注意:</b> <br />
+返回值為下列值之一<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${BOM_ANSI}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${BOM_EBCDIC}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${BOM_UCS4_LE}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${BOM_UCS4_BE}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${BOM_UTF16_BE}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${BOM_UTF16_LE}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${BOM_UNICODE_BE}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${BOM_UNICODE_LE} 或者 ${BOM_UNICODE}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${BOM_UTF8}</p>
+
+<p><b>例子:</b></p>
+<pre>&nbsp;</pre>
+
+<a name="E.5.4"></a>
+<h3>E.5.4 註冊表處理函數</h3>
+<p>註冊表函數的根鍵的有效值為下列之一<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${HKCU}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${HKLM}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${HKU}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${HKCR} <br />
+&nbsp;&nbsp;&nbsp;&nbsp;${HKPD}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${HKCC}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${HKDD} </p>
+<p><a name="E.5.4.1"></a></p>
+<h4>E.5.4.1 CopyReg             (需要聲明)</h4>
+<ul>
+<li>複製一個鍵下的值資料及子鍵資料到另一個鍵下(遞歸)。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${CopyReg} 源根鍵 源子鍵 目標根鍵 目標子鍵</pre>
+
+<p><b>注意:</b> <br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${CopyReg} ${HKCU} &quot;Software\Microsoft\Internet Explorer&quot; ${HKCU} &quot;Software\test&quot;</pre>
+
+<p><a name="E.5.4.2"></a></p>
+<h4>E.5.4.2 ReadRegBin          (需要聲明)</h4>
+<ul>
+<li>讀取一個二進制註冊表鍵值。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${ReadRegBin} 輸出變量 根鍵 子鍵 項</pre>
+<p><b>注意:</b> <br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${ReadRegBin} $0 ${HKLM} `SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Streams\Desktop` `Default Taskbar`</pre>
+
+<p><a name="E.5.4.3"></a></p>
+<h4>E.5.4.3 ReadRegMultiStr		(需要聲明)</h4>
+<ul>
+<li>讀取一個 REG_MULTI_SZ 類型的註冊表鍵值。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${ReadRegMultiStr} 根鍵 子鍵 項 回調函數位置</pre>
+
+<p><b>注意:</b> <br />
+在回調函數中堆棧頂儲存了該健的每一個值資料<br />
+錯誤等級: <br />
+&nbsp;&nbsp;&nbsp;&nbsp;1 不能開啟註冊表健<br />
+&nbsp;&nbsp;&nbsp;&nbsp;2 無法搜尋註冊表健<br />
+&nbsp;&nbsp;&nbsp;&nbsp;3 是 REG_MULTI_SZ 類型<br />
+&nbsp;&nbsp;&nbsp;&nbsp;4 值為空<br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>Section<br />GetFunctionAddress $0 CallBackProc<br />StrCpy $1 0<br />ClearErrors<br />${ReadRegMultiStr} ${HKLM} `SYSTEM\CurrentControlSet\Control\Session Manager`\<br />            `ObjectDirectories` $0<br />${If} ${Errors}<br />	GetErrorLevel $0<br />	DetailPrint $0<br />${Else}<br />    DetailPrint &quot;回調函數調用了 $1 次&quot;<br />${EndIf}<br />SectionEnd
+<br />Function CallBackProc<br />	Exch $R0<br />	DetailPrint $R0 ;在回調函數里你可以做其它的處理<br />	IntOp $1 $1 + 1<br />	Pop $R0<br />FunctionEnd</pre>
+
+<p><a name="E.5.4.4"></a></p>
+<h4>E.5.4.4 WriteRegBin         (需要聲明)</h4>
+<ul>
+<li>寫入一個二進制註冊表鍵值。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${WriteRegBin} 根鍵 子鍵 項 二進制資料(十六進制)</pre>
+
+<p><b>注意:</b> <br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${WriteRegBin} ${HKCU} `SOFTWARE\test` ffad61bc00</pre>
+
+<p><a name="E.5.4.5"></a></p>
+<h4>E.5.4.5 WriteRegStrW        (需要聲明)</h4>
+<ul>
+<li>根據指定的代碼頁寫入一個 Unicode 註冊表資料。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${WriteRegStrW} 代碼頁 根鍵 子鍵 項 資料</pre>
+
+<p><b>注意:</b> <br />
+Note that Unicode support on Windows Me/98/95 requires Microsoft Layer for Unicode.<br />
+在這裡 936 = 簡體中文代碼頁。(950 = 繁體中文代碼頁)<br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${WriteRegStrW} 936 ${HKCU} &quot;Software\測試&quot; &quot;簡體中文&quot; &quot;中國&quot;</pre>
+
+<p><a name="E.5.4.6"></a></p>
+<h4>E.5.4.6 SHCopyKey</h4>
+<ul>
+<li>複製一個鍵下的值資料及子鍵資料到另一個鍵下(遞歸)。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${SHCopyKey} 源根鍵 源子鍵 目標根鍵 目標子鍵</pre>
+
+<p><b>注意:</b> <br />
+使用 Shlwapi.dll 的 SHCopyKey 函數。如果函數失敗，則會放置一個錯誤標記<br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${SHCopyKey} ${HKCU} &quot;Software\Microsoft\Internet Explorer&quot; ${HKCU} &quot;Software\test&quot;</pre>
+
+<p><a name="E.5.4.7"></a></p>
+<h4>E.5.4.7 SHRegGetPath</h4>
+<ul>
+<li>從註冊表取得一個路徑，並把環境變量展開。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${SHRegGetPath} 輸出 根鍵 子鍵 值</pre>
+
+<p><b>注意:</b> <br />
+使用 Shlwapi.dll 的 SHRegGetPath 函數<br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${SHRegGetPath} $0 ${HKCU} &quot;Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders&quot; &quot;Templates&quot;</pre>
+
+<p><a name="E.5.4.8"></a></p>
+<h4>E.5.4.8 GetRegKeyCount</h4>
+<ul>
+<li>取得註冊表某個鍵下的子鍵個數。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${GetRegKeyCount} 輸出 根鍵 子鍵</pre>
+
+<p><b>注意:</b> <br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${GetRegKeyCount} $0 ${HKCU} &quot;Software\Microsoft\Internet Explorer&quot;</pre>
+
+<p><a name="E.5.4.9"></a></p>
+<h4>E.5.4.9 GetRegValueCount</h4>
+<ul>
+<li>取得註冊表某個鍵下的值個數。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${GetRegValueCount} 輸出 根鍵 子鍵</pre>
+
+<p><b>注意:</b> <br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${GetRegValueCount} $0 ${HKCU} &quot;Software\Microsoft\Internet Explorer\Main&quot;</pre>
+
+<a name="E.5.5"></a>
+<h3>E.5.5 雜項函數</h3>
+
+<p><a name="E.5.5.1"></a></p>
+<h4>E.5.5.1 CloseApp</h4>
+<ul>
+<li>根據類名關閉一個程式。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${CloseApp} 類名</pre>
+
+<p><b>注意:</b> <br />
+</p>
+
+<p><b>例子:</b></p>
+<pre>${CloseApp} &quot;Winamp v1.x&quot;</pre>
+
+<p><a name="E.5.5.2"></a></p>
+<h4>E.5.5.2 IsWinNT</h4>
+<ul>
+<li>Windows NT 平台返回 1 ，否則返回 0。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${IsWinNT} 輸出變量</pre>
+
+<p><b>注意:</b> <br />
+</p>
+
+<p><b>例子:</b></p>
+<pre>${IsWinNT} $0</pre>
+
+<p><a name="E.5.5.3"></a></p>
+<h4>E.5.5.3 GetComputerName</h4>
+<ul>
+<li>取得電腦名稱。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${GetComputerName} 輸出變量</pre>
+
+<p><b>注意:</b> <br />
+</p>
+
+<p><b>例子:</b></p>
+<pre>${GetComputerName} $0</pre>
+
+<p><a name="E.5.5.4"></a></p>
+<h4>E.5.5.4 GetInstallerName</h4>
+<ul>
+<li>取得安裝程式完整名稱。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${GetInstallerName} 輸出變量</pre>
+
+<p><b>注意:</b> <br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${GetInstallerName} $0</pre>
+
+<p><a name="E.5.5.5"></a></p>
+<h4>E.5.5.5 GetLocaleInfo</h4>
+<ul>
+<li>取得系統訊息。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${GetLocaleInfo} 輸出變量 訊息類型</pre>
+
+<p><b>注意:</b> <br />
+訊息類型參考 http://msdn.microsoft.com/library/default.asp?url=/library/en-us/intl/nls_8rse.asp<br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>&nbsp;</pre>
+
+<p><a name="E.5.5.6"></a></p>
+<h4>E.5.5.6 GetWinName</h4>
+<ul>
+<li>取得 Windows 產品名並返回。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${GetWinName} 輸出變量</pre>
+
+<p><b>注意:</b> <br />
+</p>
+
+<p><b>例子:</b></p>
+<pre>${GetWinName} $0 ;$0 = Microsoft Windows ME 等等</pre>
+
+<p><a name="E.5.5.7"></a></p>
+<h4>E.5.5.7 GetUserName</h4>
+<ul>
+<li>取得會員名稱。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${GetUserName} 輸出變量</pre>
+
+<p><b>注意:</b> <br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>&nbsp;</pre>
+
+<p><a name="E.5.5.8"></a></p>
+<h4>E.5.5.8 RefreshIcon</h4>
+<ul>
+<li>更新圖檔緩存。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${RefreshIcon}</pre>
+
+<p><b>注意:</b> <br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>&nbsp;</pre>
+
+<p><a name="E.5.5.9"></a></p>
+<h4>E.5.5.9 ClearDetail</h4>
+<ul>
+<li>清除詳細訊息視窗。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${ClearDetail}</pre>
+
+<p><b>注意:</b> <br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>&nbsp;</pre>
+
+<p><a name="E.5.5.10"></a></p>
+<h4>E.5.5.10 GetDllVersion</h4>
+<ul>
+<li>取得 DLL 版本訊息，x.x.x.x 格式。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${GetDllVersion} 輸出變量 DLL</pre>
+
+<p><b>注意:</b> <br />
+</p>
+
+<p><b>例子:</b></p>
+<pre>&nbsp;</pre>
+
+<p><a name="E.5.5.11"></a></p>
+<h4>E.5.5.11 LoadImage</h4>
+<ul>
+<li>載入一個圖檔、光標或位圖。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${LoadImage} 輸出圖檔句柄變量 控件句柄 圖檔名稱和路徑 圖檔類型</pre>
+<p><b>注意:</b> <br />
+  圖檔類型為下列之一:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${IMAGE_BITMAP}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${IMAGE_CURSOR}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${IMAGE_ICON}<br />
+使用後應該釋放它佔用的記憶體，調用下列函數<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Bitmap: DeleteObject<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Cursor: DestroyCursor<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Icon: DestroyIcon<br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>&nbsp;</pre>
+
+<p><a name="E.5.5.12"></a></p>
+<h4>E.5.5.12 DeleteObject</h4>
+<ul>
+<li>刪除載入的位圖佔用的記憶體。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${DeleteObject} 位圖句柄</pre>
+<p><b>注意:</b> <br />
+  使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>&nbsp;</pre>
+
+<p><a name="E.5.5.13"></a></p>
+<h4>E.5.5.13 DestroyCursor</h4>
+<ul>
+<li>刪除載入的光標佔用的記憶體。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${DestroyCursor} 光標句柄</pre>
+<p><b>注意:</b> <br />
+  使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>&nbsp;</pre>
+
+<p><a name="E.5.5.14"></a></p>
+<h4>E.5.5.14 DestroyIcon</h4>
+<ul>
+<li>刪除載入的圖檔佔用的記憶體。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${DestroyIcon} 圖檔句柄</pre>
+<p><b>注意:</b> <br />
+  使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>&nbsp;</pre>
+
+<p><a name="E.5.5.15"></a></p>
+<h4>E.5.5.15 MessageBox</h4>
+<ul>
+<li>和內建的一樣，但可以自己定義標題。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${MessageBox} 返回值 文字 標題 消息框類型</pre>
+<p><b>注意:</b> <br />
+  消息框類型為下列值之一或聯合<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${MB_OK}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${MB_OKCANCEL}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${MB_ABORTRETRYIGNORE}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${MB_YESNOCANCEL}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${MB_YESNO}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${MB_RETRYCANCEL}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${MB_ICONHAND}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${MB_ICONQUESTION}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${MB_ICONEXCLAMATION}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${MB_ICONASTERISK}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${MB_ICONINFORMATION}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${MB_ICONSTOP}<br />
+返回值為下列之一<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${IDOK}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${IDCANCEL}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${IDABORT}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${IDRETRY}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${IDIGNORE}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${IDYES}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${IDNO}<br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>&nbsp;</pre>
+
+<p><a name="E.5.5.16"></a></p>
+<h4>E.5.5.16 WriteEnvStr         (需要聲明)</h4>
+<ul>
+<li>寫入一個環境變量字串。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${WriteEnvStr} 變量名 變量值 用戶類型</pre>
+<p><b>注意:</b> <br />
+  用戶類型為下列值之一(僅在 WinNT 平台有效，Win9X 此參數將被忽略)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${CURRENT_USER} - 僅對目前用戶<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${LOCAL_MACHINE} - 對本地用戶<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${ALL_USERS} - 以上兩項的聯合( ${ALL_USERS} == ${CURRENT_USER} | ${LOCAL_MACHINE} )<br />
+Win9X 設定了環境變量後需要重啟才能生效。Win9X 中可能還需要用 GetFullPathName /SHORT 來取得 8.3 格式短路徑名<br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${WriteEnvStr} PATH &quot;C:\path&quot; ${ALL_USERS}</pre>
+
+<p><a name="E.5.5.17"></a></p>
+<h4>E.5.5.17 DeleteEnvStr         (需要聲明)</h4>
+<ul>
+<li>移除一個環境變量字串。</li>
+</ul>
+
+<p><b>語法:</b></p>
+<pre>${DeleteEnvStr} 變量名 變量值 用戶類型</pre>
+<p><b>注意:</b> <br />
+  用戶類型為下列值之一(僅在 WinNT 平台有效，Win9X 此參數將被忽略)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${CURRENT_USER} - 僅對目前用戶<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${LOCAL_MACHINE} - 對本地用戶<br />
+&nbsp;&nbsp;&nbsp;&nbsp;${ALL_USERS} - 以上兩項的聯合( ${ALL_USERS} == ${CURRENT_USER} | ${LOCAL_MACHINE} )<br />
+Win9X 設定了環境變量後需要重啟才能生效。Win9X 中可能還需要用 GetFullPathName /SHORT 來取得 8.3 格式短路徑名<br />
+使用了 System 插件</p>
+
+<p><b>例子:</b></p>
+<pre>${DeleteEnvStr} PATH &quot;C:\path&quot; ${ALL_USERS}</pre>
+
+<p><a href='SectionE.4.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='AppendixF.html'>下一頁</a></p>
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionE.5.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+</html>

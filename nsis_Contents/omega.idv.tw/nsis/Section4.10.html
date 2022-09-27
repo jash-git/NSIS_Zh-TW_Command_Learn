@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.10.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+<head>
+<title>多語言</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8"></head>
+
+<body>
+<p><a href='Section4.9.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.11.html'>下一頁</a></p>
+<a name="4.10"></a>
+<h2>4.10 多語言</h2>
+
+<p>作為 2 版本的 NSIS 已經完全支援了多語言。一個安裝程式的介面可以支援多語言。</p>
+
+<p>對所有的語言使用 <a href="Section4.9.html#4.9.15.1">LoadLanguageFile</a> 來載入預設的介面文字和語言屬性。</p>
+
+<p>預設的介面文字可以很容易的使用指令比如 <a href="Section4.8.html#4.8.1.11">ComponentText</a> 等來更改。</p>
+
+<p>你也可以在你自己的字串裡使用標準語言字串的內容 (例如，$(^Name) 包含了 <a href="Section4.8.html#4.8.1.30">Name</a> 指令設定的安裝程式名稱)。所有標準語言字串的名稱作為註釋列表於語言檔案字串的上方。 語言檔案在 <a href="#" onclick="parser('../Contrib/Language files')">Contrib\Language Files</a>。</p>
+
+<p>要建立你自己的語言字串，請使用 <a href="Section4.9.html#4.9.15.2">LangString</a>。</p>
+
+<p>使用多語言的一個安裝程式例子，請看 <a href="#" onclick="parser('../Examples/languages.nsi')">languages.nsi</a>。</p>
+<a name="4.10.1"></a>
+<h3>4.10.1 語言的選擇</h3>
+
+<p>當安裝程式啟動時按如下步驟選擇介面語言:</p>
+<ol>
+<li>取得用戶的預設 Windows 語言</li>
+<li>尋找一個最佳匹配的語言</li>
+<li>如果沒有最佳匹配的，則尋找第一個匹配的語言</li>
+<li>如果沒有匹配的，使用腳本裡定義的第一個語言 (確認你的第一個語言是一個通用的語言，比如英語)</li>
+<li>如果語言變量 <a href="Section4.2.html#4.2.3">$LANGUAGE</a> 在 .onInit 被更改，NSIS 將重新進行步驟 2 到 4。</li>
+</ol>
+<a name="4.10.2"></a>
+<h3>4.10.2 LangDLL 插件</h3>
+
+<p>LangDLL 插件允許用戶為安裝程式選擇語言。只需要把語言 ID (${LANG_langfile})和它在所有語言中的名稱壓入堆棧，然後再壓入語言的數量，視窗標題，要提示用戶選擇語言的文字，調用插件的 LangDialog 函數，彈出返回值到 $LANGUAGE，然後你便可以繼續。如果用戶按這裡了取消按鈕，則返回值就是 cancel。</p>
+
+<p>使用多語言的一個安裝程式例子，請看 <a href="#" onclick="parser('../Examples/languages.nsi')">languages.nsi</a>。</p>
+<a name="4.10.3"></a>
+<h3>4.10.3 RTL 語言</h3>
+
+<p>RTL 語言是從右至左書寫的語言(如 Arabic和 Hebrew)。NSIS 完整支援 RTL 語言。在語言檔案裡有一個地方來指定該語言是否 RTL 語言。要在運行時檢測目前是否 RTL 語言只需要檢測 $(^RTL) 語言字串的值。如果語言是 RTL 則為 1，否則為 0。這在使用插件來建立對話時非常有用，他們通常都有 RTL 設定。</p>
+<p><a href='Section4.9.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.11.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.10.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+</html>

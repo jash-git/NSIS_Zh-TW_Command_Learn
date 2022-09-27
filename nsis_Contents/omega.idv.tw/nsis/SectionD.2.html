@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionD.2.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+<head>
+<title>新增卸載訊息到新增刪除面板</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='SectionD.1.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionD.3.html'>下一頁</a></p>
+<a name="D.2"></a><h2>D.2 新增卸載訊息到新增刪除面板</h2>
+
+<p> 在 HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall 下建立一個以你的產品名為名的項，就可以向控制面板中的新增/刪除程式新增一個項目。對於 Windows NT (NT4/2000/XP)，可能還要在 HKCU 下建立項，而且這將只能顯示給目前用戶。這裡有許多可以寫入關於你的應用程式和卸載程式的訊息的值項。可以通過 WriteRegStr 或是 WriteRegDWORD 命令寫入一個值。例如:</p>
+<pre>WriteRegStr HKLM &quot;Software\Microsoft\Windows\CurrentVersion\Uninstall\Product&quot; &quot;DisplayName&quot; &quot;Application Name&quot;
+</pre>
+
+<p>必需值 </p>
+
+<p>DisplayName （字元串）- 應用程式的名稱 <br />
+  UninstallString （字元串）- 卸載程式的路徑和檔案名稱。你應該給路徑加上引號，以確保路徑中的空格不會使 Windows 找不到卸載程式。 </p>
+<p>可選值 </p>
+<p>以下某些值將不會被舊版本的 Windows 支援。 </p>
+<p>InstallLocation （字元串）- 安裝目錄 ($INSTDIR) <br />
+  DisplayIcon （字元串）- 顯示在你的應用程式名稱旁邊的圖檔的路徑，檔案名稱和索引。 </p>
+<p>Publisher （字元串）- 發表者（或公司）的名稱 </p>
+<p>ModifyPath （字元串）- 應用程式的修復程式的路徑和檔案名稱。 <br />
+  InstallSource （字元串）- 應用程式的安裝路徑。 </p>
+<p>ProductID （字元串）- 應用程式的產品 ID。 <br />
+  RegOwner （字元串）- 應用程式的註冊擁有者。 <br />
+  RegCompany （字元串）- 應用程式的註冊公司。 </p>
+<p>HelpLink （字元串）- 技術支援的網站連結。 <br />
+  HelpTelephone （字元串）- 技術支援電話。 </p>
+<p>URLUpdateInfo （字元串）- 應用程式的線上更新網址連結。 <br />
+  URLInfoAbout （字元串）- 應用程式的網頁連結。 </p>
+<p>DisplayVersion （字元串）- 應用程式的顯示版本。 <br />
+  VersionMajor （DWORD）- 應用程式的主版本號。 <br />
+  VersionMinor （DWORD）- 應用程式的副版本號。 </p>
+<p>NoModify （DWORD）- 1 （如果卸載程式沒有修改應用程式的選項） <br />
+  NoRepair （DWORD）- 1 （如果卸載程式沒有修復安裝程式的選項） </p>
+<p>如果 NoModify 和 NoRepair 都被設為 1, 那麼按鈕將會用 刪除 來代替 修改/刪除。 </p>
+<p><a href='SectionD.1.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionD.3.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionD.2.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+</html>

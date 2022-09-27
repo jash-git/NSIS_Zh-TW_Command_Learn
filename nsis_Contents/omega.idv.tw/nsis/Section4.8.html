@@ -1,0 +1,505 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.8.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+<head>
+<title>安裝程式屬性</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='Section4.7.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.9.html'>下一頁</a></p>
+<a name="4.8"></a>
+<h2>4.8 安裝程式屬性</h2>
+<a name="4.8.1"></a>
+<h3>4.8.1 慣用屬性</h3>
+
+<p>下面的所有命令都是調整安裝程式屬性的。這些屬性控制安裝程式的外觀和函數、包括哪個頁面出現在安裝程式裡、在每個頁面的每個部分顯示什麼文字、安裝程式的名稱、使用什麼樣的圖檔、預設安裝目錄、取消什麼樣的檔案還有更多。注意這些屬性可以在除了區段和函數以外的任何地方設定。</p>
+
+<p><b><u>描黑並加下標線的為預設值</u></b></p>
+<a name="4.8.1.1"></a><h4>4.8.1.1 AddBrandingImage</h4>
+<pre>(left|right|top|bottom) (寬|高) [填充]
+</pre>
+
+<p>在安裝程式頂部、底部、左邊、右邊新增一個標誌圖檔。它的大小將由指定的寬/高、安裝程式的寬/高和安裝程式字型確定。最終的大小不一定就是你需要的，請看輸出命令來得到實際大小。因為這取決於安裝程式字型，所以你應該在 AddBrandingImage 前使用 SetFont。預設的填充值為 2。</p>
+<pre>AddBrandingImage left 100
+AddBrandingImage right 50
+AddBrandingImage top 20
+AddBrandingImage bottom 35
+AddBrandingImage left 100 5
+</pre>
+<a name="4.8.1.2"></a><h4>4.8.1.2 AllowRootDirInstall</h4>
+<pre>true|<b>false</b>
+</pre>
+
+<p>控制是否允許安裝在驅動器根目錄，或者共享網絡。把它設為 true 可以改變這個安全行為，此安全行為可以防止用戶選擇 C:\ 或 \\Server\Share 來作為安裝(或卸載)目錄。對於另外的可定制的目錄選擇頁面，請看 <a href="Section4.7.html#4.7.2.1.10">.onVerifyInstDir</a>。</p>
+<a name="4.8.1.3"></a><h4>4.8.1.3 AutoCloseWindow</h4>
+<pre>true|<b>false</b>
+</pre>
+
+<p>設定當安裝完成的時候視窗是否自動關閉。該屬性可以不理會一個使用了 <a href="Section4.9.html#4.9.14.11">SetAutoClose</a> 的區段。</p>
+<a name="4.8.1.4"></a><h4>4.8.1.4 BGFont</h4>
+<pre>[字型名稱 [字型高度 [字型寬度] [/ITALIC] [/UNDERLINE] [/STRIKE]]]
+</pre>
+
+<p>指定用於背景漸變顯示文字的字型。要設定顏色請使用 <a href="Section4.8.html#4.8.1.5">BGGradient</a>。如果沒有指定參數，則使用預設的字型。預設字型為粗斜體的 Times New Roman。</p>
+<a name="4.8.1.5" id="4.8.1.5"></a>
+<h4>4.8.1.5 BGGradient</h4>
+<pre>[<b>off</b>|(頂部顏色 底部顏色 [文字顏色|notext])]
+</pre>
+
+<p>指定是否使用一個漸變的背景視窗。如果為 off ，安裝程式將不顯示背景視窗，如果無指定參數，則使用預設的黑藍漸變，或者指定頂部顏色或底部顏色來得到一個漸變的背景。頂部顏色和底部顏色使用 RRGGBB 格式(十六進制，就像 HTML 那樣，但略去了 #，因為 # 用於註釋)。你也可以指定「文字顏色」，該顏色會顯示 Name 所指定的名稱在左上角，或者你不需要文字時使用 notext 來關閉文字顯示。</p>
+<a name="4.8.1.6" id="4.8.1.6"></a>
+<h4>4.8.1.6 BrandingText</h4>
+<pre>/TRIM(LEFT|RIGHT|CENTER) 文字</pre>
+
+<p>設定顯示在安裝程式視窗底部的文字(預設為「Nullsoft Install System vX.XX」)。如果設為空字串(&quot;&quot;)則使用預設值；設為&quot; &quot;(一個空格)則顯示空白。如果你不知道哪個適合你，那就保留預設值吧，這樣可以使每個人知道你使用的 NSIS 版本。使用 /TRIMLEFT、/TRIMRIGHT 或 /TRIMCENTER 來裁剪控制大小到字串大小。</p>
+
+<p>接受變量。如果使用了變量，使用的變量應該在 <a href="Section4.7.html#4.7.2.1.2">.onInit</a> 被初始化。</p>
+<a name="4.8.1.7" id="4.8.1.7"></a>
+<h4>4.8.1.7 Caption</h4>
+<pre>標題</pre>
+
+<p>當使用一個外部的 <a href="Section4.5.html#4.5.6">PageEx</a> 區塊:設定安裝程式標題條文字。當使用了 <a href="Section4.8.html#4.8.1.30">Name</a> 指令指定了名稱時預設為「$(^Name) 安裝」。你可以把它替換為「我的安裝程式」或其他。如果你指定為空字串(&quot;&quot;)，則使用預設值(你也可以指定為&quot; &quot;來使用一個空白字串)。</p>
+
+<p>當使用一個內部的 <a href="Section4.5.html#4.5.6">PageEx</a> 區塊:設定目前頁面的子標題。</p>
+<p>接受變量。如果使用了變量，使用的變量應該在 <a href="Section4.7.html#4.7.2.1.2">.onInit</a> 被初始化。</p>
+<a name="4.8.1.8" id="4.8.1.8"></a>
+<h4>4.8.1.8 ChangeUI</h4>
+<pre>對話框 ui_file.exe
+</pre>
+
+<p>使用 ui_file.exe 裡相同資源 ID 的一個對話框替換對話框(<em>IDD_LICENSE</em>、<em>IDD_DIR</em>、<em>IDD_SELCOM</em>、<em>IDD_INST</em>、<em>IDD_INSTFILES</em>、<em>IDD_UNINST</em> 或 <em>IDD_VERIFY</em>)。你也可以指定 all 作為一個對話框，當你想從同一個 UI 檔案裡一次載入替換全部 7 個對話框時。一些 UI 的例子請看位於 NSIS 目錄下的 Contrib\UIs。</p>
+<ul>
+<li><em>IDD_LICENSE</em> 必須包含<em> IDC_EDIT1</em> (RICHEDIT 控件)。</li>
+<li><em>IDD_DIR</em> 必須包含 <em>IDC_DIR</em> (編輯框)，<em>IDC_BROWSE</em> (按鈕) 和 <em>IDC_CHECK1</em> (選擇框)。</li>
+<li><em>IDD_SELCOM</em> 必須包含 <em>IDC_TREE1</em> (SysTreeView32 control)，和 <em>IDC_COMBO1</em> (組合框)。</li>
+<li><em>IDD_INST</em> 必須包含 <em>IDC_BACK</em> (按鈕)，<em>IDC_CHILDRECT</em> (靜態控制其他所有對話大小)，<em>IDC_VERSTR</em> (靜態文字框)，<em>IDOK</em> (按鈕)，和 <em>IDCANCEL</em> (按鈕)。如果該對話框有一個圖像控件(靜態 <em>SS_BITMAP</em> 樣式)，那麼它將被用於 SetBrandingImage 作為預設值。</li>
+<li><em>IDD_INSTFILES</em> 必須包含 <em>IDC_LIST1</em> (SysListView32 控件), <em>IDC_PROGRESS</em> (msctls_progress32 控件)，和 <em>IDC_SHOWDETAILS</em> (按鈕)。</li>
+<li><em>IDD_UNINST</em> 必須包含 <em>IDC_EDIT1</em> (編輯框)。</li>
+<li><em>IDD_VERIFY</em> 必須包含 <em>IDC_STR</em> (靜態文字框)。</li>
+</ul>
+<pre>ChangeUI all &quot;${NSISDIR}\Contrib\UIs\sdbarker_tiny.exe&quot;
+</pre>
+<a name="4.8.1.9" id="4.8.1.9"></a>
+<h4>4.8.1.9 CheckBitmap</h4>
+<pre>bitmap.bmp
+</pre>
+
+<p>指定一個位圖為用於組件選擇頁面樹形列表選擇框的圖檔。</p>
+
+<p>該位圖應該為 96x16 像素大小，不能多於 8 位位深(256 色)且包括六個用於不同狀態(次序為: 鼠標按這裡反白邊緣、未選時、已選時、子區段未選時、未選且只讀、已選且只讀)的 16x16 圖檔。使用粉紅色為覆蓋顏色(該區域實際時為透明)。</p>
+<a name="4.8.1.10" id="4.8.1.10"></a>
+<h4>4.8.1.10 CompletedText</h4>
+<pre>文字</pre>
+
+<p>當指定了參數時替換在安裝結束時的預設文字(&quot;完成&quot;)。否則，使用預設值。</p>
+
+<p>接受變量。如果使用了變量，使用的變量必須在文字輸出之前初始化。</p>
+<a name="4.8.1.11" id="4.8.1.11"></a>
+<h4>4.8.1.11 ComponentText</h4>
+<pre>[文字 [子文字] [子文字2]]
+</pre>
+
+<p>用來更改組件選擇頁面的預設文字。</p>
+
+<p>文字: 控件上的文字，到安裝圖檔的右邊。</p>
+
+<p>子文字: 安裝類型選擇控件的文字。</p>
+
+<p>子文字2: 安裝類型選擇控件下面、組件列表左邊的文字。</p>
+
+<p>如果字串為空(&quot;&quot;)則使用預設文字。</p>
+
+<p>接受變量。如果使用了變量，使用的變量必須在建立組件選擇頁面之前被初始化。</p>
+<a name="4.8.1.12" id="4.8.1.12"></a>
+<h4>4.8.1.12 CRCCheck</h4>
+<pre><b>on</b>|off|force
+</pre>
+
+<p>指定安裝前安裝程式是否對自身執行一個 CRC。注意，如果用戶使用了 /NCRC 命令行參數，且你沒有指定 force 參數時，不會執行 CRC，這樣有可能導致用戶安裝一個損壞的安裝程式。</p>
+<a name="4.8.1.13" id="4.8.1.13"></a>
+<h4>4.8.1.13 DetailsButtonText</h4>
+<pre>show details text
+</pre>
+
+<p>指定參數時替換預設詳細訊息按鈕文字「顯示細節」，未指定參數時使用預設值。</p>
+<p>接受變量。如果使用了變量，使用的變量必須在安裝頁面 (instfiles) 之前被初始化。</p>
+<a name="4.8.1.14" id="4.8.1.14"></a>
+<h4>4.8.1.14 DirText</h4>
+<pre>[文字] [子文字] [瀏覽按鈕文字] [瀏覽對話框文字]
+</pre>
+
+<p>用來更改目錄選擇頁面的預設文字。</p>
+
+<p>文字: 控件上面的文字，右延至安裝圖檔。</p>
+
+<p>子文字: 在目錄選擇框架上的文字。</p>
+
+<p>瀏覽按鈕文字: 瀏覽按鈕上的文字。</p>
+
+<p>瀏覽對話框文字: 在按這裡「瀏覽」按鈕後「瀏覽目錄」對話框上的文字。</p>
+
+<p>如果字串為空(&quot;&quot;)則使用預設文字。</p>
+<p>接受變量。如果使用了變量，使用的變量必須在建立目錄選擇頁面之前被初始化。</p>
+<a name="4.8.1.15" id="4.8.1.15"></a>
+<h4>4.8.1.15 DirVar</h4>
+<pre>用戶變量(目錄輸入輸出)
+</pre>
+
+<p>指定用哪個變量來儲存所選的目錄。該變量也會儲存預設值。這樣可以很方便的建立兩個不同的目錄選擇頁面而不需要頻繁的讀取、寫入 $INSTDIR。預設的變量為 $INSTDIR。它只能用於 <a href="Section4.5.html#4.5.6">PageEx</a> 來確定目錄變量和 uninstConfirm 頁面。</p>
+<pre>Var ANOTHER_DIR
+PageEx directory
+  DirVar $ANOTHER_DIR
+PageExEnd
+
+Section
+  SetOutPath $INSTDIR
+  File &quot;a file.dat&quot;
+  SetOutPath $ANOTHER_DIR
+  File &quot;another file.dat&quot;
+SectionEnd
+</pre>
+<a name="4.8.1.16" id="4.8.1.16"></a>
+<h4>4.8.1.16 DirVerify</h4>
+<pre><b>auto</b>|leave
+</pre>
+
+<p>如果使用了 DirVerify leave ，則當安裝目錄無效或磁碟空間不夠用時下一步按鈕將會被禁止並且你可以在離開函數里使用 <a href="Section4.9.html#4.9.7.2">GetInstDirError</a> 來讀取被設定的標記。</p>
+<pre>PageEx directory
+  DirVerify leave
+  PageCallbacks &quot;&quot; &quot;&quot; dirLeave
+PageExEnd
+</pre>
+<a name="4.8.1.17" id="4.8.1.17"></a>
+<h4>4.8.1.17 FileErrorText</h4>
+<pre>檔案錯誤文字</pre>
+
+<p>替換當檔案不能寫入時顯示的預設文字。該文字可以包含一個代表檔案名稱的 $0($0 會被臨時更改為該值)。例如: &quot;檔案 $0$\r$\n不能寫入$\r$\n祝你下次好運。&quot;。</p>
+<p>接受變量。如果使用了變量，使用的變量必須在使用 <a href="Section4.9.html#4.9.1.5">File</a> 指令之前被初始化。</p>
+<a name="4.8.1.18" id="4.8.1.18"></a>
+<h4>4.8.1.18 Icon</h4>
+<pre>[路徑\]圖檔檔案.ico
+</pre>
+
+<p>設定安裝程式的圖檔。在圖檔檔案裡的每一個圖檔將會被包含在安裝程式裡。注意，如果你新增了卸載程式，那麼圖檔檔案裡的和卸載程式圖檔檔案對應的每一個圖檔必須有相同的容量大小和顏色位深。圖檔檔案裡的次序也要匹配。例如，如果安裝程式圖檔檔案有三個圖檔，第一個圖檔為 32x32 像素 8bpp，第二個圖檔為 16x16 像素 8bpp，第三個圖檔為 8x8 像素 8bpp，那麼卸載程式圖檔檔案必須也有三個圖檔，且這三個圖檔的大小、顏色位深和次序都要相同。要指定卸載程式的圖檔請使用 <a href="Section4.8.html#4.8.1.41">UninstallIcon</a>。</p>
+<a name="4.8.1.19" id="4.8.1.19"></a>
+<h4>4.8.1.19 InstallButtonText</h4>
+<pre>安裝按鈕文字</pre>
+
+<p>如果指定了參數，則會把預設的「安裝」按鈕文字替換為你指定的文字。</p>
+<p>接受變量。如果使用了變量，使用的變量必須在安裝按鈕顯示之前被初始化。</p>
+<a name="4.8.1.20" id="4.8.1.20"></a>
+<h4>4.8.1.20 InstallColors</h4>
+<pre>/windows | (前景色 背景色)
+</pre>
+
+<p>設定安裝訊息螢幕顏色(預設為 00FF00 000000)。使用 RRGGBB 格式(十六進制，就像 HTML 那樣，但略去了 #，因為 # 用於註釋)。注意如果指定了 /windows 作為唯一的參數，將使用預設的 Windows 顏色。</p>
+<a name="4.8.1.21" id="4.8.1.21"></a>
+<h4>4.8.1.21 InstallDir</h4>
+<pre>預設安裝目錄</pre>
+
+<p>設定預設的安裝目錄。觀看<a href="Section4.2.html#4.2">變量</a>一節得到可用於該字串的變量(尤其是 $PROGRAMFILES)。注意該字串中最後一個 \ 後面的部分會被保留，當用戶在安裝時選擇「瀏覽」並取得新的目錄字串時，該部分會自動附加在後面(要禁止該行為你需要在目錄字串後面新增一個額外的 \ ，但是你要使用引號把目錄字串括起來以避免被認為是斷行處理)。如果沒有起作用的話，還是使用瀏覽按鈕吧。</p>
+<a name="4.8.1.22" id="4.8.1.22"></a>
+<h4>4.8.1.22 InstallDirRegKey</h4>
+<pre>根鍵 子鍵 鍵名</pre>
+
+<p>該屬性讓安裝程式去檢測一註冊表裡的一個字串，如果該字串可用那麼把它用來作為安裝目錄。如果預置了該屬性，當指定的註冊表鍵可用時它會越過 InstallDir 指定的字串，否則使用預設的 InstallDir 指定值。搜尋註冊表時，該命令將自動截去引號(如 &quot;C:\program files\poop&quot; &quot;%1&quot; ，可得到 C:\program files\poop )。如果該字串以 .exe 結尾，它還會自動移去字串裡的檔案名稱部分(如 C:\program files\poop\poop.exe ，將得到 C:\program files\poop )。對於更多高級的安裝目錄配置，可在 .onInit 函數里設定  $INSTDIR。[譯者注: 事實上它還可以自動截取如 &quot;C:\program files\poop\poop.exe&quot; &quot;%1&quot; 而得到 C:\program files\poop ，這樣你只要知道了某個程式關聯的檔案類型，就可以直接用它獲得該程式的安裝目錄。比如 <em>InstallDirRegKey HKCR &quot;FlashGet.Document\shell\open\command&quot; &quot;&quot;</em>  &nbsp;即可獲得網際快車的安裝目錄] </p>
+<a name="4.8.1.23" id="4.8.1.23"></a>
+<h4>4.8.1.23 InstProgressFlags</h4>
+<pre>[標記 [...]]
+</pre>
+
+<p>有效的標記值為 smooth (平滑進度條)或 colored (把進度條著色為 InstallColors 設定的顏色)。例如: InstProgressFlags (預設老式 Windows 外觀)， InstProgressFlags smooth (新式平滑外觀)， InstProgressFlags smooth colored (新式平滑外觀並著色)。注意: 當安裝程式運行在 Windows XP 且使用了新式主題時 smooth 或 colored 都不能與 <a href="Section4.8.html#4.8.1.45">XPStyle</a> on 共用。</p>
+<a name="4.8.1.24" id="4.8.1.24"></a>
+<h4>4.8.1.24 InstType</h4>
+<pre>安裝類型名稱 | /NOCUSTOM | /CUSTOMSTRING=字串 | /COMPONENTSONLYONCUSTOM
+</pre>
+
+<p>把一個安裝類型新增到安裝類型列表裡，或禁止自定義安裝類型。最多可以增加到 32 類，每一個類型都需要指定安裝類型名稱。如果以 un. 作前綴那麼它就是一個卸載程式安裝類型。你可以使用在運行時可以處理的用戶變量而不是難以改變的代碼來作為安裝類型名稱，這樣你可以動態的改變安裝類型的名稱。另一個在運行時更改 InstType 名稱的方法是 <a href="Section4.9.html#4.9.13.11">InstTypeSetText</a> 命令。所不同的是使用 <a href="Section4.9.html#4.9.13.11">InstTypeSetText</a> 你可以保留你自己寶貴的用戶變量。第一個類型為預設類型(通常為「慣用」)。每一個類型都是已編號的，從 1 開始。觀看 SectionIn 可以知道這些編號怎麼使用。如果指定了 /NOCUSTOM 開關，那麼「自定義」類型就會被禁止，那麼用戶就必須選擇一個已經定義的安裝類型。作為選擇，如果指定了 /CUSTOMSTRING 開關，那麼該開關的參數將會替代「自定義」安裝類型文字。作為選擇，如果指定了 /COMPONENTSONLYONCUSTOM 標記，那麼組件列表僅在選擇了「自定義」安裝類型的時候才顯示。</p>
+<p>安裝類型名稱接受變量。如果使用了變量，使用的變量必須在建立組件頁面之前被初始化。</p>
+<a name="4.8.1.25" id="4.8.1.25"></a>
+<h4>4.8.1.25 LicenseBkColor</h4>
+<pre>顏色 | <b>/gray</b> | /windows
+</pre>
+
+<p>設定許可協議資料的背景顏色。顏色使用 RRGGBB 格式(十六進制，就像 HTML 那樣，但略去了 #，因為 # 用於註釋)。預設為 /gray 。你也可以使用 /windows 來使用 Windows 作業系統定義的顏色。</p>
+<a name="4.8.1.26" id="4.8.1.26"></a>
+<h4>4.8.1.26 LicenseData</h4>
+<pre>許可檔案.(txt|rtf)
+</pre>
+
+<p>指定一個用戶讀取許可協議的文字檔案或 RTF 檔案。如果沒有許可協議需要顯示那麼可以忽略它。注意該檔案必須是 DOS 文字格式(\r\n)。要定義多語言許可協議請使用 <a href="Section4.9.html#4.9.15.3">LicenseLangString</a>。</p>
+
+<p>如果你使用 RTF 檔案來顯示許可協議推薦使用寫字板來編輯 RTF 檔案而不是使用微軟的 Word。使用寫字板可以得到更小的檔案。</p>
+<p>你可以使用 <a href="Section4.9.html#4.9.15.3">LicenseLangString</a> 來給每一種語言顯示一個許可協議。</p>
+<a name="4.8.1.27" id="4.8.1.27"></a>
+<h4>4.8.1.27 LicenseForceSelection</h4>
+<pre>(checkbox [接受文字] | radiobuttons [接受文字] [拒絕文字] | <b>off</b>)
+</pre>
+
+<p>指定顯示的許可協議是否必須被接受。可以使用單選框或互斥按鈕的形式。預設情況下「下一步」按鈕是禁止的並且只能在鉤選了單選框選擇了正確的互斥按鈕後才可以進入下一步。如果指定了 off 則預設情況下「下一步：按鈕是可用的。</p>
+<pre>LicenseForceSelection checkbox
+LicenseForceSelection checkbox &quot;我接受&quot;
+LicenseForceSelection radiobuttons
+LicenseForceSelection radiobuttons &quot;我接受&quot;
+LicenseForceSelection radiobuttons &quot;我接受&quot; &quot;我不接受&quot;
+LicenseForceSelection radiobuttons &quot;&quot; &quot;我不接受&quot;
+LicenseForceSelection off
+</pre>
+<a name="4.8.1.28" id="4.8.1.28"></a>
+<h4>4.8.1.28 LicenseText</h4>
+<pre>[文字 [按鈕文字]]
+</pre>
+
+<p>用來更改許可協議頁面的預設文字。</p>
+
+<p>文字: 控件上方的文字，右延至安裝圖檔。</p>
+
+<p>按鈕文字: 「我同意」按鈕上的文字。</p>
+
+<p>如果字串為空(&quot;&quot;)則使用預設文字。</p>
+<p>接受變量。如果使用了變量，使用的變量必須在建立許可協議頁面之前被初始化。</p>
+<a name="4.8.1.29" id="4.8.1.29"></a>
+<h4>4.8.1.29 MiscButtonText</h4>
+<pre>[上一步文字 [下一步文字] [登出按鈕文字] [關閉按鈕文字]]
+</pre>
+
+<p>替換這四個(上一步、下一步、登出、關閉)按鈕的預設文字。如果留空參數，將使用預設值代替。</p>
+<p>接受變量。如果使用了變量，使用的變量必須在 <a href="Section4.7.html#4.7.2.1.2">.onInit</a> 被初始化。</p>
+<a name="4.8.1.30" id="4.8.1.30"></a>
+<h4>4.8.1.30 Name</h4>
+<pre>名稱 [雙與名稱]
+</pre>
+
+<p>設定安裝程式的名稱。名稱通常用來顯示產品的名稱比如「我的程式」」。如果在名稱裡有一個或多個與符號(&amp;)，把第二個參數設為與第一個相同，有 &amp; 的地方使用兩個 &amp; 來表示。例如你的產品名稱為「foo &amp; bar2000」，那麼使用:</p>
+<pre> Name &quot;foo &amp; bar2000&quot; &quot;foo &amp;&amp; bar2000&quot;
+</pre>
+
+<p>如果你的安裝程式名稱裡有 &amp; 符號並且對名稱使用了一個 <a href="Section4.9.html#4.9.15.2">LangString</a>，那麼你還需要建立另一個含有雙 &amp; 字元的名稱作為第二個參數。</p>
+<p>接受變量。如果使用了變量，使用的變量必須在 <a href="Section4.7.html#4.7.2.1.2">.onInit</a> 被初始化。</p>
+<a name="4.8.1.31" id="4.8.1.31"></a>
+<h4>4.8.1.31 OutFile</h4>
+<pre>[路徑\]安裝程式.exe
+</pre>
+
+<p>指定 MakeNSIS 要寫入安裝程式的輸出檔案。僅僅是 MakeNSIS 要寫入的檔案，它不會對安裝程式的內容有任何影響。</p>
+<a name="4.8.1.32" id="4.8.1.32"></a>
+<h4>4.8.1.32 SetFont</h4>
+<pre>[/LANG=語言ID] 字型名 字型大小</pre>
+
+<p>設定安裝程式字型大小。請記住你選擇的字型在用戶的機器上也要有，不要使用只有你自己有的字型。</p>
+<p>如果你想對每一個語言設定不同的字型，使用 /LANG 開關。例如:</p>
+<pre> SetFont /LANG=${LANG_ENGLISH} &quot;English Font&quot; 9
+ SetFont /LANG=${LANG_FRENCH} &quot;French Font&quot; 10
+</pre>
+
+<p>有兩個名稱為 ^Font 和 ^FontSize 的常量語言字串包含了每種語言對應的字型和字型大小。</p>
+<a name="4.8.1.33" id="4.8.1.33"></a>
+<h4>4.8.1.33 ShowInstDetails</h4>
+<pre><b>hide</b>|show|nevershow
+</pre>
+
+<p>設定是否顯示安裝詳細訊息。你可以設為 hide 來隱藏詳細訊息但用戶可以觀看，show 用來預設顯示詳細訊息，nevershow 可以阻止用戶觀看任何訊息。注意區段裡可以使用 SetDetailsView 來更改它的設定。</p>
+<a name="4.8.1.34" id="4.8.1.34"></a>
+<h4>4.8.1.34 ShowUninstDetails</h4>
+<pre><b>hide</b>|show|nevershow
+</pre>
+
+<p>設定是否顯示卸載詳細訊息。你可以設為 hide 來隱藏詳細訊息但用戶可以觀看，show 用來預設顯示詳細訊息，nevershow 可以阻止用戶觀看任何訊息。注意區段裡可以使用 SetDetailsView 來更改它的設定。</p>
+<a name="4.8.1.35" id="4.8.1.35"></a>
+<h4>4.8.1.35 SilentInstall</h4>
+<pre><b>normal</b>|silent|silentlog
+</pre>
+
+<p>指定安裝程式是否靜默安裝。如果它為 silent 或 silentlog ，所有標記為 SF_SELECTED 的區段都會被安裝而不做提示(你可以使用 <a href="Section4.9.html#4.9.13.1">SectionSetFlags</a> 來設定區段的標記)，安裝程式本身沒有任何螢幕輸出(而腳本仍可以顯示某些特定的輸出，使用 <a href="Section4.9.html#4.9.4.15">MessageBox</a> 的 /SD 參數來指定靜默安裝時預設的返回值)。注意如果設定為 normal 且用戶運行時使用了 /S (區分大小寫)命令行參數時就相當於 SilentInstall 設定為 silent 一樣。注意: 也可以看 <a href="Section4.9.html#4.9.12.1">LogSet</a>。</p>
+
+<p>更多訊息請觀看 <a href="Section4.12.html#4.12">4.12 節</a>。</p>
+<a name="4.8.1.36" id="4.8.1.36"></a>
+<h4>4.8.1.36 SilentUnInstall</h4>
+<pre><b>normal</b>|silent
+</pre>
+
+<p>指定卸載程式是否靜默安裝。如果它為 silent ，卸載區段會被運行而不做提示，卸載程式本身沒有任何螢幕輸出(而腳本仍可以顯示某些特定的輸出，使用 <a href="Section4.9.html#4.9.4.15">MessageBox</a> 的 /SD 參數來指定靜默安裝時預設的返回值)。注意如果設定為 normal 且用戶運行時使用了 /S (區分大小寫)命令行參數時就相當於 SilentUnInstall 設定為 silent 一樣。注意: 也可以看 <a href="Section4.9.html#4.9.12.1">LogSet</a>。</p>
+
+<p>更多訊息請觀看 <a href="Section4.12.html#4.12">4.12 節</a>。</p>
+<p><a name="4.8.1.37" id="4.8.1.37"></a></p>
+<h4>4.8.1.37 SpaceTexts</h4>
+<pre>[需要空間文字 [可用空間文字]]
+</pre>
+
+<p>如果指定了參數，將會取代安裝所需空間和可用空間文字(預設為「所需空間: 」和「可用空間: 」)。如果指定為 none 則不會顯示空間提示文字。</p>
+<p>接受變量。如果使用了變量，使用的變量必須在建立組件選擇頁面之前被初始化。</p>
+<a name="4.8.1.38" id="4.8.1.38"></a>
+<h4>4.8.1.38 SubCaption</h4>
+<pre>[頁面代號 子標題]
+</pre>
+
+<p>取代每一個安裝程式頁面(0=&quot;: 許可協議&quot;,1=&quot;: 安裝選項&quot;,2=&quot;: 安裝目錄&quot;, 3=&quot;: 正在安裝&quot;, 4=&quot;: 安裝完成&quot;)的子標題。如果指定了空字串(&quot;&quot;)，將使用預設值(你也可以指定 &quot; &quot; 來使用一個空白字串)。</p>
+
+<p>你也可以在一個 <a href="Section4.5.html#4.5.6">PageEx</a> 區塊內部使用 <a href="Section4.8.html#4.8.1.7">Caption</a> 來設定一個子標題(或取代預設值)。</p>
+<p>接受變量。如果使用了變量，使用的變量必須在相關頁面建立之前被初始化。</p>
+<a name="4.8.1.39" id="4.8.1.39"></a>
+<h4>4.8.1.39 UninstallButtonText</h4>
+<pre>文字</pre>
+
+<p>替換卸載程式上預設為「卸載」的按鈕文字。如果無指定參數，將使用預設的文字。也可以看 <a href="Section4.9.html#4.9.6.1">WriteUninstaller</a> (替換 UninstallEXEName)。</p>
+<p>接受變量。如果使用了變量，使用的變量必須在卸載按鈕顯示之前被初始化。</p>
+<a name="4.8.1.40" id="4.8.1.40"></a>
+<h4>4.8.1.40 UninstallCaption</h4>
+<pre>標題</pre>
+
+<p>設定卸載程式標題條上顯示的文字。預設情況下，它為由 Name 命令指定的「卸載名稱」。你可以取代它為「我的應用程式卸載」或其他。如果指定了空字串(&quot;&quot;)，將使用預設值(你也可以指定 &quot; &quot; 來使用一個空白字串)。</p>
+<p>接受變量。如果使用了變量，使用的變量必須在 <a href="Section4.7.html#4.7.2.2.2">un.onInit</a> 被初始化。</p>
+<a name="4.8.1.41" id="4.8.1.41"></a>
+<h4>4.8.1.41 UninstallIcon</h4>
+<pre>[路徑\]圖檔.ico
+</pre>
+
+<p>設定卸載程式的圖檔。這個圖檔檔案必須和安裝程式的圖檔結構一致。關於這個限制的更多訊息請看 <a href="Section4.8.html#4.8.1.18">Icon</a> 。 </p>
+<a name="4.8.1.42" id="4.8.1.42"></a>
+<h4>4.8.1.42 UninstallSubCaption</h4>
+<pre>頁面代號 子標題</pre>
+
+<p>取代每一個卸載程式頁面(0=&quot;: 卸載確認&quot;,1=&quot;: 正在卸載&quot;,2=&quot;: 卸載完成&quot;)的子標題。如果指定了空字串(&quot;&quot;)，將使用預設值(你也可以指定 &quot; &quot; 來使用一個空白字串)。</p>
+
+<p>你也可以在一個 <a href="Section4.5.html#4.5.6">PageEx</a> 區塊內部使用 <a href="Section4.8.html#4.8.1.7">Caption</a> 來設定一個子標題(或取代預設值)。</p>
+<p>
+<p>接受變量，如果使用了變量，使用的變量必須在相關的頁面建立之前被初始化。</p>
+<a name="4.8.1.43" id="4.8.1.43"></a></p>
+<h4>4.8.1.43 UninstallText</h4>
+<pre>文字 [子文字]
+</pre>
+
+<p>指定卸載程式確認頁面上的文字。</p>
+
+<p>文字: 控件上方的文字</p>
+
+<p>子文字: 下面卸載定位的文字</p>
+<p>接受變量，如果使用了變量，使用的變量必須在建立卸載確認頁面之前被初始化。</p>
+<a name="4.8.1.44" id="4.8.1.44"></a>
+<h4>4.8.1.44 WindowIcon</h4>
+<pre><b>on</b>|off
+</pre>
+
+<p>設定是否顯示安裝程式的圖檔。.</p>
+<a name="4.8.1.45" id="4.8.1.45"></a>
+<h4>4.8.1.45 XPStyle</h4>
+<pre>on|<b>off</b>
+</pre>
+
+<p>設定是否把 XP 外觀新增到安裝程式裡。當運行在 Windows XP 時一個 XP 外觀使得安裝程式控件使用新的 XP 樣式。這個設定也會影響卸載程式。</p>
+<a name="4.8.2"></a>
+<h3>4.8.2 編譯器標記</h3>
+
+<p>下面的命令可以告訴編譯器如何去建立代碼和壓縮資料。這些命令在腳本的任何地方都有效，並且影響著該命令下的每一行(直到被另一個命令覆蓋)。</p>
+<a name="4.8.2.1"></a><h4>4.8.2.1 AllowSkipFiles</h4>
+<pre><b>on</b>|off
+</pre>
+
+<p>該命令指定用戶是否可以略過檔案。如果 <a href="Section4.8.html#4.8.2.8">SetOverwrite</a> 設為 on(預設)且當安裝程式開啟一個檔案往裡邊寫入東西失敗時一個用戶可以選擇略過檔案。如果使用了 <em>off</em> 則不會顯示允許用戶略過檔案的忽略按鈕，這樣用戶只能選擇登出安裝程式(登出按鈕)或重試開啟該檔案寫入(重試按鈕)。如果使用了 <em>on</em> 則用戶可以選擇跳過檔案(同時置一個錯誤標記 - 看 <a href="Section4.8.html#4.8.2.8">SetOverwrite</a>)。</p>
+<a name="4.8.2.2"></a><h4>4.8.2.2 FileBufSize</h4>
+<pre>緩衝大小_MB</pre>
+
+<p>該命令設定編譯器內部檔案緩衝大小。該命令允許你通過限制一個所給的檔案一次性讀入記憶體的多少來控制編譯器的記憶體的使用。因為編譯器需要輸入和輸出，所以檔案緩衝時需要使用兩倍指定的記憶體大小。該命令不會限制需要另一組記憶體大小的壓縮器緩衝，也不會限制編譯器另外的內部緩衝，因為這兩個緩衝正常情況下無論如何也不能達到 1MB。指定一個很小的數字可能會降低執行效率。指定過大的數字可能會耗盡系統的資源並迫使編譯器登出編譯處理。該預設值為 32MB。</p>
+<a name="4.8.2.3"></a><h4>4.8.2.3 SetCompress</h4>
+<pre><b>auto</b>|force|off
+</pre>
+
+<p>該命令設定由安裝程式使用來決定資料是否應該被壓縮的壓縮標記。典型的 SetCompress 標記將影響它後面的命令，並且腳本檔案中的最後一個 SetCompress 命令也決定了是否壓縮安裝訊息區段和卸載資料。如果壓縮標記為 auto ，那麼僅當壓縮後大小小於未壓縮時檔案才會被壓縮。如果壓縮標記為 force ，則始終使用壓縮。如果壓縮標記為 off ，則不使用壓縮(這樣可以加快編譯速度)。</p>
+
+<p>注意該選項當使用了固實壓縮方式後無效。</p>
+<a name="4.8.2.4"></a><h4>4.8.2.4 SetCompressor</h4>
+<pre>[/SOLID] [/FINAL] <b>zlib</b>|bzip2|lzma
+</pre>
+
+<p>該命令設定了安裝程式壓縮檔案、資料使用的壓縮算法。該命令只能在區段、函數之外或在任何資料被壓縮之前使用。不同的壓縮方式不能在同一個安裝程式裡用來壓縮不同的檔案。建議在腳本的開始處使用這個命令來盡可能避免編譯錯誤。</p>
+
+<p>支援三種壓縮方式: ZLIB，BZIP2 和 LZMA。</p>
+
+<p>ZLIB (預設值) 使用收縮算法，是一個快速簡單的方法。預設的壓縮等級它消耗大約 300 KB 記憶體。</p>
+
+<p>BZIP2 通常比 ZLIB 的壓縮率好，但是稍微慢了一點並且記憶體的使用也多一點。預設的壓縮等級它消耗大約 4 MB 記憶體。</p>
+
+<p>LZMA 是一個壓縮率比較理想的新式壓縮方式。它的解壓速度非常快(在 2 GHz 的 CPU 上能達到 10-20 MB/s 的速度)，但是壓縮速度很慢。解壓時記憶體的使用量是字典的大小加上一些 KB，預設值為 8 MB。</p>
+<p>如果使用了<em>/FINAL</em> ，則後來調用的 SetCompressor 都會被忽略。</p>
+<p>如果使用了<em>/SOLID</em> 的話，所有的資料將被壓縮在一個區塊裡，這樣可以提高壓縮率。</p>
+<a name="4.8.2.5"></a><h4>4.8.2.5 SetCompressorDictSize</h4>
+<pre>字典大小以MB為單位</pre>
+
+<p>設定使用 LZMA 壓縮器時的字典大小(預設為 8 MB)。</p>
+<a name="4.8.2.6"></a><h4>4.8.2.6 SetDatablockOptimize</h4>
+<pre><b>on</b>|off
+</pre>
+
+<p>該命令決定編譯器是否優化資料區塊。資料區塊的優化首先由編譯器檢查要新增到資料區塊的資料是否已經存在了，如果已存在，只需要簡單的作為引用來新增(會保留一小部分大小)。非常強烈的推薦保留該選項為 on。</p>
+<a name="4.8.2.7"></a><h4>4.8.2.7 SetDateSave</h4>
+<pre><b>on</b>|off
+</pre>
+
+<p>該命令設定了由 File 命令使用的儲存檔案日期、時間標記來決定是否保留最後上次寫入檔案的日期和時間，它可以在安裝時儲存下來。有效的開關為 on 和 off 。預設為 on 。</p>
+<a name="4.8.2.8"></a><h4>4.8.2.8 SetOverwrite</h4>
+<pre><b>on</b>|off|try|ifnewer|ifdiff|lastused
+</pre>
+
+<p>該命令設定了由 File 命令使用的覆蓋標記來決定目標檔案已存在時是否覆蓋。如果覆蓋標記為 on ，則目標檔案被覆蓋(這個是預設值)。如果覆蓋標記為 off ,則已存在的檔案不會被覆蓋。如果覆蓋標記為 try ，檔案僅當可以被覆蓋時(就是說假如檔案不能寫入，它會自動略過而不需要用戶決定)才會覆蓋目標檔案。如果覆蓋標記為 ifnewer ，則僅當已存在的檔案比新檔案舊時才會覆蓋目標檔案。如果覆蓋標記為 ifdiff ，則僅當已存在的檔案比新檔案舊或新時才會覆蓋目標檔案。注意在 ifnewer 或 ifdiff 模式下，目標檔案的日期都會被設為新檔案的日期，而不管 SetDateSave 是怎麼設定的。</p>
+<pre>SetOverwrite off
+File program.cfg # 配置檔案將不會覆蓋
+SetOverwrite on
+</pre>
+<a name="4.8.2.9"></a><h4>4.8.2.9 SetPluginUnload</h4>
+<pre><b>manual</b>|alwaysoff
+</pre>
+
+<p>該命令設定了 CallInstDLL 和插件調用(插件名::函數)的不卸載插件標記。該命令設為 alwaysoff 相當於每個 CallInstDLL 和插件調用都使用了 /NOUNLOAD 參數。該命令設為 manual 則僅當你指定了 /NOUNLOAD 參數時才不卸載。</p>
+<a name="4.8.3"></a>
+<h3>4.8.3 版本訊息</h3>
+<a name="4.8.3.1"></a><h4>4.8.3.1 VIAddVersionKey</h4>
+<pre> [/LANG=語言ID] 鍵名 值</pre>
+
+<p>在檔案屬性的版本表格裡新增一個字段。既可以是由系統提供的的一個字段也可以是一個用戶定義的字段。隨後的這些字段由系統提供:</p>
+<ul>
+<li>ProductName</li><li>Comments</li><li>CompanyName</li><li>LegalCopyright</li><li>FileDescription</li><li>FileVersion</li><li>ProductVersion</li><li>InternalName</li><li>LegalTrademarks</li><li>OriginalFilename</li><li>PrivateBuild</li><li>SpecialBuild</li></ul>
+
+<p>這些字段名稱由目標系統翻譯，而用戶自定義的字段則無翻譯。</p>
+<pre>VIAddVersionKey /LANG=${LANG_ENGLISH} &quot;ProductName&quot; &quot;Test Application&quot;
+VIAddVersionKey /LANG=${LANG_ENGLISH} &quot;Comments&quot; &quot;A test comment&quot;
+VIAddVersionKey /LANG=${LANG_ENGLISH} &quot;CompanyName&quot; &quot;Fake company&quot;
+VIAddVersionKey /LANG=${LANG_ENGLISH} &quot;LegalTrademarks&quot; &quot;Test Application is a trademark of Fake company&quot;
+VIAddVersionKey /LANG=${LANG_ENGLISH} &quot;LegalCopyright&quot; &quot;(C) Fake company&quot;
+VIAddVersionKey /LANG=${LANG_ENGLISH} &quot;FileDescription&quot; &quot;Test Application&quot;
+VIAddVersionKey /LANG=${LANG_ENGLISH} &quot;FileVersion&quot; &quot;1.2.3&quot;
+</pre>
+<a name="4.8.3.2"></a><h4>4.8.3.2 VIProductVersion</h4>
+<pre>[版本字串_X.X.X.X]
+</pre>
+
+<p>在檔案屬性版本表格的頂部新增產品版本號。</p>
+<pre>VIProductVersion &quot;1.2.3.4&quot;
+</pre>
+<p><a href='Section4.7.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.9.html'>下一頁</a></p>
+
+<hr />
+<div align="left">
+<script async src="../../pagead2.googlesyndication.com/pagead/js/f.txt"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2153907722668011"
+     data-ad-slot="3767461681"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.8.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+</html>

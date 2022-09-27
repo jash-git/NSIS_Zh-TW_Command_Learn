@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.3.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:32 GMT -->
+<head>
+<title>標記</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8"></head>
+
+<body>
+<p><a href='Section4.2.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.4.html'>下一頁</a></p>
+<a name="4.3"></a>
+<h2>4.3 標記</h2>
+
+<p>標記是 Goto 指令的目標，或各種分支指令(比如 <a href="Section4.9.html#4.9.4.9">IfErrors</a>、<a href="Section4.9.html#4.9.4.15">MessageBox</a>、<a href="Section4.9.html#4.9.4.10">IfFileExists</a> 和 <a href="Section4.9.html#4.9.4.19">StrCmp</a>)的目標。標記必須存在於一個區段或函數里。標記是局限於該範圍裡的，這意味著這些指令只能瀏覽和它們同處於一個區段或函數的標記。要聲明一個標記很簡單:</p>
+
+<p><em>MyLabel:</em></p>
+
+<p>標記不能以 -、+、!、$ 或 0-9 開頭。當給多個需要指定標記的指令指定了標記，不要忘了使用空字串 (&quot;&quot;) 或 0 來表示下一個指令(表示無 Goto 跳轉)。一個標記以句點 (.) 開頭時表示這是一個全局的標記，你可以從任何區段或函數直接轉移到它上面(但是你不能從一個安裝程式轉移到一個卸載程式的全局標記，反之亦然)。</p>
+<p><a href='Section4.2.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.4.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.3.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:32 GMT -->
+</html>

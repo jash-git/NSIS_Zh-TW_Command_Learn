@@ -1,0 +1,17 @@
+HTTrack3.49-2+htsswf+htsjava launched on Tue, 27 Sep 2022 14:29:08 at https://omega.idv.tw/nsis/Contents.html +*.png +*.gif +*.jpg +*.jpeg +*.css +*.js -ad.doubleclick.net/* -mime:application/foobar
+(winhttrack -qwC2%Ps2u1%s%uN0%I0p3DaK0H0%kf2A25000%f#f -F "Mozilla/4.5 (compatible; HTTrack 3.0x; Windows 98)" -%F "<!-- Mirrored from %s%s by HTTrack Website Copier/3.x [XR&CO'2014], %s -->" -%l "en, *" https://omega.idv.tw/nsis/Contents.html -O1 "C:\Users\devel\Desktop\NSIS_Web\nsis_Contents" +*.png +*.gif +*.jpg +*.jpeg +*.css +*.js -ad.doubleclick.net/* -mime:application/foobar )
+
+Information, Warnings and Errors reported for this mirror:
+note:	the hts-log.txt file, and hts-cache folder, may contain sensitive information,
+	such as username/password authentication for websites mirrored in this project
+	do not share these files/folders if you want these information to remain private
+
+14:29:42	Error: 	"Not Found" (404) at link https://omega.idv.tw/nsis/SectionB.11.html (from https://omega.idv.tw/nsis/Section2.3.html)
+14:29:42	Error: 	"Not Found" (404) at link https://omega.idv.tw/nsis/SectionI.1.html (from https://omega.idv.tw/nsis/AppendixH.html)
+14:29:42	Error: 	"Not Found" (404) at link https://omega.idv.tw/nsis/SectionI.2.html (from https://omega.idv.tw/nsis/AppendixH.html)
+14:29:42	Error: 	"Not Found" (404) at link https://omega.idv.tw/nsis/SectionI.3.html (from https://omega.idv.tw/nsis/AppendixH.html)
+14:29:42	Error: 	"Not Found" (404) at link https://omega.idv.tw/nsis/SectionI.4.html (from https://omega.idv.tw/nsis/AppendixH.html)
+14:29:42	Error: 	"Not Found" (404) at link https://omega.idv.tw/nsis/SectionI.5.html (from https://omega.idv.tw/nsis/AppendixH.html)
+
+HTTrack Website Copier/3.49-2 mirror complete in 34 seconds : 117 links scanned, 110 files written (715252 bytes overall) [413412 bytes received at 12159 bytes/sec], 546309 bytes transferred using HTTP compression in 109 files, ratio 36%, 29.2 requests per connection
+(6 errors, 0 warnings, 0 messages)

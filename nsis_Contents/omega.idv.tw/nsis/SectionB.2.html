@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionB.2.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+<head>
+<title>Library Installation</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='SectionB.1.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionB.3.html'>下一頁</a></p>
+<a name="B.2"></a>
+<h2>B.2 庫的安裝</h2>
+<a name="B.2.1"></a>
+<h3>B.2.1 說明</h3>
+
+<p>安裝庫使用 InstallLib 宏。 </p>
+
+<p>要檢測安裝完成後是否需要重啟可以使用 MUI 並且帶一個完成頁面或者使用 <a href="Section4.9.html#4.9.4.11">IfRebootFlag</a> 指令來判斷。</p>
+<a name="B.2.2"></a>
+<h3>B.2.2 參數</h3>
+<pre>庫類型 是否共享 安裝方式 本地檔案 目標檔案 臨時目錄</pre>
+
+<p><b>庫類型</b></p>
+
+<p>庫的類型</p>
+
+<p>DLL - 動態連結庫 (DLL)<br>
+   REGDLL - 要註冊的 DLL<br>
+    TLB - 類型庫或包含 LIBRARY 類型的 DLL<br>
+     REGDLLTLB - 要註冊的 DLL 並包含類型庫<br>
+</p>
+
+<p><b>是否共享</b></p>
+
+<p>指定要安裝的庫是否與其它應用程式共享</p>
+
+<p>NOTSHARED - 該庫不共享<br>
+   $VARNAME - 當應用程式第一次安裝時為空，
+
+
+ 安裝時將使共享庫計數增加。<br>
+</p>
+
+<p><b>安裝方式</b></p>
+
+<p>指定安裝方式</p>
+
+<p>REBOOT_PROTECTED</p>
+<ul>
+<li>正在使用時等待重啟後更新檔案 (系統檔案必須)。</li>
+<li>當檔案沒有系統檔案保護時更新檔案。</li>
+</ul>
+
+<p>NOREBOOT_PROTECTED</p>
+<ul>
+<li>當檔案正在使用時警告用戶。用戶將可以關閉使用該檔案的應用程式。</li>
+<li>當檔案沒有系統檔案保護時更新檔案。</li></ul>
+
+<p>REBOOT_NOTPROTECTED</p>
+<ul>
+<li>正在使用時等待重啟後更新檔案 (系統檔案必須)。</li>
+<li>不檢測系統檔案保護而直接更新檔案。</li>
+</ul>
+
+<p>NOREBOOT_NOTPROTECTED</p>
+<ul>
+<li>當檔案正在使用時警告用戶。用戶將可以關閉使用該檔案的應用程式。</li><li>不檢測系統檔案保護而直接更新檔案。</li></ul>
+
+<p><b>本地檔案</b></p>
+
+<p>編譯時檔案的位置。</p>
+
+<p><b>目標檔案</b></p>
+
+<p>用戶系統裡需要更新檔案的位置。</p>
+
+<p><b>臨時目錄</b></p>
+
+<p>當系統需要重啟時用來儲存臨時檔案的目錄。</p>
+
+<p>要支援 Windows 9x/ME ，該目錄應該和目標檔案位於同一個卷。Windows 臨時目錄可以位於任何卷，所以你不能使用該目錄。</p>
+<a name="B.2.3"></a>
+<h3>B.2.3 選項</h3>
+
+<p>LIBRARY_SHELL_EXTENSION</p>
+<ul>
+<li>在插入 InstallLib 宏之前定義來在註冊後調用帶 SHCNE_ASSOCCHANGED 的 SHChangeNotify 函數。它可以在安裝了環境擴展或更改了檔案關聯後更新環境。</li>
+</ul>
+
+<p>LIBRARY_COM</p>
+<ul>
+<li>在插入 InstallLib 宏之前定義來在註冊後調用CoFreeUnusedLibraries 函數。當安裝了 COM 庫後它可以從記憶體裡卸載所有不需要的庫檔案。</li>
+</ul>
+<a name="B.2.4"></a>
+<h3>B.2.4 注意事項</h3>
+<ul>
+<li>如果你想要支援 Windows 9x/ME，那麼你只能使用短檔案名稱 (8.3)。</li>
+<li><b>警告:</b> 當配置 DLL 時，總是使用可分配的檔案。不要從你的系統目錄裡複製檔案。</li>
+</ul>
+<a name="B.2.5"></a>
+<h3>B.2.5 例子</h3>
+<pre> ;如果應用程式已安裝，請把 $ALREADY_INSTALLED 設為一個非零的值。
+ ;例如:
+
+ IfFileExists &quot;$INSTDIR\MyApp.exe&quot; 0 new_installation ;把 MyApp.exe 替換為你的應用程式
+   StrCpy $ALREADY_INSTALLED 1
+ new_installation:
+
+ !insertmacro InstallLib REGDLL $ALREADY_INSTALLED REBOOT_NOTPROTECTED dllname.dll $SYSDIR\dllname.dll $SYSDIR
+</pre>
+<p><a href='SectionB.1.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionB.3.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionB.2.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+</html>

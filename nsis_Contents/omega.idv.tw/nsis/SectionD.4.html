@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionD.4.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+<head>
+<title>把安裝詳細訊息導出到檔案</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='SectionD.3.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionD.5.html'>下一頁</a></p>
+<a name="D.4"></a><h2>D.4 把安裝詳細訊息導出到檔案</h2>
+
+<p>這個函數可以把安裝詳細訊息導出到你選定的檔案。建立這個函數是因為<a href="http://forums.winamp.com/showthread.php?s=&amp;threadid=125431">這個論壇帖子</a>裡 Afrow_UK 請求把訊息導出到檔案。</p>
+
+<p>要使用這個函數請先把檔案名稱壓入堆棧。它將會把安裝訊息導出到該檔案。例如:</p>
+<pre>GetTempFileName $0
+Push $0
+Call DumpLog
+</pre>
+
+<p>這裡是要調用的函數:</p>
+<pre>!define LVM_GETITEMCOUNT 0x1004
+!define LVM_GETITEMTEXT 0x102D
+
+Function DumpLog
+  Exch $5
+  Push $0
+  Push $1
+  Push $2
+  Push $3
+  Push $4
+  Push $6
+
+  FindWindow $0 &quot;#32770&quot; &quot;&quot; $HWNDPARENT
+  GetDlgItem $0 $0 1016
+  StrCmp $0 0 error
+  FileOpen $5 $5 &quot;w&quot;
+  StrCmp $5 0 error
+    SendMessage $0 ${LVM_GETITEMCOUNT} 0 0 $6
+    System::Alloc ${NSIS_MAX_STRLEN}
+    Pop $3
+    StrCpy $2 0
+    System::Call &quot;*(i, i, i, i, i, i, i, i, i) i \
+      (0, 0, 0, 0, 0, r3, ${NSIS_MAX_STRLEN}) .r1&quot;
+    loop: StrCmp $2 $6 done
+      System::Call &quot;User32::SendMessageA(i, i, i, i) i \
+        ($0, ${LVM_GETITEMTEXT}, $2, r1)&quot;
+      System::Call &quot;*$3(&amp;t${NSIS_MAX_STRLEN} .r4)&quot;
+      FileWrite $5 &quot;$4$\r$\n&quot;
+      IntOp $2 $2 + 1
+      Goto loop
+    done:
+      FileClose $5
+      System::Free $1
+      System::Free $3
+      Goto exit
+  error:
+    MessageBox MB_OK &quot;錯誤&quot;
+  exit:
+    Pop $6
+    Pop $4
+    Pop $3
+    Pop $2
+    Pop $1
+    Pop $0
+    Exch $5
+FunctionEnd
+</pre>
+
+<p>written by KiCHiK</p>
+<p><a href='SectionD.3.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionD.5.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionD.4.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+</html>

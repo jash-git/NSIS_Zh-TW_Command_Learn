@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionC.7.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+<head>
+<title>判斷 .NET Framework 是否已安裝</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='SectionC.6.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionC.8.html'>下一頁</a></p>
+<a name="C.7"></a>
+<h2>C.7 判斷 .NET Framework 是否已安裝</h2>
+<pre> ; IsDotNETInstalled
+ ;
+ ; 用法:
+ ;   Call IsDotNETInstalled
+ ;   Pop $0
+ ;   StrCmp $0 1 found.NETFramework no.NETFramework
+
+
+ Function IsDotNETInstalled
+   Push $0
+   Push $1
+   Push $2
+   Push $3
+   Push $4
+
+   ReadRegStr $4 HKEY_LOCAL_MACHINE \
+     &quot;Software\Microsoft\.NETFramework&quot; &quot;InstallRoot&quot;
+   # 移除退格鍵
+   Push $4
+   Exch $EXEDIR
+   Exch $EXEDIR
+   Pop $4
+   # 如果根目錄不存在則 .NET 未安裝
+   IfFileExists $4 0 noDotNET
+
+   StrCpy $0 0
+
+   EnumStart:
+
+     EnumRegKey $2 HKEY_LOCAL_MACHINE \
+       &quot;Software\Microsoft\.NETFramework\Policy&quot;  $0
+     IntOp $0 $0 + 1
+     StrCmp $2 &quot;&quot; noDotNET
+
+     StrCpy $1 0
+
+     EnumPolicy:
+
+       EnumRegValue $3 HKEY_LOCAL_MACHINE \
+         &quot;Software\Microsoft\.NETFramework\Policy\$2&quot; $1
+       IntOp $1 $1 + 1
+        StrCmp $3 &quot;&quot; EnumStart
+         IfFileExists &quot;$4\$2.$3&quot; foundDotNET EnumPolicy
+
+   noDotNET:
+     StrCpy $0 0
+     Goto done
+
+   foundDotNET:
+     StrCpy $0 1
+
+   done:
+     Pop $4
+     Pop $3
+     Pop $2
+     Pop $1
+     Exch $0
+ FunctionEnd
+</pre>
+<p><a href='SectionC.6.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionC.8.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionC.7.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+</html>

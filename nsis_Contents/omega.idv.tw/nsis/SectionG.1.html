@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionG.1.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:40 GMT -->
+<head>
+<title>慣用構建</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='AppendixG.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionG.2.html'>下一頁</a></p>
+<a name="G.1"></a><h2>G.1 慣用構建</h2>
+
+<p>源代碼可以在 <a href="http://cvs.sourceforge.net/viewcvs.py/nsis">CVS</a> 找到並且和 <a href="http://sourceforge.net/project/showfiles.php?group_id=22049">NSIS 發行版本分離</a>。</p>
+
+<p>要構建 NSIS 首先要安裝 <a href="http://www.python.org/">Python</a> 和 <a href="http://www.scons.org/">SCons</a>。目前，支援的 SCons 版本是 0.96.90。任何高於 1.5.2 的 Python 版本只可以支援。</p>
+
+<p>要開始構建，首先開啟控制台，更改工作目錄到 NSIS 根目錄並輸入<code>scons</code> 然後Enter。像下面這樣:</p>
+<pre>C:\&gt;cd dev\nsis
+C:\dev\nsis&gt;scons
+scons: Reading SConscript files ...
+Using Microsoft tools configuration
+Checking for main() in C library gdi32... (cached) yes
+Checking for main() in C library user32... (cached) yes
+Checking for main() in C library version... (cached) yes
+Checking for main() in C library pthread... (cached) no
+Checking for main() in C library stdc++... (cached) no
+Checking for main() in C library iconv... (cached) no
+Checking for main() in C library libiconv... (cached) no
+scons: done reading SConscript files.
+scons: Building targets ...
+...
+</pre>
+
+<p>要安裝構建檔案，輸入:</p>
+<pre>scons PREFIX=&quot;C:\Program Files\NSIS&quot; install
+</pre>
+
+<p>要建立安裝程式 (僅在 Windows 上)，輸入:</p>
+<pre>scons dist-installer
+</pre>
+
+<p>要建立發行的 ZIP 檔案，輸入:</p>
+<pre>scons dist-zip
+</pre>
+
+<p>都要建立，輸入:</p>
+<pre>scons dist
+</pre>
+
+<p>要取得系統提供的完整選項列表，輸入:</p>
+<pre>scons -h
+</pre>
+
+<p>要取得 SCons 提供的完整選項列表，輸入:</p>
+<pre>scons -H
+</pre>
+<p><a href='AppendixG.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionG.2.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionG.1.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:40 GMT -->
+</html>

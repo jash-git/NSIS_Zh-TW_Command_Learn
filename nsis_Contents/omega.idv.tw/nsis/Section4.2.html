@@ -1,0 +1,277 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.2.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:32 GMT -->
+<head>
+<title>變量</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='Section4.1.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.3.html'>下一頁</a></p>
+<a name="4.2"></a>
+<h2>4.2 變量</h2>
+
+<p>所有的變量都是全局的並且可以用於區段和函數。需要注意的是，在預設情況下變量被限制在 1024 字元。要擴大這個限制你需要重新構建一個使用了更大 NSIS_MAX_STRLEN 值的 NSIS 或使用<a href="http://nsis.sourceforge.net/download/specialbuilds/">特別版本</a>。</p>
+<a name="4.2.1"></a>
+<h3>4.2.1 用戶變量</h3>
+
+<p>$變量名</p>
+
+<p>用戶變量可以用 <a href="Section4.2.html#4.2.1.1">Var</a> 命令來聲明。你可以用這些變量來儲存值，用於字串操作等等。</p>
+<a name="4.2.1.1"></a><h4>4.2.1.1 Var</h4>
+<pre>[/GLOBAL] 變量名</pre>
+
+<p>聲明一個用戶變量。變量名允許的字元: [a-z][A-Z][0-9] 和 '_'。所有定義的變量都是全局的，即使在區段或函數內定義。要使它表達更清楚一些，區段或函數內定義的變量必須使用 /GLOBAL 標記。在區段和函數之外不需要 /GLOBAL 標記。</p>
+<pre>Var example
+
+Function testVar
+  Var /GLOBAL example2
+
+  StrCpy $example &quot;example value&quot;
+  StrCpy $example2 &quot;another example value&quot;
+FunctionEnd
+</pre>
+<a name="4.2.2"></a>
+<h3>4.2.2 其他已登記的變量</h3>
+
+<p><em>$0, $1, $2, $3, $4, $5, $6, $7, $8, $9, $R0, $R1, $R2, $R3, $R4, $R5, $R6, $R7, $R8, $R9</em></p>
+
+<p>這些變量可以像用戶變量一樣使用，但常用於公用函數或宏。你不需要聲明這些變量，所以當你在公用代碼裡使用他們的時候不能有任何名字衝突。當在公用代碼裡使用的時候，推薦你使用堆棧儲存和還原他們原來的資料。這些變量也可以在插件裡傳遞，因為他們可以被 DLL 插件讀取和寫入。</p>
+
+<p><em>$INSTDIR</em></p>
+
+<p>安裝目錄 ($INSTDIR 可以使用 <a href="Section4.9.html#4.9.8.1">StrCpy</a>、<a href="Section4.9.html#4.9.2.12">ReadRegStr</a>、<a href="Section4.9.html#4.9.2.10">ReadINIStr</a> 等等來更改。例如在 <a href="Section4.7.html#4.7.2.1.2">.onInit</a> 函數里可以用來做高級的檢測安裝定位)。</p>
+
+<p> 注意在卸載程式代碼裡，$INSTDIR 為卸載程式所在的目錄而不是在安裝程式裡所指定的目錄。例如，你把卸載程式放在 $WINDIR 裡並且用戶沒有移動它，那麼在卸載程式裡 $INSTDIR 就等於 $WINDIR。如果你要把卸載程式放到到另外的位置，那麼你應該先把安裝程式的 $INSTDIR 值寫入註冊表或其它容易儲存的地方，然後在卸載程式裡讀取該值並賦值給卸載程式裡的 $INSTDIR。 </p>
+
+<p><em>$OUTDIR</em></p>
+
+<p>目前輸出路徑 (通過 <a href="Section4.9.html#4.9.1.9">SetOutPath</a> 設定或通過 <a href="Section4.9.html#4.9.8.1">StrCpy</a>、<a href="Section4.9.html#4.9.2.12">ReadRegStr</a>、<a href="Section4.9.html#4.9.2.10">ReadINIStr</a> 等等)</p>
+
+<p><em>$CMDLINE</em></p>
+
+<p>安裝程式的命令行輸入。命令行的格式如下面之一所示:</p>
+<ul>
+<li>&quot;完整路徑\安裝程式.exe&quot; 參數 參數 參數</li>
+<li>安裝程式.exe 參數 參數 參數</li>
+<li>對於解析「參數」部分，參閱 GetParameters 在 <a href="SectionC.3.html#C.3">常用函數附錄</a>。如果在命令行裡指定了 /D= (用來跳過安裝路徑的選擇)那麼 /D= 後面的參數將不會被儲存在 $CMDLINE(前面的可以儲存)。</li>
+</ul>
+
+<p><em>$LANGUAGE</em></p>
+
+<p>目前使用的語言標識符。例如，英語是 1033。你可以在 <a href="Section4.7.html#4.7.2.1.2">.onInit</a> 裡更改。</p>
+<a name="4.2.3"></a>
+<h3>4.2.3 常量</h3>
+
+<p>常量通常用在 <a href="Section4.8.html#4.8.1.21">InstallDir</a> 屬性裡。</p>
+
+<p>需要注意的是一些新的常量並不是在所有的 OS 上都是正常的。例如 $CDBURN_AREA 僅在　Windows XP 及以上系統中才正常。如果在 Windows 98 中使用將會得到空值。除非特別提示，否則該常量都是在所有 OS 上有效的。</p>
+
+<p><em>$PROGRAMFILES</em></p>
+
+<p>程式檔案目錄(通常為 C:\Program Files 但是運行時會檢測)。</p>
+
+<p><em>$COMMONFILES</em></p>
+
+<p>公用檔案目錄。這是應用程式共享組件的目錄(通常為 C:\Program Files\Common Files 但是運行時會檢測)。</p>
+
+<p><em>$DESKTOP</em></p>
+
+<p>Windows 桌面目錄(通常為 C:\windows\desktop 但是運行時會檢測)。該常量的內容(所有用戶或目前用戶)取決於 <a href="Section4.9.html#4.9.7.3">SetShellVarContext</a> 設定。預設為目前用戶。</p>
+
+<p><em>$EXEDIR</em></p>
+
+<p>安裝程式運行時的位置。(從技術上來說你可以修改改變量，但並不是一個好方法)。</p>
+
+<p><em>${NSISDIR}</em></p>
+
+<p>包含 NSIS 安裝目錄的一個標記。在編譯時會檢測到。常用於在你想調用一個在 NSIS 目錄下的資源時，例如：圖檔、介面……</p>
+
+<p><em>$WINDIR</em></p>
+
+<p>Windows 目錄(通常為 C:\windows 或 C:\winnt 但在運行時會檢測)</p>
+
+<p><em>$SYSDIR</em></p>
+
+<p>Windows 系統目錄(通常為 C:\windows\system 或 C:\winnt\system32 但在運行時會檢測)</p>
+
+<p><em>$TEMP</em></p>
+
+<p>系統臨時目錄(通常為 C:\windows\temp 但在運行時會檢測)</p>
+
+<p><em>$STARTMENU</em></p>
+
+<p>開始選單目錄(常用於新增一個開始選單項，使用 <a href="Section4.9.html#4.9.3.4">CreateShortCut</a>)。該常量的內容(所有用戶或目前用戶)取決於 <a href="Section4.9.html#4.9.7.5">SetShellVarContext</a> 設定。預設為目前用戶。</p>
+
+<p><em>$SMPROGRAMS</em></p>
+
+<p>開始選單程式目錄(當你想定位 $STARTMENU\程式 時可以使用它)。該常量的內容(所有用戶或目前用戶)取決於 <a href="Section4.9.html#4.9.7.5">SetShellVarContext</a> 設定。預設為目前用戶。</p>
+
+<p><em>$SMSTARTUP</em></p>
+
+<p>開始選單程式/啟動 目錄。該常量的內容(所有用戶或目前用戶)取決於 <a href="Section4.9.html#4.9.7.5">SetShellVarContext</a> 設定。預設為目前用戶。</p>
+
+<p><em>$QUICKLAUNCH</em></p>
+
+<p>在 IE4 活動桌面及以上的快速啟動目錄。如果快速啟動不可用，僅僅返回和 $TEMP 一樣。</p>
+
+<p><em>$DOCUMENTS</em></p>
+
+<p>文件目錄。一個目前用戶典型的路徑形如 C:\Documents and Settings\Foo\My Documents。這個常量的內容(所有用戶或目前用戶)取決於 <a href="Section4.9.html#4.9.7.5">SetShellVarContext</a> 設定。預設為目前用戶。</p>
+
+<p>該常量在 Windows 95 且 Internet Explorer 4 沒有安裝時無效。</p>
+
+<p><em>$SENDTO</em></p>
+
+<p>該目錄包含了「發送到」選單快捷項。</p>
+
+<p><em>$RECENT</em></p>
+
+<p>該目錄包含了指向用戶最近文件的快捷方式。</p>
+
+<p><em>$FAVORITES</em></p>
+
+<p>該目錄包含了指向用戶網絡收藏夾、文件等的快捷方式。這個常量的內容(所有用戶或目前用戶)取決於 <a href="Section4.9.html#4.9.7.5">SetShellVarContext</a> 設定。預設為目前用戶。</p>
+
+<p>該常量在 Windows 95 且 Internet Explorer 4 沒有安裝時無效。</p>
+
+<p><em>$MUSIC</em></p>
+
+<p>用戶的音樂檔案目錄。這個常量的內容(所有用戶或目前用戶)取決於 <a href="Section4.9.html#4.9.7.5">SetShellVarContext</a> 設定。預設為目前用戶。</p>
+
+<p>該常量僅在 Windows XP、ME 及以上才有效。</p>
+
+<p><em>$PICTURES</em></p>
+
+<p>用戶的圖片目錄。這個常量的內容(所有用戶或目前用戶)取決於 <a href="Section4.9.html#4.9.7.5">SetShellVarContext</a> 設定。預設為目前用戶。</p>
+
+<p>該常量僅在 Windows 2000、XP、ME 及以上才有效。</p>
+
+<p><em>$VIDEOS</em></p>
+
+<p>用戶的視頻檔案目錄。這個常量的內容(所有用戶或目前用戶)取決於 <a href="Section4.9.html#4.9.7.5">SetShellVarContext</a> 設定。預設為目前用戶。</p>
+
+<p>該常量僅在 Windows XP、ME 及以上才有效。</p>
+
+<p><em>$NETHOOD</em></p>
+
+<p>該目錄包含了可能存在於我的網絡位置、網上鄰居檔案夾的連結對象。</p>
+
+<p>該常量在 Windows 95 且 Internet Explorer 4 和活動桌面沒有安裝時無效。</p>
+
+<p><em>$FONTS</em></p>
+
+<p>系統字型目錄。</p>
+
+<p><em>$TEMPLATES</em></p>
+
+<p>文件模板目錄。這個常量的內容(所有用戶或目前用戶)取決於 <a href="Section4.9.html#4.9.7.5">SetShellVarContext</a> 設定。預設為目前用戶。</p>
+
+<p><em>$APPDATA</em></p>
+
+<p>應用程式資料目錄。目前用戶路徑的檢測需要 Internet Explorer 4 及以上。所有用戶路徑的檢測需要 Internet Explorer 5 及以上。這個常量的內容(所有用戶或目前用戶)取決於 <a href="Section4.9.html#4.9.7.5">SetShellVarContext</a> 設定。預設為目前用戶。</p>
+
+<p>該常量在 Windows 95 且 Internet Explorer 4 和活動桌面沒有安裝時無效。</p>
+
+<p><em>$LOCALAPPDATA</em></p>
+
+<p>本機應用程式資料目錄。</p>
+
+<p>該常量僅在 Windows 2000 或以上系統有效。.</p>
+
+<p><em>$PRINTHOOD</em></p>
+
+<p>該目錄包含了可能存在於列印機檔案夾的連結對象。</p>
+
+<p>該常量在 Windows 95 和 Windows 98 上無效。</p>
+
+<p><em>$INTERNET_CACHE</em></p>
+
+<p>Internet Explorer 的臨時檔案目錄。</p>
+
+<p>該常量在 Windows 95 和 Windows NT 且 Internet Explorer 4 和活動桌面沒有安裝時無效。</p>
+
+<p><em>$COOKIES</em></p>
+
+<p>Internet Explorer 的 Cookies 目錄。</p>
+
+<p>該常量在 Windows 95 和 Windows NT 且 Internet Explorer 4 和活動桌面沒有安裝時無效。</p>
+
+<p><em>$HISTORY</em></p>
+
+<p>Internet Explorer 的歷史記錄目錄。</p>
+
+<p>該常量在 Windows 95 和 Windows NT 且 Internet Explorer 4 和活動桌面沒有安裝時無效。</p>
+
+<p><em>$PROFILE</em></p>
+
+<p>用戶的個人配置目錄。一個典型的路徑如 C:\Documents and Settings\Foo。</p>
+
+<p>該常量在 Windows 2000 及以上有效。</p>
+
+<p><em>$ADMINTOOLS</em></p>
+
+<p>一個儲存管理工具的目錄。這個常量的內容(所有用戶或目前用戶)取決於 <a href="Section4.9.html#4.9.7.5">SetShellVarContext</a> 設定。預設為目前用戶。</p>
+
+<p>該常量在 Windows 2000、ME 及以上有效。 </p>
+
+<p><em>$RESOURCES</em></p>
+
+<p>該資源目錄儲存了主題和其他 Windows 資源(通常為 C:\Windows\Resources 但在運行時會檢測)。</p>
+
+<p>該常量在 Windows XP 及以上有效。 </p>
+
+<p><em>$RESOURCES_LOCALIZED</em></p>
+
+<p>該本地的資源目錄儲存了主題和其他 Windows 資源(通常為 C:\Windows\Resources\1033 但在運行時會檢測)。</p>
+
+<p>該常量在 Windows XP 及以上有效。</p>
+
+<p><em>$CDBURN_AREA</em></p>
+
+<p>一個在燒錄 CD 時儲存檔案的目錄。</p>
+
+<p>該常量在 Windows XP 及以上有效。</p>
+
+<p><em>$HWNDPARENT</em></p>
+
+<p>父視窗的十進制視窗句柄。</p>
+
+<p><em>$PLUGINSDIR</em></p>
+
+<p>該路徑是一個臨時目錄，當第一次使用一個插件或一個調用 <a href="Section4.9.html#4.9.7.3">InitPluginsDir</a> 時被建立。該檔案夾當安裝程式登出時會被自動刪除。這個檔案夾的用意是用來儲存給 <a href="#" onclick="parser('https://omega.idv.tw/Docs/InstallOptions/Readme.html')">InstallOptions</a> 使用的 INI 檔案、啟動畫面位圖或其他插件運行需要的檔案。</p>
+<a name="4.2.4"></a>
+<h3>4.2.4 在字串裡使用常量</h3>
+
+<p><em>$$</em></p>
+
+<p>轉義，用來表示 $。</p>
+
+<p><em>$\r</em></p>
+
+<p>用來表示一個Enter(\r)。</p>
+
+<p><em>$\n</em></p>
+
+<p>用來表示新的一行(\n)。</p>
+
+<p><em>$\t</em></p>
+
+<p>用來表示一個 Tab(\t)。</p>
+
+<p><a href='Section4.1.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.3.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.2.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:32 GMT -->
+</html>

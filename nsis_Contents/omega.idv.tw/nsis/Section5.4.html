@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section5.4.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+<head>
+<title>條件編譯</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8"></head>
+
+<body>
+<p><a href='Section5.3.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='AppendixA.html'>下一頁</a></p>
+<a name="5.4"></a><h2>5.4 條件編譯</h2>
+
+<p>編譯器有一個定義符號列表，定義符號可以通過 !define 定義或使用 /D 命令行切換。這些定義符號可以用於條件編譯（通過 !ifdef 定義）或用於符號替換（一種格式簡單的宏）。若要用它的值替換一個符號，請使用 ${符號} (如果沒有定義符號，那麼不會產生轉換）。這個轉換為 first-come-first-served，這意味著如果你做了:</p>
+<pre>!define 符號1 ${符號2}
+</pre>
+
+<p>如果定義了 「符號2」，那麼當出現那一行時，它將會被替換。否則，當 「${符號1}」 被引用時，任何替換都會發生。</p>
+
+<p>與定義、條件編譯相關的命令:</p>
+<a name="5.4.1"></a><h3>5.4.1 !define</h3>
+<pre>[/date] 符號 [值]
+</pre>
+
+<p>這個命令將會向全局定義列表中新增 「符號」。這個效果與對編譯器使用 /D 命令行切換效果相似。（只有在 !define 命令之後，定義才有效）</p>
+<p>如果使用了 /date，則定義的值會被格式化為 strtime 格式。strtime 會把代表目前的時間日期轉換為實際的值。例如 %H 會轉換為目前時間的 24 小時格式。完整的格式化字串列表你可以尋找 <a href="http://msdn.microsoft.com/">MSDN</a>。在 POSIX 平台，你可以使用 man strtime 來取得列表。</p>
+<pre>!define USE_SOMETHING
+!define VERSION 1.2
+!define /date NOW &quot;%H:%M:%S %d %b, %Y&quot;
+</pre>
+<a name="5.4.2"></a><h3>5.4.2 !undef</h3>
+<pre>賦值號</pre>
+
+<p>從全局定義列表中移除一個已定義的符號。請注意，取消定義符號的地方（${符號}）將會自己保留為為 &quot;${符號}&quot;。</p>
+<pre>!define SOMETHING
+!undef SOMETHING
+</pre>
+<a name="5.4.3"></a><h3>5.4.3 !ifdef</h3>
+<pre>符號 [布爾邏輯符號 [符號 [...]]]
+</pre>
+
+<p>當這個命令與 !endif 命令組成一對時，將會告訴編譯器是否編譯在其兩者之間的代碼。如果 「符號」 被全局定義了（通過 !define 或 /D 切換），那麼所含的代碼將會被編譯。否則，那些代碼將會被跳過。布爾邏輯符號 可以在更多的 「符號」 之間被指定為 &amp; (布爾與) 或 | (布爾或)-- 優先度很簡單，從左到右。</p>
+<pre>!define SOMETHING
+!ifdef SOMETHING
+  !echo &quot;SOMETHING 已定義！&quot;
+!endif
+!undef SOMETHING
+!ifdef SOMETHING
+  !echo &quot;SOMETHING 已定義！&quot; # 將不會輸出
+!endif
+</pre>
+<a name="5.4.4"></a><h3>5.4.4 !ifndef</h3>
+<pre>符號 [布爾邏輯符號 [符號 [...]]]
+</pre>
+
+<p>它與 !ifdef 正好相反。當 「符號」 沒有被定義時，代碼將會被編譯。</p>
+<a name="5.4.5"></a><h3>5.4.5 !ifmacrodef</h3>
+<pre>宏名稱 [布爾邏輯符號 [宏名稱 [...]]]
+</pre>
+
+<p>當這個命令與 !endif 命令組成一對時，將會告訴編譯器是否編譯在其兩者之間的代碼。如果宏 「宏名稱」 存在，那麼所含的代碼將會被編譯。否則，那些代碼將會被跳過。布爾邏輯符號可以在更多的 「宏名稱」 之間被指定為 &amp; (布爾與) 或 | (布爾或)-- 優先度很簡單，從左到右。</p>
+<pre>!macro SomeMacro
+!macroend
+!ifmacrodef SomeMacro
+  !echo &quot;SomeMacro 已定義！&quot;
+!endif
+</pre>
+<a name="5.4.6"></a><h3>5.4.6 !ifmacrondef</h3>
+<pre>宏名稱 [布爾邏輯符號 [宏名稱 [...]]]
+</pre>
+
+<p>它與 !ifmacrodef 正好相反。當宏 「宏名稱」 不存在時，代碼塊將會被編譯。</p>
+<a name="5.4.7"></a><h3>5.4.7 !else</h3>
+<pre>[ifdef|ifndef|ifmacrodef|ifmacrondef [...]]
+</pre>
+
+<p>這個命令允許方便地插入不同的代碼塊，當有不同的定義或設定了不同的宏時。你可以建立類似 !ifdef/!else/!endif, !ifdef/!else ifdef/!else/!endif 等代碼塊.</p>
+<pre>!ifdef VERSION
+OutFile installer-${VERSION}.exe
+!else
+OutFile installer.exe
+!endif
+</pre>
+<a name="5.4.8"></a><h3>5.4.8 !endif</h3>
+
+<p>這個命令用於關閉以 !ifdef, !ifndef, !ifmacrodef 或 !ifmacrondef 開始的代碼塊。</p>
+<a name="5.4.9"></a><h3>5.4.9 !insertmacro</h3>
+<pre>宏名稱 [參數] [...]
+</pre>
+
+<p>插入一個由 !macro 建立的宏的內容。如果建立的宏帶有參數，那麼你必須按宏的需求向它傳送足夠的參數。</p>
+<pre>!macro Print text
+  DetailPrint &quot;${text}&quot;
+!macroend
+!insertmacro Print &quot;some text&quot;
+!insertmacro Print &quot;some more text&quot;
+</pre>
+<a name="5.4.10"></a><h3>5.4.10 !macro</h3>
+<pre>宏名稱 [參數][...]
+</pre>
+
+<p>建立一個名為宏。所有在 !macro 與 !macroend 之間的代碼行都會被儲存。 若要稍後插入宏，請使用 !insertmacro。!macro 定義可以有一個或多個定義的參數。這些參數可能會按相同的方式被瀏覽，宏參數會被依次定義（例如：${PARMNAME})且在宏結束的時候依次取消定義。</p>
+<pre>!macro SomeMacro parm1 parm2 parm3
+  DetailPrint &quot;${parm1}&quot;
+  MessageBox MB_OK &quot;${parm2}&quot;
+  File &quot;${parm3}&quot;
+!macroend
+</pre>
+<a name="5.4.11"></a><h3>5.4.11 !macroend</h3>
+
+<p>結束一個以 !macro 為開始的宏。</p>
+<p><a href='Section5.3.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='AppendixA.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section5.4.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+</html>

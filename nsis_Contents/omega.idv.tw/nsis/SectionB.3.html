@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionB.3.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+<head>
+<title>Library Uninstallation</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='SectionB.2.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionB.4.html'>下一頁</a></p>
+<a name="B.3"></a>
+<h2>B.3 庫的卸載</h2>
+<a name="B.3.1"></a>
+<h3>B.3.1 說明</h3>
+
+<p>UnInstallLib 宏用來卸載一個庫。.</p>
+<a name="B.3.2"></a>
+<h3>B.3.2 參數</h3>
+<pre>庫類型 是否共享 卸載方式 檔案</pre>
+
+<p><b>庫類型</b></p>
+
+<p>庫的類型</p>
+
+<p>DLL - 動態連結庫 (DLL)<br />
+REGDLL - 要註冊的 DLL<br />
+TLB - 類型庫或包含 LIBRARY 類型的 DLL<br />
+REGDLLTLB - 要註冊的 DLL 並包含類型庫<br></p>
+
+<p><b>是否共享</b></p>
+
+<p>指定要卸載的庫是否與其它應用程式共享</p>
+
+<p>NOTSHARED - 該庫不是共享的<br>
+ SHARED - 該庫是共享的且僅在共享庫計數減少到不再使用時才移除。<br>
+</p>
+
+<p><b>卸載方式</b></p>
+
+<p>指定卸載方式</p>
+
+<p>NOREMOVE</p>
+<ul>
+<li>該庫不要被移除。你應該在公共的或重要的系統檔案比如 Visual Basic/C++/MFC 運行時庫使用該選項。</li>
+</ul>
+
+<p>REBOOT_PROTECTED</p>
+<ul>
+<li>如果正在使用則等重啟後移除 (系統檔案必須)。</li>
+<li>當檔案沒有系統保護時移除。</li>
+</ul>
+
+<p>NOREBOOT_PROTECTED</p>
+<ul>
+<li>當庫正在使用時警告用戶。使用戶可以關閉正在使用該庫的應用程式。</li>
+<li>當檔案沒有系統保護時移除。</li></ul>
+
+<p>REBOOT_NOTPROTECTED</p>
+<ul>
+<li>如果正在使用則等重啟後移除 (系統檔案必須)。</li>
+<li>移除該庫而不檢測系統檔案保護。</li>
+</ul>
+
+<p>NOREBOOT_NOTPROTECTED</p>
+<ul>
+<li>當庫正在使用時警告用戶。使用戶可以關閉正在使用該庫的應用程式。</li><li>移除該庫而不檢測系統檔案保護。</li></ul>
+
+<p><b>檔案</b></p>
+
+<p>用戶系統裡要卸載的檔案位置</p>
+<a name="B.3.3"></a>
+<h3>B.3.3 選項</h3>
+
+<p>LIBRARY_SHELL_EXTENSION</p>
+<ul>
+<li>在插入 UninstallLib 宏之前定義來在反註冊後調用帶 SHCNE_ASSOCCHANGED 的 SHChangeNotify 函數。它可以在卸載了環境擴展或更改了檔案關聯後更新環境。</li>
+</ul>
+
+<p>LIBRARY_COM</p>
+<ul>
+<li>在插入 UninstallLib 宏之前定義來在反註冊後調用CoFreeUnusedLibraries 函數。當卸載了 COM 庫後它可以從記憶體裡卸載所有不需要的庫檔案。</li>
+</ul>
+<a name="B.3.4"></a>
+<h3>B.3.4 例子</h3>
+<pre> !insertmacro UnInstallLib REGDLL SHARED REBOOT_NOTPROTECTED $SYSDIR\dllname.dll
+</pre>
+<p><a href='SectionB.2.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionB.4.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionB.3.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+</html>

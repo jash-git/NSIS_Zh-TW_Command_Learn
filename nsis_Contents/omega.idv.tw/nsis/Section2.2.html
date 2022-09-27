@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section2.2.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:27 GMT -->
+<head>
+<title>腳本檔案</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='Section2.1.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section2.3.html'>下一頁</a></p>
+<a name="2.2"></a>
+<h2>2.2 腳本檔案</h2>
+
+<p> 要建立 NSIS 安裝程式，首先要寫一個 NSIS 腳本。NSIS 腳本僅僅是一個包含了特殊語法的文字檔案，你可以用任何的文字編輯器來編輯。推薦使用可以顯示行數的文字編輯器，因為當發生錯誤時 NSIS 使用行數來指出錯誤所在。更推薦使用帶有語法高亮顯示的編輯器，你可以在 <a href="http://nsis.sf.net/wiki/">NSIS Wiki</a>下載到。</p>
+
+<p> 在 NSIS 腳本裡每一行都作為一個命令處理，如果這一行太長的話你可以使用「\」來分隔，編譯器會自動地把下一行接到上一行來作為完整的一行，而不是看作新的行。例如： </p>
+<pre>Messagebox MB_OK|MB_ICONINFORMATION \
+&quot;本樣例演示了在 NSIS 腳本裡如何對長的命令進行斷行處理&quot;
+</pre>
+
+<p> 如果在字串裡需要使用雙引號，你應該使用 $\&quot; 來避免誤解，或者使用另外的不引起歧義的引號比如 ` 或 '。</p>
+
+<p> 關於腳本格式更詳細的請看 <a href="Section4.1.html#4.1">腳本檔案格式</a> 。 </p>
+
+<p> 腳本檔案的預設副檔名是 .nsi，頭檔案為 .nsh。頭檔案可以通過把它劃分為一個或多個代碼塊來幫你編排你的腳本，你也可以在頭檔案裡加入功能函數或宏，並且在多個安裝程式裡包含頭檔案，這樣可以更容易的升級你的程式，並且使你的腳本很容易的讓人看懂。要把一個頭檔案包含在你的腳本裡你可以使用 <a href="Section5.1.html#5.1.1">!include</a>。
+
+
+ 這樣就可以僅使用名字包含位於NSIS目錄下的Include目錄下的頭檔案。例如：</p>
+<pre>!include Sections.nsh
+</pre>
+<p><a href='Section2.1.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section2.3.html'>下一頁</a></p>
+
+<hr />
+<div align="left">
+<script async src="../../pagead2.googlesyndication.com/pagead/js/f.txt"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2153907722668011"
+     data-ad-slot="3767461681"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section2.2.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:27 GMT -->
+</html>

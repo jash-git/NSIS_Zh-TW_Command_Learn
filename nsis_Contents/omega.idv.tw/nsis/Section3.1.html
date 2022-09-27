@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section3.1.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:32 GMT -->
+<head>
+<title>MakeNSIS 的使用</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='Chapter3.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section3.2.html'>下一頁</a></p>
+<a name="3.1"></a><h2>3.1 MakeNSIS 的使用</h2>
+
+<p>NSIS 的安裝程式通過使用 'MakeNSIS' 程式來把 (.NSI) 腳本編譯成可執行的安裝程式。NSIS 開發工具包已經安裝在你的電腦裡，你只需要簡單的在資源管理器的 .nsi 檔案上按這裡鼠標右鍵，然後選擇「編譯」。</p>
+
+<p>如果你想在命令行裡使用 MakeNSIS，MakeNSIS 命令的語法為:</p>
+<pre>makensis [選項 | script.nsi | - [...]]
+</pre>
+<a name="3.1.1"></a>
+<h3>3.1.1 選項</h3>
+<ul>
+<li> /LICENSE 顯示一個許可頁面。 </li><li> /V 開關及後面跟隨的 0 ~ 4 數字設定了輸出。0=無輸出，1=僅錯誤，2=警告和錯誤，3=訊息、警告和錯誤，4=全部輸出。 </li><li> /O 開關及後面跟隨的記錄檔案告訴編譯器輸出記錄到記錄檔案而不是螢幕。 </li>
+<li> /PAUSE 使得 Makensis 在登出前暫停，當直接從 Windows 執行時非常有用。 </li><li> /NOCONFIG 禁止包含 [makensis.exe 路徑]\nsisconf.nsh。沒有這個參數的話，安裝程式預設從 nsisconf.nsi 讀取設定。</li>
+<li> /CMDHELP 輸出基本的命令用法訊息(如果指定了命令)，或所有命令(如果未指定命令)。 </li><li> /HDRINFO 輸出 Makensis 編譯的選項訊息。 </li>
+<li> /NOCD 禁止把目前目錄更改到 .nsi 檔案。 </li><li> 使用 /D 開關一次或多次將會把符號新增到全局定義列表(請看 !define)。 </li><li> 使用 /X 開關一次或多次將會執行你隨後指定的代碼。例如: "/XAutoCloseWindow false"。 </li><li> 對腳本名指定一個破折號(-)將會通知 Makensis 把標準輸入作為源來使用。 </li></ul>
+<a name="3.1.2"></a><h3>3.1.2 注意事項</h3>
+<ul>
+<li>參數是按照次序來處理的。<code>makensis /Ddef script.nsi</code> 和 <code>makensis script.nsi /Ddef 是不同的</code>。</li>
+<li> 如果指定了多個腳本，他們將會被連接起來當為一個腳本來處理。 </li>
+</ul>
+<a name="3.1.3"></a><h3>3.1.3 例子</h3>
+
+<p>基本用法:</p>
+<pre>makensis.exe myscript.nsi
+</pre>
+<p>安靜模式:</p>
+<pre>makensis.exe /V1 myscript.nsi
+</pre>
+<p>強行設定壓縮器:</p>
+<pre>makensis.exe /X&quot;SetCompressor /FINAL lzma&quot; myscript.nsi
+</pre>
+<p>改變腳本的行為:</p>
+<pre>makensis.exe /DUSE_UPX /DVERSION=1.337 /DNO_IMAGES myscript.nsi
+</pre>
+<p>參數次序:</p>
+<pre>makensis /XSection sectioncontents.nsi /XSectionEnd</pre>
+<p><a href='Chapter3.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section3.2.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section3.1.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:32 GMT -->
+</html>

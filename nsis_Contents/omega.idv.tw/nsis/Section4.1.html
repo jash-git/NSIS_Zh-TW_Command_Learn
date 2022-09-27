@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.1.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:32 GMT -->
+<head>
+<title>腳本檔案格式</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8"></head>
+
+<body>
+<p><a href='Chapter4.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.2.html'>下一頁</a></p>
+<a name="4.1"></a>
+<h2>4.1 腳本檔案格式</h2>
+
+<p>一個 NSIS 腳本檔案 (.nsi) 就是一個包含了腳本代碼的文字檔案。</p>
+
+<p><b>命令</b></p>
+
+<p>命令行為 命令 [參數] 這樣的格式。</p>
+<pre>File &quot;我的檔案&quot;
+</pre>
+
+<p><b>註釋</b></p>
+
+<p>以 ; 或 # 開始的行為註釋。你可以在命令後面新增註釋。你也可以使用 C 規範的註釋來註釋一行或多行。</p>
+<pre>; 註釋
+# 註釋
+
+/*
+註釋
+註釋
+*/
+
+File &quot;我的檔案&quot; ; 註釋
+</pre>
+
+<p>如果參數需要由 ; 或 # 開頭，你可以用雙引號把它括起來。</p>
+
+<p><b>插件</b></p>
+
+<p>要調用一個插件，使用 插件::命令 [參數] 。更多的訊息請觀看 <a href="Section4.11.html#4.11">插件 DLL</a>。</p>
+<pre>nsExec::Exec &quot;我的檔案&quot;
+</pre>
+
+<p><b>數字</b></p>
+
+<p>對於數字參數，使用十進制(數字)或十六進制(以 0x 開頭的，比如: 0x01235AB)，或八進制(以 0 開頭且無 x)。</p>
+
+<p>顏色被設定為十六進制 RGB 形式，像 HTML 那樣但是沒有 # 開頭。</p>
+<pre>IntCmp 1 0x1 lbl_equal
+
+SetCtlColors $HWND CCCCCC
+</pre>
+
+<p><b>字串</b></p>
+
+<p>要使用一個包含空格的字串，需要用引號括起來:</p>
+<pre>MessageBox MB_OK &quot;Hi 各位！&quot;
+</pre>
+
+<p>引號僅有的作用就是當他們開始時包含一個參數。他們可以是單引號、雙引號或向後的單引號。</p>
+
+<p>你可以使用 $\ 來跳過引號的解析:</p>
+<pre>MessageBox MB_OK &quot;I'll be happy&quot; ; 把一個 ' 放在字串裡
+MessageBox MB_OK 'And he said to me &quot;Hi there!&quot;' ; 把一個 &quot; 放在字串裡
+MessageBox MB_OK `And he said to me &quot;I'll be fucked!&quot;` ; 這裡把 ' 和 &quot; 都放到了字串裡
+MessageBox MB_OK &quot;$\&quot;A quote from a wise man$\&quot; said the wise man&quot; ; 這裡演示了跳過引號的解析</pre>
+
+<p>要在字串裡使用Enter、換行、Tab 等，請使用 $\r, $\n, $\t 等。<a href="Section4.2.html#4.2.4">更多訊息...</a></p>
+
+<p><b>變量</b></p>
+
+<p>變量以 $ 開頭。用戶變量應該 (不是必須) 事先被聲明並且區分大小寫。</p>
+<pre>Var MYVAR
+
+StrCpy $MYVAR &quot;變量值&quot;
+</pre>
+
+<p><a href="Section4.2.html#4.2">更多的訊息...</a></p>
+
+<p><b>長命令</b></p>
+
+<p>要把命令擴充為多行，需要在行尾使用反斜槓 (\) ，下一行會被自動連接到上一行的尾部。例如:</p>
+<pre>CreateShortCut &quot;$SMPROGRAMS\NSIS\ZIP2EXE project workspace.lnk&quot; \
+    &quot;$INSTDIR\source\zip2exe\zip2exe.dsw&quot;
+
+MessageBox MB_YESNO|MB_ICONQUESTION \
+    &quot;Do you want to remove all files in the folder? \
+    (If you have anything you created that you want \
+     to keep, click No)&quot; \
+    IDNO NoRemoveLabel
+</pre>
+
+<p><b>配置檔案</b></p>
+
+<p>如果在 makensis.exe 同目錄下存在 nsisconf.nsh，那麼它裡面的代碼預設將會被包含在任何腳本裡(除非你使用了 /NOCONFIG 命令參數)。</p>
+<p><a href='Chapter4.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.2.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.1.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:32 GMT -->
+</html>

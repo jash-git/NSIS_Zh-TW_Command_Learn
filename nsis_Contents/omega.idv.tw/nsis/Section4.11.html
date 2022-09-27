@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.11.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+<head>
+<title>插件 DLL</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8"></head>
+
+<body>
+<p><a href='Section4.10.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.12.html'>下一頁</a></p>
+<a name="4.11"></a><h2>4.11 Plugin DLLs</h2>
+
+<p>NSIS 腳本語言允許你通過一個 DLL 檔案的函數擴展它的能力。可能最好的例子就是在每個 NSIS 發表的版本裡附帶的 InstallOptions.dll。</p>
+
+<p>當 NSIS 編譯器開始時它會掃瞄插件目錄的 DLL 並且列出找到的插件和輸出的函數。在編譯時如果遇到有序的冒號如 fred::flintstone 編譯器將會作為關鍵字在該列表中尋找。如果列表項列入了 fred.dll 並輸出 flintstone 則 NSIS 將會把 fred.dll 檔案打包到安裝程式裡。</p>
+
+<p>當插件命令執行時 NSIS 將會解壓所需的插件 DLL 檔案到一個臨時目錄 ($PLUGINSDIR)，把指定的參數全部壓入(從右到左次序)，然後執行 DLL 函數。如果指定了 /NOUNLOAD 選項則插件將不會卸載直到安裝程式登出或下一次你使用該插件並不帶 /NOUNLOAD 參數。需要注意的是最後一次調用該插件的時候必須不能有 /NOUNLOAD 否則插件將不能從 $PLUGINSDIR 裡刪除，而導致垃圾檔案留在用戶的機器裡。</p>
+<a name="4.11.1"></a>
+<h3>4.11.1 使用插件命令</h3>
+
+<p>一般插件的調用象下面這樣:</p>
+<pre>InstallOptions::dialog &quot;INI檔案.ini&quot;
+</pre>
+
+<p>所有的參數都壓入堆棧(在這個例子，該插件函數僅需要一個參數)。還有一些插件不需要在堆棧裡有任何參數，而其他的有可能需要幾個或更多。要使用插件命令你首先需要閱讀插件附帶的文件以瞭解該插件函數需要什麼樣的參數。</p>
+<a name="4.11.2"></a>
+<h3>4.11.2 禁止插件卸載</h3>
+
+<p>如果你不希望在調用函數後就卸載該 DLL，你可以使用 /NOUNLOAD 作為第一個參數。例如:</p>
+<pre>dll::function /NOUNLOAD &quot;參數&quot;
+</pre>
+
+<p>你也可以使用 <a href="Section4.8.html#4.8.2.9">SetPluginUnload</a> alwaysoff 來避免每次使用相同插件都要寫 /NOUNLOAD。</p>
+<a name="4.11.3"></a>
+<h3>4.11.3 手動調用插件</h3>
+
+<p>如果你想調用一個用戶硬碟或其他地方裡的插件，你可以使用 <a href="Section4.9.html#4.9.3.1">CallInstDLL</a>。幾乎所有插件都提供了安裝程式的泛函數，所以使用插件命令是一個簡易的方法。使用 <a href="Section4.9.html#4.9.3.1">CallInstDLL</a> 對於你建立了插件並包含在你的應用程式裡並被複製到安裝目錄裡的情況來說非常有用。</p>
+<p><a href='Section4.10.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.12.html'>下一頁</a></p>
+
+<hr />
+<div align="left">
+<script async src="../../pagead2.googlesyndication.com/pagead/js/f.txt"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2153907722668011"
+     data-ad-slot="3767461681"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.11.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+</html>

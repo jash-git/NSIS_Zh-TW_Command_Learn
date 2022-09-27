@@ -1,0 +1,653 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Contents.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:09 GMT -->
+<head>
+<title>NSIS 用戶手冊</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<a name="title"></a>
+<h1>NSIS 用戶手冊</h1>
+<p>新聞、訊息、支援、例子、指南等可以到 <a href="http://nsis.sourceforge.net/">http://nsis.sf.net</a> 觀看。</p>
+<p>快速連結:<br>
+  <a href="http://nsis.sourceforge.net/support/faq/">FAQ</a> - 常見問題列表<br>
+  <a href="http://nsis.sourceforge.net/wiki/">NSIS Wiki </a> - 例子、函數、指南、插件、軟體等等<br>
+  <a href="http://forums.winamp.com/forumdisplay.php?forumid=65">論壇</a> - 發表你的問題或討論 NSIS</p>
+<p>版權所有 (C) 1999-2005 Nullsoft, Inc.</p>
+<ul>
+<li><a class="btitle" href="Chapter1.html#"><b>第一章: </b>介紹 NSIS</a></li>
+<ul>
+<li><a href="Section1.1.html#1.1">關於 NSIS</a></li>
+<li><a href="Section1.2.html#1.2">主要特性</a></li>
+<li><a href="Section1.3.html#1.3">特性列表</a></li>
+</ul>
+<li><a class="btitle" href="Chapter2.html#"><b>第二章: </b>指南: 基礎</a></li>
+<ul>
+<li><a href="Section2.1.html#2.1">介紹</a></li>
+<li><a href="Section2.2.html#2.2">腳本檔案</a></li>
+<li><a href="Section2.3.html#2.3">腳本結構</a></li>
+<ul>
+<li><a href="Section2.3.html#2.3.1">安裝程式屬性</a></li>
+<li><a href="Section2.3.html#2.3.2">頁面</a></li>
+<li><a href="Section2.3.html#2.3.3">區段</a></li>
+<li><a href="Section2.3.html#2.3.4">函數</a></li>
+<li><a href="Section2.3.html#2.3.5">腳本的工作方式</a></li>
+<ul>
+<li><a href="Section2.3.html#2.3.5.1">變量</a></li>
+<li><a href="Section2.3.html#2.3.5.2">調試腳本</a></li>
+</ul>
+<li><a href="Section2.3.html#2.3.6">編譯器命令</a></li>
+</ul>
+<li><a href="Section2.4.html#2.4">編譯器</a></li>
+<li><a href="Section2.5.html#2.5">新式用戶介面(Modern UI)</a></li>
+<li><a href="Section2.6.html#2.6">插件</a></li>
+<li><a href="Section2.7.html#2.7">更多</a></li>
+</ul>
+<li><a class="btitle" href="Chapter3.html#"><b>第三章: </b>命令行的使用</a></li>
+<ul>
+<li><a href="Section3.1.html#3.1">MakeNSIS 的使用</a></li>
+<ul>
+<li><a href="Section3.1.html#3.1.1">選項</a></li>
+<li><a href="Section3.1.html#3.1.2">注意事項</a></li>
+<li><a href="Section3.1.html#3.1.3">例子</a></li>
+</ul>
+<li><a href="Section3.2.html#3.2">安裝程式的使用</a></li>
+<ul>
+<li><a href="Section3.2.html#3.2.1">公共選項</a></li>
+<li><a href="Section3.2.html#3.2.2">卸載程式特別選項</a></li>
+<li><a href="Section3.2.html#3.2.3">例子</a></li>
+</ul>
+</ul>
+<li><a class="btitle" href="Chapter4.html#"><b>第四章: </b>腳本參考</a></li>
+<ul>
+<li><a href="Section4.1.html#4.1">腳本檔案格式</a></li>
+<li><a href="Section4.2.html#4.2">變量</a></li>
+<ul>
+<li><a href="Section4.2.html#4.2.1">用戶變量</a></li>
+<ul>
+<li><a href="Section4.2.html#4.2.1.1">Var</a></li>
+</ul>
+<li><a href="Section4.2.html#4.2.2">其它可寫的變量</a></li>
+<li><a href="Section4.2.html#4.2.3">常量</a></li>
+<li><a href="Section4.2.html#4.2.4">在字串裡使用變量</a></li>
+</ul>
+<li><a href="Section4.3.html#4.3">標記</a></li>
+<li><a href="Section4.4.html#4.4">相對跳轉</a></li>
+<li><a href="Section4.5.html#4.5">頁面</a></li>
+<ul>
+<li><a href="Section4.5.html#4.5.1">次序</a></li>
+<li><a href="Section4.5.html#4.5.2">頁面選項</a></li>
+<li><a href="Section4.5.html#4.5.3">回調</a></li>
+<li><a href="Section4.5.html#4.5.4">Page</a></li>
+<li><a href="Section4.5.html#4.5.5">UninstPage</a></li>
+<li><a href="Section4.5.html#4.5.6">PageEx</a></li>
+<li><a href="Section4.5.html#4.5.7">PageExEnd</a></li>
+<li><a href="Section4.5.html#4.5.8">PageCallbacks</a></li>
+</ul>
+<li><a href="Section4.6.html#4.6">區段</a></li>
+<ul>
+<li><a href="Section4.6.html#4.6.1">區段命令</a></li>
+<ul>
+<li><a href="Section4.6.html#4.6.1.1">AddSize</a></li>
+<li><a href="Section4.6.html#4.6.1.2">Section</a></li>
+<li><a href="Section4.6.html#4.6.1.3">SectionEnd</a></li>
+<li><a href="Section4.6.html#4.6.1.4">SectionIn</a></li>
+<li><a href="Section4.6.html#4.6.1.5">SectionGroup</a></li>
+<li><a href="Section4.6.html#4.6.1.6">SectionGroupEnd</a></li>
+</ul>
+<li><a href="Section4.6.html#4.6.2">卸載區段</a></li>
+</ul>
+<li><a href="Section4.7.html#4.7">函數</a></li>
+<ul>
+<li><a href="Section4.7.html#4.7.1">函數命令</a></li>
+<ul>
+<li><a href="Section4.7.html#4.7.1.1">Function</a></li>
+<li><a href="Section4.7.html#4.7.1.2">FunctionEnd</a></li>
+</ul>
+<li><a href="Section4.7.html#4.7.2">回調函數</a></li>
+<ul>
+<li><a href="Section4.7.html#4.7.2.1">安裝回調</a></li>
+<ul>
+<li><a href="Section4.7.html#4.7.2.1.1">.onGUIInit</a></li>
+<li><a href="Section4.7.html#4.7.2.1.2">.onInit</a></li>
+<li><a href="Section4.7.html#4.7.2.1.3">.onInstFailed</a></li>
+<li><a href="Section4.7.html#4.7.2.1.4">.onInstSuccess</a></li>
+<li><a href="Section4.7.html#4.7.2.1.5">.onGUIEnd</a></li>
+<li><a href="Section4.7.html#4.7.2.1.6">.onMouseOverSection</a></li>
+<li><a href="Section4.7.html#4.7.2.1.7">.onRebootFailed</a></li>
+<li><a href="Section4.7.html#4.7.2.1.8">.onSelChange</a></li>
+<li><a href="Section4.7.html#4.7.2.1.9">.onUserAbort</a></li>
+<li><a href="Section4.7.html#4.7.2.1.10">.onVerifyInstDir</a></li>
+</ul>
+<li><a href="Section4.7.html#4.7.2.2">卸載回調</a></li>
+<ul>
+<li><a href="Section4.7.html#4.7.2.2.1">un.onGUIInit</a></li>
+<li><a href="Section4.7.html#4.7.2.2.2">un.onInit</a></li>
+<li><a href="Section4.7.html#4.7.2.2.3">un.onUninstFailed</a></li>
+<li><a href="Section4.7.html#4.7.2.2.4">un.onUninstSuccess</a></li>
+<li><a href="Section4.7.html#4.7.2.2.5">un.onGUIEnd</a></li>
+<li><a href="Section4.7.html#4.7.2.2.6">un.onRebootFailed</a></li>
+<li><a href="Section4.7.html#4.7.2.2.7">un.onUserAbort</a></li>
+</ul>
+</ul>
+</ul>
+<li><a href="Section4.8.html#4.8">安裝程式屬性</a></li>
+<ul>
+<li><a href="Section4.8.html#4.8.1">慣用屬性</a></li>
+<ul>
+<li><a href="Section4.8.html#4.8.1.1">AddBrandingImage</a></li>
+<li><a href="Section4.8.html#4.8.1.2">AllowRootDirInstall</a></li>
+<li><a href="Section4.8.html#4.8.1.3">AutoCloseWindow</a></li>
+<li><a href="Section4.8.html#4.8.1.4">BGFont</a></li>
+<li><a href="Section4.8.html#4.8.1.5">BGGradient</a></li>
+<li><a href="Section4.8.html#4.8.1.6">BrandingText</a></li>
+<li><a href="Section4.8.html#4.8.1.7">Caption</a></li>
+<li><a href="Section4.8.html#4.8.1.8">ChangeUI</a></li>
+<li><a href="Section4.8.html#4.8.1.9">CheckBitmap</a></li>
+<li><a href="Section4.8.html#4.8.1.10">CompletedText</a></li>
+<li><a href="Section4.8.html#4.8.1.11">ComponentText</a></li>
+<li><a href="Section4.8.html#4.8.1.12">CRCCheck</a></li>
+<li><a href="Section4.8.html#4.8.1.13">DetailsButtonText</a></li>
+<li><a href="Section4.8.html#4.8.1.14">DirText</a></li>
+<li><a href="Section4.8.html#4.8.1.15">DirVar</a></li>
+<li><a href="Section4.8.html#4.8.1.16">DirVerify</a></li>
+<li><a href="Section4.8.html#4.8.1.17">FileErrorText</a></li>
+<li><a href="Section4.8.html#4.8.1.18">Icon</a></li>
+<li><a href="Section4.8.html#4.8.1.19">InstallButtonText</a></li>
+<li><a href="Section4.8.html#4.8.1.20">InstallColors</a></li>
+<li><a href="Section4.8.html#4.8.1.21">InstallDir</a></li>
+<li><a href="Section4.8.html#4.8.1.22">InstallDirRegKey</a></li>
+<li><a href="Section4.8.html#4.8.1.23">InstProgressFlags</a></li>
+<li><a href="Section4.8.html#4.8.1.24">InstType</a></li>
+<li><a href="Section4.8.html#4.8.1.25">LicenseBkColor</a></li>
+<li><a href="Section4.8.html#4.8.1.26">LicenseData</a></li>
+<li><a href="Section4.8.html#4.8.1.27">LicenseForceSelection</a></li>
+<li><a href="Section4.8.html#4.8.1.28">LicenseText</a></li>
+<li><a href="Section4.8.html#4.8.1.29">MiscButtonText</a></li>
+<li><a href="Section4.8.html#4.8.1.30">Name</a></li>
+<li><a href="Section4.8.html#4.8.1.31">OutFile</a></li>
+<li><a href="Section4.8.html#4.8.1.32">SetFont</a></li>
+<li><a href="Section4.8.html#4.8.1.33">ShowInstDetails</a></li>
+<li><a href="Section4.8.html#4.8.1.34">ShowUninstDetails</a></li>
+<li><a href="Section4.8.html#4.8.1.35">SilentInstall</a></li>
+<li><a href="Section4.8.html#4.8.1.36">SilentUnInstall</a></li>
+<li><a href="Section4.8.html#4.8.1.37">SpaceTexts</a></li>
+<li><a href="Section4.8.html#4.8.1.38">SubCaption</a></li>
+<li><a href="Section4.8.html#4.8.1.39">UninstallButtonText</a></li>
+<li><a href="Section4.8.html#4.8.1.40">UninstallCaption</a></li>
+<li><a href="Section4.8.html#4.8.1.41">UninstallIcon</a></li>
+<li><a href="Section4.8.html#4.8.1.42">UninstallSubCaption</a></li>
+<li><a href="Section4.8.html#4.8.1.43">UninstallText</a></li>
+<li><a href="Section4.8.html#4.8.1.44">WindowIcon</a></li>
+<li><a href="Section4.8.html#4.8.1.45">XPStyle</a></li>
+</ul>
+<li><a href="Section4.8.html#4.8.2">編譯器標記</a></li>
+<ul>
+<li><a href="Section4.8.html#4.8.2.1">AllowSkipFiles</a></li>
+<li><a href="Section4.8.html#4.8.2.2">FileBufSize</a></li>
+<li><a href="Section4.8.html#4.8.2.3">SetCompress</a></li>
+<li><a href="Section4.8.html#4.8.2.4">SetCompressor</a></li>
+<li><a href="Section4.8.html#4.8.2.5">SetCompressorDictSize</a></li>
+<li><a href="Section4.8.html#4.8.2.6">SetDatablockOptimize</a></li>
+<li><a href="Section4.8.html#4.8.2.7">SetDateSave</a></li>
+<li><a href="Section4.8.html#4.8.2.8">SetOverwrite</a></li>
+<li><a href="Section4.8.html#4.8.2.9">SetPluginUnload</a></li>
+</ul>
+<li><a href="Section4.8.html#4.8.3">版本訊息</a></li>
+<ul>
+<li><a href="Section4.8.html#4.8.3.1">VIAddVersionKey</a></li>
+<li><a href="Section4.8.html#4.8.3.2">VIProductVersion</a></li>
+</ul>
+</ul>
+<li><a href="Section4.9.html#4.9">指令用法說明</a></li>
+<ul>
+<li><a href="Section4.9.html#4.9.1">基本指令</a></li>
+<ul>
+<li><a href="Section4.9.html#4.9.1.1">Delete</a></li>
+<li><a href="Section4.9.html#4.9.1.2">Exec</a></li>
+<li><a href="Section4.9.html#4.9.1.3">ExecShell</a></li>
+<li><a href="Section4.9.html#4.9.1.4">ExecWait</a></li>
+<li><a href="Section4.9.html#4.9.1.5">File</a></li>
+<li><a href="Section4.9.html#4.9.1.6">Rename</a></li>
+<li><a href="Section4.9.html#4.9.1.7">ReserveFile</a></li>
+<li><a href="Section4.9.html#4.9.1.8">RMDir</a></li>
+<li><a href="Section4.9.html#4.9.1.9">SetOutPath</a></li>
+</ul>
+<li><a href="Section4.9.html#4.9.2">註冊表、INI 檔案指令</a></li>
+<ul>
+<li><a href="Section4.9.html#4.9.2.1">DeleteINISec</a></li>
+<li><a href="Section4.9.html#4.9.2.2">DeleteINIStr</a></li>
+<li><a href="Section4.9.html#4.9.2.3">DeleteRegKey</a></li>
+<li><a href="Section4.9.html#4.9.2.4">DeleteRegValue</a></li>
+<li><a href="Section4.9.html#4.9.2.5">EnumRegKey</a></li>
+<li><a href="Section4.9.html#4.9.2.6">EnumRegValue</a></li>
+<li><a href="Section4.9.html#4.9.2.7">ExpandEnvStrings</a></li>
+<li><a href="Section4.9.html#4.9.2.8">FlushINI</a></li>
+<li><a href="Section4.9.html#4.9.2.9">ReadEnvStr</a></li>
+<li><a href="Section4.9.html#4.9.2.10">ReadINIStr</a></li>
+<li><a href="Section4.9.html#4.9.2.11">ReadRegDWORD</a></li>
+<li><a href="Section4.9.html#4.9.2.12">ReadRegStr</a></li>
+<li><a href="Section4.9.html#4.9.2.13">WriteINIStr</a></li>
+<li><a href="Section4.9.html#4.9.2.14">WriteRegBin</a></li>
+<li><a href="Section4.9.html#4.9.2.15">WriteRegDWORD</a></li>
+<li><a href="Section4.9.html#4.9.2.16">WriteRegStr</a></li>
+<li><a href="Section4.9.html#4.9.2.17">WriteRegExpandStr</a></li>
+</ul>
+<li><a href="Section4.9.html#4.9.3">慣用用途指令</a></li>
+<ul>
+<li><a href="Section4.9.html#4.9.3.1">CallInstDLL</a></li>
+<li><a href="Section4.9.html#4.9.3.2">CopyFiles</a></li>
+<li><a href="Section4.9.html#4.9.3.3">CreateDirectory</a></li>
+<li><a href="Section4.9.html#4.9.3.4">CreateShortCut</a></li>
+<li><a href="Section4.9.html#4.9.3.5">GetDLLVersion</a></li>
+<li><a href="Section4.9.html#4.9.3.6">GetDLLVersionLocal</a></li>
+<li><a href="Section4.9.html#4.9.3.7">GetFileTime</a></li>
+<li><a href="Section4.9.html#4.9.3.8">GetFileTimeLocal</a></li>
+<li><a href="Section4.9.html#4.9.3.9">GetFullPathName</a></li>
+<li><a href="Section4.9.html#4.9.3.10">GetTempFileName</a></li>
+<li><a href="Section4.9.html#4.9.3.11">SearchPath</a></li>
+<li><a href="Section4.9.html#4.9.3.12">SetFileAttributes</a></li>
+<li><a href="Section4.9.html#4.9.3.13">RegDLL</a></li>
+<li><a href="Section4.9.html#4.9.3.14">UnRegDLL</a></li>
+</ul>
+<li><a href="Section4.9.html#4.9.4">流程控制指令</a></li>
+<ul>
+<li><a href="Section4.9.html#4.9.4.1">Abort</a></li>
+<li><a href="Section4.9.html#4.9.4.2">Call</a></li>
+<li><a href="Section4.9.html#4.9.4.3">ClearErrors</a></li>
+<li><a href="Section4.9.html#4.9.4.4">GetCurrentAddress</a></li>
+<li><a href="Section4.9.html#4.9.4.5">GetFunctionAddress</a></li>
+<li><a href="Section4.9.html#4.9.4.6">GetLabelAddress</a></li>
+<li><a href="Section4.9.html#4.9.4.7">Goto</a></li>
+<li><a href="Section4.9.html#4.9.4.8">IfAbort</a></li>
+<li><a href="Section4.9.html#4.9.4.9">IfErrors</a></li>
+<li><a href="Section4.9.html#4.9.4.10">IfFileExists</a></li>
+<li><a href="Section4.9.html#4.9.4.11">IfRebootFlag</a></li>
+<li><a href="Section4.9.html#4.9.4.12">IfSilent</a></li>
+<li><a href="Section4.9.html#4.9.4.13">IntCmp</a></li>
+<li><a href="Section4.9.html#4.9.4.14">IntCmpU</a></li>
+<li><a href="Section4.9.html#4.9.4.15">MessageBox</a></li>
+<li><a href="Section4.9.html#4.9.4.16">Return</a></li>
+<li><a href="Section4.9.html#4.9.4.17">Quit</a></li>
+<li><a href="Section4.9.html#4.9.4.18">SetErrors</a></li>
+<li><a href="Section4.9.html#4.9.4.19">StrCmp</a></li>
+</ul>
+<li><a href="Section4.9.html#4.9.5">檔案指令</a></li>
+<ul>
+<li><a href="Section4.9.html#4.9.5.1">FileClose</a></li>
+<li><a href="Section4.9.html#4.9.5.2">FileOpen</a></li>
+<li><a href="Section4.9.html#4.9.5.3">FileRead</a></li>
+<li><a href="Section4.9.html#4.9.5.4">FileReadByte</a></li>
+<li><a href="Section4.9.html#4.9.5.5">FileSeek</a></li>
+<li><a href="Section4.9.html#4.9.5.6">FileWrite</a></li>
+<li><a href="Section4.9.html#4.9.5.7">FileWriteByte</a></li>
+<li><a href="Section4.9.html#4.9.5.8">FindClose</a></li>
+<li><a href="Section4.9.html#4.9.5.9">FindFirst</a></li>
+<li><a href="Section4.9.html#4.9.5.10">Find下一頁</a></li>
+</ul>
+<li><a href="Section4.9.html#4.9.6">卸載程式指令</a></li>
+<ul>
+<li><a href="Section4.9.html#4.9.6.1">WriteUninstaller</a></li>
+</ul>
+<li><a href="Section4.9.html#4.9.7">混合指令</a></li>
+<ul>
+<li><a href="Section4.9.html#4.9.7.1">GetErrorLevel</a></li>
+<li><a href="Section4.9.html#4.9.7.2">GetInstDirError</a></li>
+<li><a href="Section4.9.html#4.9.7.3">InitPluginsDir</a></li>
+<li><a href="Section4.9.html#4.9.7.4">SetErrorLevel</a></li>
+<li><a href="Section4.9.html#4.9.7.5">SetShellVarContext</a></li>
+<li><a href="Section4.9.html#4.9.7.6">Sleep</a></li>
+</ul>
+<li><a href="Section4.9.html#4.9.8">字串操作指令</a></li>
+<ul>
+<li><a href="Section4.9.html#4.9.8.1">StrCpy</a></li>
+<li><a href="Section4.9.html#4.9.8.2">StrLen</a></li>
+</ul>
+<li><a href="Section4.9.html#4.9.9">堆棧支援</a></li>
+<ul>
+<li><a href="Section4.9.html#4.9.9.1">Exch</a></li>
+<li><a href="Section4.9.html#4.9.9.2">Pop</a></li>
+<li><a href="Section4.9.html#4.9.9.3">Push</a></li>
+</ul>
+<li><a href="Section4.9.html#4.9.10">整數支援</a></li>
+<ul>
+<li><a href="Section4.9.html#4.9.10.1">IntFmt</a></li>
+<li><a href="Section4.9.html#4.9.10.2">IntOp</a></li>
+</ul>
+<li><a href="Section4.9.html#4.9.11">重啟指令</a></li>
+<ul>
+<li><a href="Section4.9.html#4.9.11.1">Reboot</a></li>
+<li><a href="Section4.9.html#4.9.11.2">SetRebootFlag</a></li>
+</ul>
+<li><a href="Section4.9.html#4.9.12">安裝記錄指令</a></li>
+<ul>
+<li><a href="Section4.9.html#4.9.12.1">LogSet</a></li>
+<li><a href="Section4.9.html#4.9.12.2">LogText</a></li>
+</ul>
+<li><a href="Section4.9.html#4.9.13">區段管理</a></li>
+<ul>
+<li><a href="Section4.9.html#4.9.13.1">SectionSetFlags</a></li>
+<li><a href="Section4.9.html#4.9.13.2">SectionGetFlags</a></li>
+<li><a href="Section4.9.html#4.9.13.3">SectionSetText</a></li>
+<li><a href="Section4.9.html#4.9.13.4">SectionGetText</a></li>
+<li><a href="Section4.9.html#4.9.13.5">SectionSetInstTypes</a></li>
+<li><a href="Section4.9.html#4.9.13.6">SectionGetInstTypes</a></li>
+<li><a href="Section4.9.html#4.9.13.7">SectionSetSize</a></li>
+<li><a href="Section4.9.html#4.9.13.8">SectionGetSize</a></li>
+<li><a href="Section4.9.html#4.9.13.9">SetCurInstType</a></li>
+<li><a href="Section4.9.html#4.9.13.10">GetCurInstType</a></li>
+<li><a href="Section4.9.html#4.9.13.11">InstTypeSetText</a></li>
+<li><a href="Section4.9.html#4.9.13.12">InstTypeGetText</a></li>
+</ul>
+<li><a href="Section4.9.html#4.9.14">用戶介面指令</a></li>
+<ul>
+<li><a href="Section4.9.html#4.9.14.1">BringToFront</a></li>
+<li><a href="Section4.9.html#4.9.14.2">CreateFont</a></li>
+<li><a href="Section4.9.html#4.9.14.3">DetailPrint</a></li>
+<li><a href="Section4.9.html#4.9.14.4">EnableWindow</a></li>
+<li><a href="Section4.9.html#4.9.14.5">FindWindow</a></li>
+<li><a href="Section4.9.html#4.9.14.6">GetDlgItem</a></li>
+<li><a href="Section4.9.html#4.9.14.7">HideWindow</a></li>
+<li><a href="Section4.9.html#4.9.14.8">IsWindow</a></li>
+<li><a href="Section4.9.html#4.9.14.9">LockWindow</a></li>
+<li><a href="Section4.9.html#4.9.14.10">SendMessage</a></li>
+<li><a href="Section4.9.html#4.9.14.11">SetAutoClose</a></li>
+<li><a href="Section4.9.html#4.9.14.12">SetBrandingImage</a></li>
+<li><a href="Section4.9.html#4.9.14.13">SetDetailsView</a></li>
+<li><a href="Section4.9.html#4.9.14.14">SetDetailsPrint</a></li>
+<li><a href="Section4.9.html#4.9.14.15">SetCtlColors</a></li>
+<li><a href="Section4.9.html#4.9.14.16">SetSilent</a></li>
+<li><a href="Section4.9.html#4.9.14.17">ShowWindow</a></li>
+</ul>
+<li><a href="Section4.9.html#4.9.15">多語言指令</a></li>
+<ul>
+<li><a href="Section4.9.html#4.9.15.1">LoadLanguageFile</a></li>
+<li><a href="Section4.9.html#4.9.15.2">LangString</a></li>
+<li><a href="Section4.9.html#4.9.15.3">LicenseLangString</a></li>
+</ul>
+</ul>
+<li><a href="Section4.10.html#4.10">多語言</a></li>
+<ul>
+<li><a href="Section4.10.html#4.10.1">語言的選擇</a></li>
+<li><a href="Section4.10.html#4.10.2">LangDLL 插件</a></li>
+<li><a href="Section4.10.html#4.10.3">RTL 語言</a></li>
+</ul>
+<li><a href="Section4.11.html#4.11">插件 DLL</a></li>
+<ul>
+<li><a href="Section4.11.html#4.11.1">使用插件命令</a></li>
+<li><a href="Section4.11.html#4.11.2">禁止插件卸載</a></li>
+<li><a href="Section4.11.html#4.11.3">手動調用插件</a></li>
+</ul>
+<li><a href="Section4.12.html#4.12">靜默安裝、卸載</a></li>
+</ul>
+<li><a class="btitle" href="Chapter5.html#"><b>第五章: </b>編譯時命令</a></li>
+<ul>
+<li><a href="Section5.1.html#5.1">編譯器實用命令</a></li>
+<ul>
+<li><a href="Section5.1.html#5.1.1">!include</a></li>
+<li><a href="Section5.1.html#5.1.2">!addincludedir</a></li>
+<li><a href="Section5.1.html#5.1.3">!addplugindir</a></li>
+<li><a href="Section5.1.html#5.1.4">!cd</a></li>
+<li><a href="Section5.1.html#5.1.5">!echo</a></li>
+<li><a href="Section5.1.html#5.1.6">!error</a></li>
+<li><a href="Section5.1.html#5.1.7">!execute</a></li>
+<li><a href="Section5.1.html#5.1.8">!packhdr</a></li>
+<li><a href="Section5.1.html#5.1.9">!system</a></li>
+<li><a href="Section5.1.html#5.1.10">!warning</a></li>
+<li><a href="Section5.1.html#5.1.11">!verbose</a></li>
+</ul>
+<li><a href="Section5.2.html#5.2">預設定義</a></li>
+<ul>
+<li><a href="Section5.2.html#5.2.1">${__FILE__}</a></li>
+<li><a href="Section5.2.html#5.2.2">${__LINE__}</a></li>
+<li><a href="Section5.2.html#5.2.3">${__DATE__}</a></li>
+<li><a href="Section5.2.html#5.2.4">${__TIME__}</a></li>
+<li><a href="Section5.2.html#5.2.5">${__TIMESTAMP__}</a></li>
+</ul>
+<li><a href="Section5.3.html#5.3">讀取環境變量</a></li>
+<ul>
+<li><a href="Section5.3.html#5.3.1">$%envVarName%</a></li>
+</ul>
+<li><a href="Section5.4.html#5.4">條件編譯</a></li>
+<ul>
+<li><a href="Section5.4.html#5.4.1">!define</a></li>
+<li><a href="Section5.4.html#5.4.2">!undef</a></li>
+<li><a href="Section5.4.html#5.4.3">!ifdef</a></li>
+<li><a href="Section5.4.html#5.4.4">!ifndef</a></li>
+<li><a href="Section5.4.html#5.4.5">!ifmacrodef</a></li>
+<li><a href="Section5.4.html#5.4.6">!ifmacrondef</a></li>
+<li><a href="Section5.4.html#5.4.7">!else</a></li>
+<li><a href="Section5.4.html#5.4.8">!endif</a></li>
+<li><a href="Section5.4.html#5.4.9">!insertmacro</a></li>
+<li><a href="Section5.4.html#5.4.10">!macro</a></li>
+<li><a href="Section5.4.html#5.4.11">!macroend</a></li>
+</ul>
+</ul>
+<li><a class="btitle" href="AppendixA.html#A"><b>附錄 A: </b>新式用戶介面</a></li>
+<li><a class="btitle" href="AppendixB.html#B"><b>附錄 B: </b>DLL/TLB 庫的安裝</a></li>
+<ul>
+<li><a href="SectionB.1.html#B.1">簡介</a></li>
+<li><a href="SectionB.2.html#B.2">庫的安裝</a></li>
+<ul>
+<li><a href="SectionB.2.html#B.2.1">說明</a></li>
+<li><a href="SectionB.2.html#B.2.2">參數</a></li>
+<li><a href="SectionB.2.html#B.2.3">選項</a></li>
+<li><a href="SectionB.2.html#B.2.4">注意事項</a></li>
+<li><a href="SectionB.2.html#B.2.5">例子</a></li>
+</ul>
+<li><a href="SectionB.3.html#B.3">庫的卸載</a></li>
+<ul>
+<li><a href="SectionB.3.html#B.3.1">說明</a></li>
+<li><a href="SectionB.3.html#B.3.2">參數</a></li>
+<li><a href="SectionB.3.html#B.3.3">選項</a></li>
+<li><a href="SectionB.3.html#B.3.4">例子</a></li>
+</ul>
+<li><a href="SectionB.4.html#B.4">Visual Basic 6 Runtimes</a></li>
+</ul>
+<li><a class="btitle" href="AppendixC.html#C"><b>附錄 C: </b>常用腳本</a></li>
+<ul>
+<li><a href="SectionC.1.html#C.1">取得上層目錄</a></li>
+<li><a href="SectionC.2.html#C.2">修剪新行(去除Enter換行)</a></li>
+<li><a href="SectionC.3.html#C.3">取得命令行參數</a></li>
+<li><a href="SectionC.4.html#C.4">在字串裡尋找</a></li>
+<li><a href="SectionC.5.html#C.5">取得 Windows 版本</a></li>
+<li><a href="SectionC.6.html#C.6">取得 Internet Explorer 版本</a></li>
+<li><a href="SectionC.7.html#C.7">判斷 .NET Framework 是否已安裝</a></li>
+<li><a href="SectionC.8.html#C.8">判斷 Macromedia Flash Player 是否已安裝</a></li>
+<li><a href="SectionC.9.html#C.9">連接到 Internet</a></li>
+<li><a href="SectionC.10.html#C.10">取得安裝程式檔案名稱</a></li>
+<li><a href="SectionC.11.html#C.11">禁止多個安裝程式實例</a></li>
+<li><a href="SectionC.12.html#C.12">更多的</a></li>
+</ul>
+<li><a class="btitle" href="AppendixD.html#D"><b>附錄 D: </b>常用訊息</a></li>
+<ul>
+<li><a href="SectionD.1.html#D.1">錯誤等級</a></li>
+<li><a href="SectionD.2.html#D.2">新增卸載訊息到新增刪除面板</a></li>
+<li><a href="SectionD.3.html#D.3">使用 System.dll 來調用一個外部 DLL</a></li>
+<li><a href="SectionD.4.html#D.4">把安裝詳細訊息導出到檔案</a></li>
+<li><a href="SectionD.5.html#D.5">如何讀取 REG_MULTI_SZ 值</a></li>
+</ul>
+<li><a class="btitle" href="AppendixE.html#E"><b>附錄 E: </b>常用頭檔案</a></li>
+<ul>
+<li><a href="SectionE.1.html#E.1">檔案函數</a></li>
+<ul>
+<li><a href="SectionE.1.html#E.1.1">介紹</a></li>
+<li><a href="SectionE.1.html#E.1.2">Locate</a></li>
+<li><a href="SectionE.1.html#E.1.3">GetSize</a></li>
+<li><a href="SectionE.1.html#E.1.4">DriveSpace</a></li>
+<li><a href="SectionE.1.html#E.1.5">GetDrives</a></li>
+<li><a href="SectionE.1.html#E.1.6">GetTime</a></li>
+<li><a href="SectionE.1.html#E.1.7">GetFileAttributes</a></li>
+<li><a href="SectionE.1.html#E.1.8">GetFileVersion</a></li>
+<li><a href="SectionE.1.html#E.1.9">GetExeName</a></li>
+<li><a href="SectionE.1.html#E.1.10">GetExePath</a></li>
+<li><a href="SectionE.1.html#E.1.11">GetParameters</a></li>
+<li><a href="SectionE.1.html#E.1.12">GetOptions</a></li>
+<li><a href="SectionE.1.html#E.1.13">GetRoot</a></li>
+<li><a href="SectionE.1.html#E.1.14">GetParent</a></li>
+<li><a href="SectionE.1.html#E.1.15">GetFileName</a></li>
+<li><a href="SectionE.1.html#E.1.16">GetBaseName</a></li>
+<li><a href="SectionE.1.html#E.1.17">GetFileExt</a></li>
+<li><a href="SectionE.1.html#E.1.18">BannerTrimPath</a></li>
+<li><a href="SectionE.1.html#E.1.19">DirState</a></li>
+<li><a href="SectionE.1.html#E.1.20">RefreshShellIcons</a></li>
+</ul>
+<li><a href="SectionE.2.html#E.2">文字函數</a></li>
+<ul>
+<li><a href="SectionE.2.html#E.2.1">介紹</a></li>
+<li><a href="SectionE.2.html#E.2.2">LineFind</a></li>
+<li><a href="SectionE.2.html#E.2.3">LineRead</a></li>
+<li><a href="SectionE.2.html#E.2.4">FileReadFromEnd</a></li>
+<li><a href="SectionE.2.html#E.2.5">LineSum</a></li>
+<li><a href="SectionE.2.html#E.2.6">FileJoin</a></li>
+<li><a href="SectionE.2.html#E.2.7">TextCompare</a></li>
+<li><a href="SectionE.2.html#E.2.8">ConfigRead</a></li>
+<li><a href="SectionE.2.html#E.2.9">ConfigWrite</a></li>
+<li><a href="SectionE.2.html#E.2.10">FileRecode</a></li>
+<li><a href="SectionE.2.html#E.2.11">TrimNewLines</a></li>
+</ul>
+<li><a href="SectionE.3.html#E.3">句子函數</a></li>
+<ul>
+<li><a href="SectionE.3.html#E.3.1">介紹</a></li>
+<li><a href="SectionE.3.html#E.3.2">WordFind</a></li>
+<li><a href="SectionE.3.html#E.3.3">WordFind2X</a></li>
+<li><a href="SectionE.3.html#E.3.4">WordFind3X</a></li>
+<li><a href="SectionE.3.html#E.3.5">WordReplace</a></li>
+<li><a href="SectionE.3.html#E.3.6">WordAdd</a></li>
+<li><a href="SectionE.3.html#E.3.7">WordInsert</a></li>
+<li><a href="SectionE.3.html#E.3.8">StrFilter</a></li>
+<li><a href="SectionE.3.html#E.3.9">VersionCompare</a></li>
+<li><a href="SectionE.3.html#E.3.10">VersionConvert</a></li>
+</ul>
+<li><a href="SectionE.4.html#E.4">邏輯函數庫</a></li>
+<ul>
+<li><a href="SectionE.4.html#E.4.1">介紹</a></li>
+<li><a href="SectionE.4.html#E.4.2">基本語句</a></li>
+<li><a href="SectionE.4.html#E.4.3">表達式</a></li>
+<li><a href="SectionE.4.html#E.4.4">例子</a></li>
+</ul>
+<li><a href="SectionE.5.html#E.5">常用函數庫</a></li>
+<ul>
+<li><a href="SectionE.5.html#E.5.1">介紹</a></li>
+<li><a href="SectionE.5.html#E.5.2">字串處理函數</a></li>
+<ul>
+<li><a href="SectionE.5.html#E.5.2.1">Find</a></li>
+<li><a href="SectionE.5.html#E.5.2.2">FindI</a></li>
+<li><a href="SectionE.5.html#E.5.2.3">FindLast</a></li>
+<li><a href="SectionE.5.html#E.5.2.4">FindLastI</a></li>
+<li><a href="SectionE.5.html#E.5.2.5">StrStr</a></li>
+<li><a href="SectionE.5.html#E.5.2.6">StrStrI</a></li>
+<li><a href="SectionE.5.html#E.5.2.7">StrRStrI</a></li>
+<li><a href="SectionE.5.html#E.5.2.8">TrimLine</a></li>
+<li><a href="SectionE.5.html#E.5.2.9">TrimLineEx</a></li>
+<li><a href="SectionE.5.html#E.5.2.10">Replace</a></li>
+<li><a href="SectionE.5.html#E.5.2.11">ReplaceEx</a></li>
+<li><a href="SectionE.5.html#E.5.2.12">VerCmp</a></li>
+<li><a href="SectionE.5.html#E.5.2.13">StrCase</a></li>
+<li><a href="SectionE.5.html#E.5.2.14">StrToHex</a></li>
+<li><a href="SectionE.5.html#E.5.2.15">ConvertANSIToUTF8</a></li>
+<li><a href="SectionE.5.html#E.5.2.16">ConvertUTF8ToANSI</a></li>
+</ul>
+<li><a href="SectionE.5.html#E.5.3">檔案、磁碟處理函數</a></li>
+<ul>
+<li><a href="SectionE.5.html#E.5.3.1">GetParent</a></li>
+<li><a href="SectionE.5.html#E.5.3.2">GetChild</a></li>
+<li><a href="SectionE.5.html#E.5.3.3">GetFileExt</a></li>
+<li><a href="SectionE.5.html#E.5.3.4">DumpLog</a></li>
+<li><a href="SectionE.5.html#E.5.3.5">AppendFile</a></li>
+<li><a href="SectionE.5.html#E.5.3.6">DelFileByLog</a></li>
+<li><a href="SectionE.5.html#E.5.3.7">RMDir</a></li>
+<li><a href="SectionE.5.html#E.5.3.8">ForEachFile</a></li>
+<li><a href="SectionE.5.html#E.5.3.9">ForEachFileEx</a></li>
+<li><a href="SectionE.5.html#E.5.3.10">SearchFile</a></li>
+<li><a href="SectionE.5.html#E.5.3.11">IsWritable</a></li>
+<li><a href="SectionE.5.html#E.5.3.12">GetVolume</a></li>
+<li><a href="SectionE.5.html#E.5.3.13">TrimDir</a></li>
+<li><a href="SectionE.5.html#E.5.3.14">FileTimeCmp</a></li>
+<li><a href="SectionE.5.html#E.5.3.15">GetFileSize</a></li>
+<li><a href="SectionE.5.html#E.5.3.16">CompactPathEx</a></li>
+<li><a href="SectionE.5.html#E.5.3.17">RenameExtension</a></li>
+<li><a href="SectionE.5.html#E.5.3.18">RelativePathTo</a></li>
+<li><a href="SectionE.5.html#E.5.3.19">PathCanonicalize</a></li>
+<li><a href="SectionE.5.html#E.5.3.20">RemoveArgs</a></li>
+<li><a href="SectionE.5.html#E.5.3.21">CheckFileEncoding</a></li>
+</ul>
+<li><a href="SectionE.5.html#E.5.4">註冊表處理函數</a></li>
+<ul>
+<li><a href="SectionE.5.html#E.5.4.1">CopyReg</a></li>
+<li><a href="SectionE.5.html#E.5.4.2">ReadRegBin</a></li>
+<li><a href="SectionE.5.html#E.5.4.3">ReadRegMultiStr</a></li>
+<li><a href="SectionE.5.html#E.5.4.4">WriteRegBin</a></li>
+<li><a href="SectionE.5.html#E.5.4.5">WriteRegStrW</a></li>
+<li><a href="SectionE.5.html#E.5.4.6">SHCopyKey</a></li>
+<li><a href="SectionE.5.html#E.5.4.7">SHRegGetPath</a></li>
+<li><a href="SectionE.5.html#E.5.4.8">GetRegKeyCount</a></li>
+<li><a href="SectionE.5.html#E.5.4.9">GetRegValueCount</a></li>
+</ul>
+<li><a href="SectionE.5.html#E.5.5">雜項函數</a></li>
+<ul>
+<li><a href="SectionE.5.html#E.5.5.1">CloseApp</a></li>
+<li><a href="SectionE.5.html#E.5.5.2">IsWinNT</a></li>
+<li><a href="SectionE.5.html#E.5.5.3">GetComputerName</a></li>
+<li><a href="SectionE.5.html#E.5.5.4">GetInstallerName</a></li>
+<li><a href="SectionE.5.html#E.5.5.5">GetLocaleInfo</a></li>
+<li><a href="SectionE.5.html#E.5.5.6">GetWinName</a></li>
+<li><a href="SectionE.5.html#E.5.5.7">GetUserName</a></li>
+<li><a href="SectionE.5.html#E.5.5.8">RefreshIcon</a></li>
+<li><a href="SectionE.5.html#E.5.5.9">ClearDetail</a></li>
+<li><a href="SectionE.5.html#E.5.5.10">GetDllVersion</a></li>
+<li><a href="SectionE.5.html#E.5.5.11">LoadImage</a></li>
+<li><a href="SectionE.5.html#E.5.5.12">DeleteObject</a></li>
+<li><a href="SectionE.5.html#E.5.5.13">DestroyCursor</a></li>
+<li><a href="SectionE.5.html#E.5.5.14">DestroyIcon</a></li>
+<li><a href="SectionE.5.html#E.5.5.15">MessageBox</a></li>
+<li><a href="SectionE.5.html#E.5.5.16">WriteEnvStr</a></li>
+<li><a href="SectionE.5.html#E.5.5.17">DeleteEnvStr</a></li>
+</ul>
+</ul>
+</ul>
+<li><a class="btitle" href="AppendixF.html#F"><b>附錄 F: </b>更新記錄和版本注意事項</a></li>
+<li><a class="btitle" href="AppendixG.html#G"><b>附錄 G: </b>構建 NSIS</a></li>
+<ul>
+<li><a href="SectionG.1.html#G.1">慣用</a></li>
+<li><a href="SectionG.2.html#G.2">在 Windows 上構建</a></li>
+<li><a href="SectionG.3.html#G.3">在 POSIX 上構建</a></li>
+<li><a href="SectionG.4.html#G.4">每日構建</a></li>
+</ul>
+<li><a class="btitle" href="AppendixH.html#H"><b>附錄 H: </b>致謝名單</a></li>
+<ul>
+<li><a href="SectionH.1.html#H.1">程式員</a></li>
+<li><a href="SectionH.2.html#H.2">貢獻者</a></li>
+<li><a href="SectionH.3.html#H.3">資源製作者</a></li>
+<li><a href="SectionH.4.html#H.4">翻譯者</a></li>
+<li><a href="SectionH.5.html#H.5">文件編寫者</a></li>
+</ul>
+<li><a class="btitle" href="AppendixI.html#I"><b>附錄 I: </b>NSIS 許可協議</a></li>
+</ul>
+
+<hr />
+<div align="left">
+<script async src="../../pagead2.googlesyndication.com/pagead/js/f.txt"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2153907722668011"
+     data-ad-slot="3767461681"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Contents.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:27 GMT -->
+</html>

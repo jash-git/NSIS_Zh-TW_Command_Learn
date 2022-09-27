@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.5.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:32 GMT -->
+<head>
+<title>頁面</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8"></head>
+
+<body>
+<p><a href='Section4.4.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.6.html'>下一頁</a></p>
+<a name="4.5"></a>
+<h2>4.5 頁面</h2>
+
+<p>每個(非靜默安裝) NSIS 安裝程式都有一個頁面設定。每個頁面可以是一個 NSIS 內建頁面或者一個由用戶函數(看 <a href="#" onclick="parser('https://omega.idv.tw/Docs/InstallOptions/Readme.html')">InstallOptions</a> 例子)建立的自定義頁面。</p>
+
+<p>使用這些腳本你可以控制這些頁面的次序、外觀、作用。你可以略過頁面、顏色繪為白色、強制用戶停留在某個頁面直到特定條件成立、顯示一個說明文件頁面、給輸入顯示一個自定義頁面或者更多的功能。在這部分你將學到如何控制上面提到的功能。</p>
+
+<p>關於頁面有兩個基本的命令，<a href="Section4.5.html#4.5.4">Page</a> 和 <a href="Section4.5.html#4.5.5">UninstPage</a>。前一個為新增一個頁面到安裝程式，後一個為新增一個頁面到卸載程式。在他們兩個命令的前面你可以用 <a href="Section4.5.html#4.5.6">PageEx</a> 命令給他們新增一個頁面且包括一些選項。<a href="Section4.5.html#4.5.6">PageEx</a> 可以使你給新增的指定頁面設定選項而不是使用 <a href="Section4.5.html#4.5.6">PageEx</a> 之外設定的預設設定。</p>
+<a name="4.5.1"></a>
+<h3>4.5.1 次序</h3>
+
+<p>頁面的次序由 <a href="Section4.5.html#4.5.4">Page</a>、<a href="Section4.5.html#4.5.5">UninstPage</a> 和 <a href="Section4.5.html#4.5.6">PageEx</a> 出現在腳本裡的次序決定。例如:</p>
+<pre> Page license
+ Page components
+ Page directory
+ Page instfiles
+ UninstPage uninstConfirm
+ UninstPage instfiles
+</pre>
+
+<p>該代碼告訴 NSIS 第一個顯示的是許可頁面，然後是組件選擇頁面，然後是目錄選擇頁面，最後是區段被執行的安裝記錄頁面，就像老式的安裝程式那樣。卸載程式將首先顯示卸載確認頁面然後是卸載執行記錄。</p>
+
+<p>你可以把同一個頁面類型多次指定。</p>
+
+<p>由於需要向後兼容老的 NSIS 腳本，如果沒有使用到安裝程式頁面命令，那麼隨後的這些安裝程式頁面將會被新增: 許可(如果指定了 <a href="Section4.8.html#4.8.1.28">LicenseText</a> 和 <a href="Section4.8.html#4.8.1.26">LicenseData</a>)、組件選擇(如果指定了 <a href="Section4.8.html#4.8.1.11">ComponentText</a> 並且有一個以上非隱藏的區段)、目錄選擇(如果指定了 <a href="Section4.8.html#4.8.1.14">DirText</a>)和安裝記錄。當沒有使用到卸載程式頁面命令，那麼隨後的卸載程式頁面將會被新增: 卸載確認頁面(如果指定了 <a href="Section4.8.html#4.8.1.43">UninstallText</a>)和卸載記錄。不過這個方法是不贊成的，強烈推薦的是把腳本轉換為使用頁面命令，因為你可以使用新的標準語言字串。</p>
+<a name="4.5.2"></a>
+<h3>4.5.2 頁面選項</h3>
+
+<p>每個頁面都有它自己唯一的資料設定來定義外觀和作用。這一段敘述了每種頁面使用的資料和怎麼樣來設定。<a href="Section4.5.html#4.5.3">回調函數</a>將在下一部分說明而不在本段處理。</p>
+
+<p>下面的這個列表列出了某個頁面類型受什麼樣的命令影響。除非特別提及，否則這些命令都可以在 <a href="Section4.5.html#4.5.6">PageEx</a> 區塊內外使用。如果在一個 <a href="Section4.5.html#4.5.6">PageEx</a> 區塊內部使用那麼他們僅僅對由  <a href="Section4.5.html#4.5.6">PageEx</a> 設定的目前頁面產生影響，否則他們將被設為其他所有頁面的預設值。</p>
+
+<p><em>許可頁面</em></p>
+<ul>
+<li><a href="Section4.8.html#4.8.1.28">LicenseText</a></li>
+<li><a href="Section4.8.html#4.8.1.26">LicenseData</a></li>
+<li><a href="Section4.8.html#4.8.1.27">LicenseForceSelection</a></li>
+</ul>
+
+<p><em>組件選擇頁面</em></p>
+<ul>
+<li><a href="Section4.8.html#4.8.1.11">ComponentText</a></li>
+</ul>
+
+<p><em>目錄選擇頁面</em></p>
+<ul>
+<li><a href="Section4.8.html#4.8.1.14">DirText</a></li>
+<li><a href="Section4.8.html#4.8.1.15">DirVar</a> - 僅能在 <a href="Section4.5.html#4.5.6">PageEx</a> 裡使用 </li>
+<li><a href="Section4.8.html#4.8.1.16">DirVerify</a></li>
+</ul>
+
+<p><em>卸載、安裝記錄頁面</em></p>
+<ul>
+<li><a href="Section4.8.html#4.8.1.13">DetailsButtonText</a></li>
+<li><a href="Section4.8.html#4.8.1.10">CompletedText</a></li>
+</ul>
+
+<p><em>卸載確認頁面</em></p>
+<ul>
+<li><a href="Section4.8.html#4.8.1.15">DirVar</a> - 僅能在 <a href="Section4.5.html#4.5.6">PageEx</a> 裡使用</li>
+<li><a href="Section4.8.html#4.8.1.43">UninstallText</a></li>
+</ul>
+
+<p>要設定頁面標題請使用 <a href="Section4.8.html#4.8.1.7">Caption</a>。</p>
+<a name="4.5.3"></a>
+<h3>4.5.3 回調</h3>
+
+<p>每個內建的頁面都有三個回調函數。一個預置函數、一個顯示建立函數和一個離開函數。預置函數在頁面被建立之前被直接的調用，顯示函數在頁面被建立後且在顯示之前被直接調用，離開函數在用戶按下下一頁按鈕之後並且在頁面離開之前被直接調用。</p>
+<ul>
+<li>預置函數允許你使用 <a href="Section4.9.html#4.9.4.1">Abort</a> 來跳過該頁面。</li>
+<li>顯示函數允許你使用 <a href="Section4.9.html#4.9.14.2">CreateFont</a>、<a href="Section4.9.html#4.9.14.15">SetCtlColors</a>、<a href="Section4.9.html#4.9.14.10">SendMessage </a>和其他來調整頁面的用戶介面。</li>
+<li>離開函數允許你使用 <a href="Section4.9.html#4.9.4.1">Abort</a> 來強制用戶停留在目前頁面。</li>
+</ul>
+
+<p>一個自定義的頁面僅有兩個回調函數，一個是必須的建立頁面，另一個離開函數的作用就和內建頁面的離開函數一樣。</p>
+
+<p>舉例:</p>
+<pre> Page license skipLicense &quot;&quot; stayInLicense
+ Page custom customPage &quot;&quot; &quot;: 自定義頁面&quot;
+ Page instfiles
+
+ Function skipLicense
+   MessageBox MB_YESNO &quot;你想略過許可頁面嗎？&quot; IDNO no
+     Abort
+   no:
+ FunctionEnd
+
+ Function stayInLicense
+   MessageBox MB_YESNO &quot;你想停留在許可頁面嗎？&quot; IDNO no
+     Abort
+   no:
+ FunctionEnd
+
+ Function customPage
+   GetTempFileName $R0
+   File /oname=$R0 customPage.ini
+   InstallOptions::dialog $R0
+   Pop $R1
+   StrCmp $R1 &quot;cancel&quot; done
+   StrCmp $R1 &quot;back&quot; done
+   StrCmp $R1 &quot;success&quot; done
+   error: MessageBox MB_OK|MB_ICONSTOP &quot;InstallOptions error:$\r$\n$R1&quot;
+   done:
+ FunctionEnd
+</pre>
+<a name="4.5.4"></a><h3>4.5.4 Page</h3>
+<pre>custom [建立函數] [離開函數] [標題]
+  或
+(license|components|directory|instfiles|uninstConfirm) [預置函數] [顯示函數] [離開函數]
+</pre>
+
+<p>要新增一個安裝程式頁面，請看上面關於相對於自定義頁面的內建頁面和關於回調函數的段。</p>
+<a name="4.5.5"></a><h3>4.5.5 UninstPage</h3>
+<pre>custom [建立函數] [離開函數] [標題]
+  或
+(license|components|directory|instfiles|uninstConfirm) [預置函數] [顯示函數] [離開函數]
+</pre>
+
+<p>要新增一個卸載程式頁面，請看上面關於相對於自定義頁面的內建頁面和關於回調函數的段。</p>
+<a name="4.5.6"></a><h3>4.5.6 PageEx</h3>
+<pre>[un.](custom|uninstConfirm|license|components|directory|instfiles)
+</pre>
+
+<p>新增一個安裝程式頁面或一個卸載程式頁面(如果使用了 un. 前綴)。每一個 PageEx 必須和 <a href="Section4.5.html#4.5.7">PageExEnd</a> 配合使用。在一個 PageEx 區塊你可以對這個頁面進行特殊的設定，這些設定不會被其他頁面使用。沒有被設定的選項將使用 PageEx 外部區塊的的設定或者當什麼都沒有指定時使用預設設定。要對頁面設定子標題使用 <a href="Section4.8.html#4.8.1.7">Caption</a> 或 <a href="Section4.8.html#4.8.1.38">SubCaption</a>。要對一個使用 PageEx 的頁面設定回調函數請使用 <a href="Section4.5.html#4.5.8">PageCallbacks</a>。請看上面關於相對於自定義頁面的內建頁面的段。</p>
+
+<p>使用舉例:</p>
+<pre> PageEx license
+   LicenseText &quot;說明&quot;
+   LicenseData readme.rtf
+ PageExEnd
+
+ PageEx license
+   LicenseData license.txt
+   LicenseForceSelection checkbox
+ PageExEnd
+</pre>
+<a name="4.5.7"></a><h3>4.5.7 PageExEnd</h3>
+
+<p>結束一個 <a href="Section4.5.html#4.5.6">PageEx</a> 區塊。</p>
+<a name="4.5.8"></a><h3>4.5.8 PageCallbacks</h3>
+<pre>([建立函數] [離開函數]) | ([預置函數] [顯示函數] [離開函數])
+</pre>
+
+<p>對一個使用 <a href="Section4.5.html#4.5.6">PageEx</a> 定義的頁面設定回調函數。僅能在 <a href="Section4.5.html#4.5.6">PageEx</a> 區塊裡使用。請看上面關於回調函數的段。</p>
+<pre>PageEx license
+  PageCallbacks licensePre licenseShow licenseLeave
+PageExEnd
+</pre>
+<p><a href='Section4.4.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.6.html'>下一頁</a></p>
+
+<hr />
+<div align="left">
+<script async src="../../pagead2.googlesyndication.com/pagead/js/f.txt"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2153907722668011"
+     data-ad-slot="3767461681"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.5.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:32 GMT -->
+</html>

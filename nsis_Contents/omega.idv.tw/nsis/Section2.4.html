@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section2.4.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:32 GMT -->
+<head>
+<title>編譯器</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8"></head>
+
+<body>
+<p><a href='Section2.3.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section2.5.html'>下一頁</a></p>
+<a name="2.4"></a>
+<h2>2.4 編譯器</h2>
+
+<p>在你製作安裝程式時建立了你的腳本後所要做的第二件事就是編譯你的腳本。MakeNSIS.exe 就是 NSIS 編譯器。它會載入你的腳本，解析並建立你的安裝程式。</p>
+
+<p>要編譯你需要在你的 .nsi 檔案上點右鍵並選擇「Compile NSI」或「Compile NSIS (with bz2)」。這樣將會使用 MakeNSISw 來引導並調用 MakeNSIS 來編譯你的腳本。MakeNSISw 將會給出 MakeNSIS 的輸出並在一個可見的視窗裡顯示出來，你可以複製、測試安裝程式、瀏覽和更多。如果你在右鍵彈出選單裡沒有找到編譯 NSI 的選項可能是你在安裝 NSIS 時沒有選擇外殼擴展，你可以從 Windows 命令行裡使用 MakeNSIS.exe 或者重新安裝 NSIS 並選擇安裝外殼擴展。</p>
+
+<p>編譯器會檢查你的腳本並給出警告或錯誤。如果發生了錯誤(例如需要兩個參數而你只給了一個)編譯器竟會登出並給出一個包含錯誤行數的錯誤訊息顯示。對於非關鍵性錯誤編譯器將會給出一個警告(例如在一個腳本裡有兩個 DirText 命令)。如果你的腳本沒有任何錯誤則編譯器將會輸出你要發表的安裝程式。</p>
+
+<p>NSIS 支援不同的壓縮器風格 zlib 和 bzip2。zlib 非常快並且在資源消耗方面非常有效率。bzip2 通常在製作大的安裝程式時有可觀的效果，但是需要更多的記憶體並且有一點慢。要設定壓縮器請使用<a href="Section4.8.html#4.8.2.4"> SetCompressor</a>。</p>
+<p>你也可以在 Linux、BSD 或 Mac OS X 伺服器上面編譯安裝程式。詳細訊息請看 <a href="AppendixG.html#G">構建 NSIS</a>。 </p>
+<p><a href='Section2.3.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section2.5.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section2.4.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:32 GMT -->
+</html>

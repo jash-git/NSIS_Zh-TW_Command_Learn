@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.4.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:32 GMT -->
+<head>
+<title>相對跳轉</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8"></head>
+
+<body>
+<p><a href='Section4.3.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.5.html'>下一頁</a></p>
+<a name="4.4"></a>
+<h2>4.4 相對跳轉</h2>
+
+<p>和標記不一樣，相對跳轉就如其名一樣，相對於被調用的地方。在任何你可用到標記的地方你也都可以相對跳轉。相對跳轉由數字標定。+1 轉移到下一條指令(預設的步進)，+2 會跳過一條指令也並且從目前指令轉到第二條指令，-2 將往後跳兩條指令，+10 將會跳過 9 條指令，從目前指令跳到第十條指令。</p>
+
+<p>一條指令就是在安裝程式運行時可以被執行的所有命令。<a href="Section4.9.html#4.9.4.15">MessageBox</a>、<a href="Section4.9.html#4.9.4.7">Goto</a>、<a href="Section4.9.html#4.9.3.5">GetDLLVersion</a>、<a href="Section4.9.html#4.9.5.3">FileRead</a>、<a href="Section4.9.html#4.9.7.5">SetShellVarContext</a> 都是指令。<a href="Section4.6.html#4.6.1.1">AddSize</a>、<a href="Section4.6.html#4.6.1.2">Section</a>、<a href="Section4.6.html#4.6.1.5">SectionGroup</a>、<a href="Section4.6.html#4.6.1.3">SectionEnd</a>、<a href="Section4.8.html#4.8.2.8">SetOverwrite</a>(和所有處於 <a href="Section4.8.html#4.8.2">編譯器標記</a>)、<a href="Section4.8.html#4.8.1.30">Name</a>、<a href="Section4.8.html#4.8.1.32">SetFont</a>、<a href="Section4.9.html#4.9.15.2">LangString</a> 都不是指令，因為它們在編譯時就被執行。</p>
+
+<p>例子:</p>
+<pre> Goto +2
+   MessageBox MB_OK &quot;你將看不到這個訊息框&quot;
+ MessageBox MB_OK &quot;上一條訊息被略過，這條訊息才會被顯示&quot;
+</pre>
+<pre> Goto +4
+ MessageBox MB_OK &quot;隨後的這條訊息將會被略過&quot;
+ Goto +3
+ MessageBox MB_OK &quot;你將不會看到這個訊息框&quot;
+ Goto -3
+ MessageBox MB_OK &quot;完成&quot;
+</pre>
+<p><a href='Section4.3.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.5.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.4.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:32 GMT -->
+</html>

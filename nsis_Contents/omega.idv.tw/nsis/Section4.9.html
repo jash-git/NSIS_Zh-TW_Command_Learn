@@ -1,0 +1,1185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.9.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+<head>
+<title>指令</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='Section4.8.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.10.html'>下一頁</a></p>
+<a name="4.9"></a>
+<h2>4.9 指令</h2>
+<a name="4.9.1"></a>
+<h3>4.9.1 基本指令</h3>
+
+<p>NSIS 用於腳本的這些指令稍微的近似於 PHP 和彙編。它們沒有真正的高級語言結構，但是他們的指令(對於絕大部分)卻是高級的，並且你可以很容易的掌握(比如你不用擔心字串的連接等等)。基本上你有 25 個寄存器(20 個慣用用途，5 個特殊用途)，和一個堆棧。</p>
+<a name="4.9.1.1"></a><h4>4.9.1.1 Delete</h4>
+<pre>[/REBOOTOK] 檔案</pre>
+
+<p>從目標系統刪除檔案(可以是檔案或通配符，但必須指定一個完整的路徑)。如果指定了 /REBOOTOK 並且該檔案目前不可刪除，則會在系統重啟時刪除該檔案 -- 如果該檔案要在系統重啟時刪除，你還要設定一個重啟的標記。如果找到的檔案不能被刪除則會置一個錯誤標記。但該錯誤標記不是為嘗試刪除一個不存在的檔案設定的。</p>
+<pre>Delete $INSTDIR\somefile.dat
+</pre>
+<a name="4.9.1.2"></a><h4>4.9.1.2 Exec</h4>
+<pre>命令</pre>
+
+<p>執行一個指定的程式並且立即繼續安裝。注意指定的檔案必須存在於目標系統而不是編譯的系統。$OUTDIR 用於指定工作路徑。如果該命令不能被運行則會置一個錯誤標記。注意，如果該命令包含有空格，你要用引號來把他們包括起來。例如：Exec '&quot;$INSTDIR\command.exe&quot; 參數'。如果你不用引號括起來則在 Windwos 9X 下不正常或丟失參數。</p>
+<pre>Exec '&quot;$INSTDIR\someprogram.exe&quot;'
+Exec '&quot;$INSTDIR\someprogram.exe&quot; some parameters'
+</pre>
+<a name="4.9.1.3"></a><h4>4.9.1.3 ExecShell</h4>
+<pre>動作 命令 [參數] [SW_SHOWNORMAL | SW_SHOWMAXIMIZED | SW_SHOWMINIMIZED | SW_HIDE]
+</pre>
+
+<p>使用 Windows 的外殼關聯來執行一個指定的程式。注意「動作」通常為 open 、 print 等等，也可以是一個空字串來使用預設動作。參數和顯示類型是可選項。$OUTDIR 用於指定工作路徑。如果該命令不能被運行則會置一個錯誤標記。</p>
+<pre>ExecShell &quot;open&quot; &quot;http://nsis.sf.net/&quot;
+ExecShell &quot;open&quot; &quot;$INSTDIR\readme.txt&quot;
+ExecShell &quot;print&quot; &quot;$INSTDIR\readme.txt&quot;
+</pre>
+<a name="4.9.1.4"></a><h4>4.9.1.4 ExecWait</h4>
+<pre>命令 [用戶變量(返回代碼)]
+</pre>
+
+<p>執行一個指定的程式並且等待運行處理結束。更多訊息請觀看 Exec。當程式執行返回一個非零錯誤代碼，或者當產生錯誤時如果沒有指定「用戶變量(返回代碼)」 則ExecWait 會置一個錯誤標記。如果指定了「用戶變量(返回代碼)」，ExecWait 會把變量設為返回代碼(並且僅當產生錯誤時置一個錯誤標記；如果產生錯誤則該用戶變量的內容為未指定)。注意，如果該命令包含有空格，你要用引號來把他們包括起來。例如：Exec '&quot;$INSTDIR\command.exe&quot; 參數'。如果你不用引號括起來則在Windwos 9X 下不正常或丟失參數。</p>
+<pre>ExecWait '&quot;$INSTDIR\someprogram.exe&quot;'
+ExecWait '&quot;$INSTDIR\someprogram.exe&quot;' $0
+DetailPrint &quot;程式返回了 $0&quot;
+</pre>
+<a name="4.9.1.5"></a><h4>4.9.1.5 File</h4>
+<pre>[/nonfatal] [/a] ([/r] [/x 檔案|通配符 [...]] (檔案|通配符) [...] | /oname=輸出路徑\檔案名稱 輸入路徑\檔案名稱)
+</pre>
+
+<p>釋放檔案到目前輸出路徑($OUTDIR)。</p>
+<ul>
+<li>注意輸出檔案名稱是 $OUTDIR\檔案名稱。</li>
+<li>如果使用了 /oname=X 開關，則輸出檔案會變為 $OUTDIR\X。當使用了 /oname= 開關時只能指定一個檔案，且輸出的檔案名稱可以使用變量(或完整路徑如 $SYSDIR\whatever.dll)。如果輸出名稱包含了空格，你需要用雙引號把參數括起來，包括 /oname，就像下面例子顯示的那樣。</li>
+<li>支援通配符。</li>
+<li>如果使用了 /r 開關，匹配的檔案將會在子目錄裡被遞歸的搜尋。如果目錄名匹配則所有包含的內容都會被遞歸新增。目錄結構也會被保持。</li>
+<li>使用 /x 開關可以用來來排除檔案或目錄。</li>
+<li>如果使用了 /a 開關，則被新增的檔案的屬性將會保持。</li>
+<li>如果覆蓋模式被設定為 try 並且檔案不能覆蓋，那麼 File 命令將會置一個錯誤標記，或者如果覆蓋模式被設定為 on 並且檔案不能覆蓋並用戶選擇了忽略時，也會放置一個錯誤標記。</li>
+<li>如果使用了 /nonfatal 開關且當檔案未找到時使用警告來代替錯誤。</li>
+</ul>
+<pre>File something.exe
+File /a something.exe
+File *.exe
+File /r *.dat
+File /r data
+File /oname=$TEMP\temp.dat somefile.ext
+File &quot;/oname=$TEMP\name with spaces.dat&quot; somefile.ext
+File /nonfatal &quot;一個可能不存在的檔案&quot;
+File /r /x CVS myproject\*.*
+File /r /x *.res /x *.obj /x *.pch source\*.*
+</pre>
+<a name="4.9.1.6"></a><h4>4.9.1.6 Rename</h4>
+<pre>[/REBOOTOK] 源檔案 目標檔案</pre>
+
+<p>把 源檔案 重命名為 目標檔案。你可以用它來把用戶系統裡的任何地方的一個檔案移動到用戶系統裡的任何地方，你也可以在一些驅動器上把一個目錄移動到某些地方。目標檔案必須不存在否則移動失敗(除非你使用了 /REBOOTOK)。如果指定了 /REBOOTOK，並且當檔案不能移動時(比如，目標檔案已存在)，則該檔案在系統重啟後才被移動到目標。如果檔案在重啟後才被移動，則會放置一個重啟的標記。當檔案不能被重命名時(並且沒有使用 /REBOOTOK)或者原檔案不存在時，會放置一個錯誤標記。</p>
+
+<p>如果沒有指定絕對路徑則使用目前路徑代替。目前路徑可以使用 <a href="Section4.9.html#4.9.1.9">SetOutPath</a> 指令來設定。如果你沒有使用 <a href="Section4.9.html#4.9.1.9">SetOutPath</a> 那麼目前路徑為 <a href="Section4.2.html#4.2.2">$EXEDIR</a>。</p>
+<pre>Rename $INSTDIR\file.ext $INSTDIR\file.dat
+</pre>
+<a name="4.9.1.7"></a><h4>4.9.1.7 ReserveFile</h4>
+<pre>[/nonfatal] [/r] [/x file|wildcard [...]] 檔案 [檔案...]
+</pre>
+
+<p>把檔案儲存在稍後使用的資料區塊。檔案將按照在腳本裡出現的次序依次新增到壓縮的資料區塊。因為函數不必要按照它們出現在腳本裡的次序調用，因此如果你把檔案新增到一個早期就調用但卻放在腳本最後的函數的時候，早期需要的檔案需要解壓出來，那麼當檔案很多的時候就需要很長的時間去解壓這些檔案。<a href="Section4.7.html#4.7.2.1.2">.onInit</a> 就是這樣的一個函數。它總是在安裝程式初始化的時候被調用，如果你把這個函數放在了腳本的最後，這個函數所需要的檔案之前還有很多檔案，那麼當你解壓這些需要的檔案的時候安裝程式就需要大量的時間才能載入。這就是為什麼這個命令很有用的原因，這個命令能加快安裝程式的載入，使用這個命令後它可以把早期需要的檔案新增到資料區塊的頂端而不是讓 NSIS 把壓縮的資料區塊從頂端搜尋到底部後才把這些檔案解壓出來。</p>
+
+<p>相關參數說明請觀看 <a href="Section4.9.html#4.9.1.5">File</a>。</p>
+<a name="4.9.1.8"></a><h4>4.9.1.8 RMDir</h4>
+<pre>[/r] [/REBOOTOK] 目錄名</pre>
+
+<p>刪除指定的目錄(完整路徑)。沒有 /r 參數時只有在目錄為空時才會被刪除。如果指定了 /r，則目錄會被遞歸刪除，所以在指定目錄下的所有檔案和目錄均被刪除。如果指定了 /REBOOTOK，任何目前不能刪除的檔案或目錄將會在重啟後被刪除 —— 如果檔案或目錄需要在重啟時被刪除，會放置一個重啟的標記。當檔案或目錄不能被刪除時放置一個錯誤的標記。</p>
+<pre>RMDir $INSTDIR
+RMDir $INSTDIR\data
+RMDir /r /REBOOTOK $INSTIDR
+RMDir /REBOOTOK $INSTDIR\DLLs
+</pre>
+
+<p>需要注意的是目前的工作目錄不能刪除。目前的工作目錄由 <a href="Section4.9.html#4.9.1.9">SetOutPath</a> 設定。例如，下面的例子裡將不能刪除該目錄。</p>
+<pre>SetOutPath $TEMP\dir
+RMDir $TEMP\dir
+</pre>
+
+<p>而下面的例子可以刪除該目錄。</p>
+<pre>SetOutPath $TEMP\dir
+SetOutPath $TEMP
+RMDir $TEMP\dir
+</pre>
+<a name="4.9.1.9"></a><h4>4.9.1.9 SetOutPath</h4>
+<pre>輸出路徑</pre>
+
+<p>設定輸出路徑($OUTDIR)且當路徑不存在時建立(需要時會遞歸建立)。必須為全路徑名，通常都使用 $INSTDIR。</p>
+<pre>SetOutPath $INSTDIR
+File program.exe
+</pre>
+<a name="4.9.2"></a>
+<h3>4.9.2 註冊表、INI 檔案指令</h3>
+
+<p>在下面所有的註冊表指令裡你可以使用一個空字串(&quot;&quot;)來作為某個子健預設項，該預設項在註冊表編輯器裡顯示為「(預設)」。</p>
+<p>如果要處理的 INI 檔案的路徑沒有指定，則使用 Windows 目錄來代替。</p>
+<a name="4.9.2.1"></a><h4>4.9.2.1 DeleteINISec</h4>
+<pre>INI檔案 區段</pre>
+
+<p>從「INI檔案」 裡刪除整個區段 「區段」。如果該區段不能被刪除，會放置一個錯誤的標記。但是如果該區段找不到時則不會放置錯誤標記。</p>
+<pre>WriteINIStr $TEMP\something.ini section1 something 123
+WriteINIStr $TEMP\something.ini section1 somethingelse 1234
+WriteINIStr $TEMP\something.ini section2 nsis true
+DeleteINISec $TEMP\something.ini section1
+</pre>
+<a name="4.9.2.2"></a><h4>4.9.2.2 DeleteINIStr</h4>
+<pre>INI檔案 區段 字串</pre>
+
+<p>從「INI檔案」 裡的 「區段」 區段刪除 「字串」 字串。如果該字串不能被刪除，會放置一個錯誤的標記。但是如果該字串找不到時則不會放置錯誤標記。</p>
+<pre>WriteINIStr $TEMP\something.ini section1 something 123
+WriteINIStr $TEMP\something.ini section1 somethingelse 1234
+DeleteINIStr $TEMP\something.ini section1 somethingelse
+</pre>
+<a name="4.9.2.3"></a><h4>4.9.2.3 DeleteRegKey</h4>
+<pre>[/ifempty] 根鍵 子鍵</pre>
+
+<p>刪除一個註冊表鍵。如果指定了 /ifempty，則該註冊表鍵僅當它無子鍵時才會被刪除(否則，整個註冊表鍵將被刪除)。有效的根鍵值在後面的 <a href="Section4.9.html#4.9.2.16">WriteRegStr</a> 列出。如果該鍵不能被刪除(或如果它不存在)則會放置一個錯誤的標記。</p>
+<pre>DeleteRegKey HKLM &quot;Software\My Company\My Software&quot;
+DeleteRegKey /ifempty HKLM &quot;Software\A key that might have subkeys&quot;
+</pre>
+<a name="4.9.2.4"></a><h4>4.9.2.4 DeleteRegValue</h4>
+<pre>根鍵 子鍵 鍵名</pre>
+
+<p>刪除一個註冊表鍵值。有效的根鍵值在後面的 <a href="Section4.9.html#4.9.2.16">WriteRegStr</a> 列出。如果該鍵值不能被刪除(或如果它不存在)則會放置一個錯誤的標記。</p>
+<pre>DeleteRegValue HKLM &quot;Software\My Company\My Software&quot; &quot;some value&quot;
+</pre>
+<a name="4.9.2.5"></a><h4>4.9.2.5 EnumRegKey</h4>
+<pre>用戶變量(輸出) 根鍵 子鍵 索引</pre>
+
+<p>搜尋 「根鍵\子鍵」 第 「索引」 號註冊表的鍵並輸出到變量。有效的根鍵值在後面的 <a href="Section4.9.html#4.9.2.16">WriteRegStr</a> 列出。當指定的 「根鍵\子鍵」 沒有任何鍵時會返回一個空字串，當產生一個錯誤時會返回空字串並放置一個錯誤標記。</p>
+<pre>StrCpy $0 0
+loop:
+  ClearErrors<br />  EnumRegKey $1 HKLM Software $0
+  IfErrors done ;如果發生錯誤則提前結束
+  IntOp $0 $0 + 1
+  MessageBox MB_YESNO|MB_ICONQUESTION &quot;$1$\n$\nMore?&quot; IDYES loop
+done:
+</pre>
+<a name="4.9.2.6"></a>
+<h4>4.9.2.6 EnumRegValue</h4>
+<pre>用戶變量(輸出) 根鍵 子鍵 索引</pre>
+
+<p>搜尋 「根鍵\子鍵」 第 「索引」 號註冊表的鍵值並輸出到變量。有效的根鍵值在後面的 <a href="Section4.9.html#4.9.2.16">WriteRegStr</a> 列出。當指定的「根鍵\子鍵」沒有任何鍵值時會返回一個空字串，當產生一個錯誤時會返回空字串並放置一個錯誤標記。</p>
+<pre>StrCpy $0 0
+loop:
+  EnumRegValue $1 HKLM Software\Microsoft\Windows\CurrentVersion $0
+  StrCmp $1 &quot;&quot; done
+  IntOp $0 $0 + 1
+  ReadRegStr $2 HKLM Software\Microsoft\Windows\CurrentVersion $1
+  MessageBox MB_YESNO|MB_ICONQUESTION &quot;$1 = $2$\n$\nMore?&quot; IDYES loop
+done:
+</pre>
+<a name="4.9.2.7"></a><h4>4.9.2.7 ExpandEnvStrings</h4>
+<pre>用戶變量(輸出) 字串</pre>
+
+<p>把<strong>字串</strong>裡的環境變量展開到用戶變量 <strong>$x</strong>。如果環境變量不存在則字串不會被替換。例如，你使用 %var% 而 var 不存在，輸出還是 %var%。.如果發生錯誤，該變量會被設為空值並放置一個錯誤標記。</p>
+<pre>ExpandEnvStrings $0 &quot;WINDIR=%WINDIR%$\nTEMP=%TEMP%&quot;
+</pre>
+<a name="4.9.2.8"></a><h4>4.9.2.8 FlushINI</h4>
+<pre>INI檔案名稱</pre>
+
+<p>更新 INI 檔案緩衝。Windows 9x 會保持 INI 檔案在記憶體裡。該命令強制更改立即寫入磁碟。當你自己編輯一個 INI 檔案的時候可以使用它，刪除、移動、複製，直到你使用 <a href="Section4.9.html#4.9.2.13">WriteINIStr</a>、<a href="Section4.9.html#4.9.2.1">DeleteINISec</a> 或 <a href="Section4.9.html#4.9.2.2">DeleteINStr</a> 來更改它。</p>
+<pre>WriteINIStr $TEMP\something.ini test test test
+FlushINI $TEMP\something.ini
+Delete $TEMP\something.ini
+</pre>
+<a name="4.9.2.9"></a><h4>4.9.2.9 ReadEnvStr</h4>
+<pre>用戶變量(輸出) 名稱</pre>
+
+<p>從環境字串「名稱」讀取值並把值賦給用戶變量 $x。如果讀取字串時有錯誤發生，該用戶變量被設為空，並放置一個錯誤標記。</p>
+<pre>ReadEnvStr $0 WINDIR
+ReadEnvStr $1 TEMP
+</pre>
+<a name="4.9.2.10"></a><h4>4.9.2.10 ReadINIStr</h4>
+<pre>用戶變量(輸出) INI檔案 區段 項</pre>
+
+<p>從 「INI檔案」 的 「區段」 區段讀取 「項」 的值並把該值輸出到用戶變量。如果該項未找到時會放置一個錯誤標記且該用戶變量被賦為空值。</p>
+<pre>ReadINIStr $0 $INSTDIR\winamp.ini winamp outname
+</pre>
+<a name="4.9.2.11"></a><h4>4.9.2.11 ReadRegDWORD</h4>
+<pre>用戶變量(輸出) 根鍵 子鍵 項</pre>
+
+<p>從註冊表讀取一個 32 位 DWORD 並輸出到用戶變量。有效的根鍵值在後面的 <a href="Section4.9.html#4.9.2.16">WriteRegStr</a> 列出。如果 DWORD 不存在時會放置一個錯誤標記並把 $x 設為空字串。如果該值存在但不是 DWORD，則會作為字串類型讀取並放置一個錯誤標記。</p>
+<pre>ReadRegDWORD $0 HKLM Software\NSIS VersionBuild
+</pre>
+<a name="4.9.2.12"></a><h4>4.9.2.12 ReadRegStr</h4>
+<pre>用戶變量(輸出) 根鍵 子鍵 項</pre>
+
+<p>從註冊表讀取一個字串值並輸出到用戶變量。有效的根鍵值在後面的 <a href="Section4.9.html#4.9.2.16">WriteRegStr</a> 列出。如果字串不存在時會放置一個錯誤標記並把 $x 設為空字串。如果該值存在但是 DWORD，則會轉換為字串類型並放置一個錯誤標記。</p>
+<pre>ReadRegStr $0 HKLM Software\NSIS &quot;&quot;
+DetailPrint &quot;NSIS 安裝在: $0&quot;
+</pre>
+<a name="4.9.2.13"></a><h4>4.9.2.13 WriteINIStr</h4>
+<pre>INI檔案 區段 項 值</pre>
+
+<p>把 「項」 = 「值」 寫入 「INI檔案」 的 「區段名」 區段。如果 INI 檔案不能寫入則放置一個錯誤的標記。</p>
+<pre>WriteINIStr $TEMP\something.ini section1 something 123
+WriteINIStr $TEMP\something.ini section1 somethingelse 1234
+WriteINIStr $TEMP\something.ini section2 nsis true
+</pre>
+<a name="4.9.2.14"></a><h4>4.9.2.14 WriteRegBin</h4>
+<pre>根鍵 子鍵 項 值資料</pre>
+
+<p>該命令將會寫一個區塊的二進制資料到註冊表。有效的根鍵值在後面的 <a href="Section4.9.html#4.9.2.16">WriteRegStr</a> 列出。值資料為十六進制格式(如 DEADBEEF01223211151)。如果該二進制資料不能寫入註冊表則放置一個錯誤的標記。如果註冊表鍵不存在則會自動建立。「值資料」不能使用變量。</p>
+<pre>WriteRegBin HKLM &quot;Software\My Company\My Software&quot; &quot;Binary Value&quot; DEADBEEF01223211151
+</pre>
+<a name="4.9.2.15"></a><h4>4.9.2.15 WriteRegDWORD</h4>
+<pre>根鍵 子鍵 項 值</pre>
+
+<p>該命令寫一個 DWORD (32 位整數) 到註冊表(可以使用變量)。有效的根鍵值在後面的 <a href="Section4.9.html#4.9.2.16">WriteRegStr</a> 列出。如果該 DWORD 不能寫入註冊表則會放置一個錯誤的標記。如果註冊表鍵不存在則會自動建立。</p>
+<pre>WriteRegDWORD HKLM &quot;Software\My Company\My Software&quot; &quot;DWORD Value&quot; 0xDEADBEEF
+</pre>
+<a name="4.9.2.16"></a><h4>4.9.2.16 WriteRegStr</h4>
+<pre>根鍵 子鍵 項 值</pre>
+
+<p>把字串寫入註冊表。詳細訊息請觀看 <a href="Section4.9.html#4.9.2.17">WriteRegExpandStr</a>。</p>
+<pre>WriteRegStr HKLM &quot;Software\My Company\My Software&quot; &quot;String Value&quot; &quot;dead beef&quot;
+</pre>
+<a name="4.9.2.17"></a><h4>4.9.2.17 WriteRegExpandStr</h4>
+<pre>根鍵 子鍵 項 值</pre>
+
+<p>把字串寫入註冊表。根鍵必須為下面列表之一:</p>
+<ul>
+<li><em>HKCR</em> 或 <em>HKEY_CLASSES_ROOT</em></li>
+<li><em>HKLM</em> 或<em>HKEY_LOCAL_MACHINE</em></li><li><em>HKCU</em> 或<em>HKEY_CURRENT_USER</em></li>
+<li><em>HKU</em> &nbsp;或<em>HKEY_USERS</em></li>
+<li><em>HKCC</em> 或<em>HKEY_CURRENT_CONFIG</em></li><li><em>HKDD</em> 或<em>HKEY_DYN_DATA</em></li><li><em>HKPD</em> 或<em>HKEY_PERFORMANCE_DATA</em></li><li><em>SHCTX</em> 或<em>SHELL_CONTEXT</em></li></ul>
+
+<p>如果字串不能寫入註冊表則放置一個錯誤的標記。字串的類型為 REG_SZ 對應 WriteRegStr，或 REG_EXPAND_STR 對應 WriteRegExpandStr。如果註冊表鍵不存在則會自動建立。</p>
+<pre>WriteRegExpandStr HKLM &quot;Software\My Company\My Software&quot; &quot;Expand String Value&quot; &quot;%WINDIR%\notepad.exe&quot;
+</pre>
+<a name="4.9.3"></a>
+<h3>4.9.3 慣用用途指令</h3>
+<a name="4.9.3.1"></a><h4>4.9.3.1 CallInstDLL</h4>
+<pre>DLL檔案 [/NOUNLOAD] 函數</pre>
+
+<p>從一個 NSIS 擴展動態連結庫裡調用一個函數。看 Contrib\ExDLL 的例子可以知道如何來建立。擴展動態連結庫可以瀏覽堆棧和變量。使用 /NOUNLOAD 來強制安裝程式保持動態連結庫不卸載。注意: 要自動釋放並調用 DLL 插件請使用插件命令而不是 CallInstDLL。</p>
+<pre>Push &quot;參數&quot;
+Push &quot;另一個參數&quot;
+CallInstDLL $INSTDIR\somedll.dll somefunction
+</pre>
+<a name="4.9.3.2"></a><h4>4.9.3.2 CopyFiles</h4>
+<pre>[/SILENT] [/FILESONLY] 目標系統檔案規範 目標路徑 [檔案大小_單位為_kb]
+</pre>
+
+<p>在正在安裝的系統中把 「目標系統檔案(規範)」 複製到 「目標路徑」。如果你想從安裝媒體裡複製，或從系統的一個地方複製到另一個地方，你可以使用 $EXEDIR 變量來代替安裝程式目錄。如果複製操作需要很長時間的話你可以看到 Windows 的複製檔案視窗(要禁止出現複製檔案視窗使用/SILENT)。最後的參數用來指定要複製的檔案的大小(單位為 kb)，使安裝程式可以估計所需磁碟空間。在出錯，或用戶登出(僅當忽略了 /SILENT 時)時，會放置一個錯誤標記。如果指定了 /FILESONLY 則僅複製檔案。</p>
+
+<p>這個指令應該使用完整的路徑，使用相對路徑將得到不可預料的結果<a href="Section4.2.html#4.2.2"></a>。</p>
+<pre>CreateDirectory $INSTDIR\backup
+CopyFiles $INSTDIR\*.dat $INSTDIR\backup
+</pre>
+<a name="4.9.3.3"></a><h4>4.9.3.3 CreateDirectory</h4>
+<pre>要建立的路徑</pre>
+
+<p>建立 (遞歸建立) 指定的目錄。當目錄不能建立時會放置一個錯誤標記。</p>
+
+<p>你也可以指定一個絕對路徑。</p>
+<pre>CreateDirectory $INSTDIR\some\directory
+</pre>
+<a name="4.9.3.4"></a><h4>4.9.3.4 CreateShortCut</h4>
+<pre>快捷檔案.lnk 目標檔案 [參數 [圖檔檔案 [圖檔索引號 [啟動選項 [鍵盤快捷鍵 [描述]]]]]]
+</pre>
+
+<p>建立一個指向 「目標檔案」 的快捷方式 「快捷檔案.lnk」，可以帶 「參數」 參數。用於快捷方式的圖檔為 「圖檔檔案,圖檔索引號」；要使用預設圖檔的話把「圖檔檔案」 和 「圖檔索引號」 設為空字串。「啟動選項」 可以是它們之一: <em>SW_SHOWNORMAL</em>, <em>SW_SHOWMAXIMIZED</em>, <em>SW_SHOWMINIMIZED</em>, 或一個空字串。 「鍵盤快捷鍵」 應該為 flag|c 格式且 flag 可以聯合使用(使用 |): <em>ALT</em>, <em>CONTROL</em>, <em>EXT</em>, 或 <em>SHIFT</em>。c 為要使用的字元(a-z, A-Z, 0-9, F1-F24 等等)。注意在這些字串裡不能含有空格。一個典型的例子為 &quot;ALT|CONTROL|F8&quot;。$OUTDIR 被用來作為工作目錄。你可以在建立快捷方式之前使用 <a href="Section4.9.html#4.9.1.9">SetOutPath</a> 來指定或更改。「描述」 為快捷方式的描述，或在 XP 下作為註釋調用。當快捷方式不能建立的時候會放置一個錯誤標記(例如路徑 (連結路徑或目標路徑) 不存在或一些其它錯誤)。</p>
+<pre>CreateDirectory &quot;$SMPROGRAMS\My Company&quot;
+CreateShortCut &quot;$SMPROGRAMS\My Company\My Program.lnk&quot; &quot;$INSTDIR\My Program.exe&quot; \
+  &quot;some command line parameters&quot; &quot;$INSTDIR\My Program.exe&quot; 2 SW_SHOWNORMAL \
+  ALT|CTRL|SHIFT|F5 &quot;a description&quot;
+</pre>
+<a name="4.9.3.5"></a><h4>4.9.3.5 GetDLLVersion</h4>
+<pre>檔案名稱 用戶變量(高位DWORD輸出) 用戶變量(低位DWORD輸出)</pre>
+
+<p>從「檔案名稱」 DLL (或其他包含版本訊息的可執行檔案) 取得版本訊息。完成時把版本訊息高位 DWORD 和低位 DWORD 設為用戶輸出變量；失敗時輸出為空且置錯誤標記。下面的例子演示了讀取一個 DLL 版本並可讀的版本到 $0:</p>
+<pre>GetDllVersion &quot;$INSTDIR\MyDLL.dll&quot; $R0 $R1
+IntOp $R2 $R0 / 0x00010000
+IntOp $R3 $R0 &amp; 0x0000FFFF
+IntOp $R4 $R1 / 0x00010000
+IntOp $R5 $R1 &amp; 0x0000FFFF
+StrCpy $0 &quot;$R2.$R3.$R4.$R5&quot;
+</pre>
+<a name="4.9.3.6"></a><h4>4.9.3.6 GetDLLVersionLocal</h4>
+<pre>內部檔案 用戶變量(高位DWORD輸出) 用戶變量(低位DWORD輸出)</pre>
+
+<p>類似於 GetDLLVersion，但它僅用於取得安裝程式內部檔案的訊息(它實際上編譯為兩個 StrCpy 命令)。完成時把內部檔案的版本訊息高位 DWORD 和低位 DWORD 設為用戶輸出變量。</p>
+<a name="4.9.3.7"></a><h4>4.9.3.7 GetFileTime</h4>
+<pre>檔案名稱 用戶變量(高位DWORD輸出) 用戶變量(低位DWORD輸出)</pre>
+
+<p>取得 「檔案名稱」 的最後寫入時間。完成時把時間戳訊息高位 DWORD 和低位 DWORD 輸出到用戶輸出變量;失敗時輸出為空且置一個錯誤標記。</p>
+<a name="4.9.3.8"></a><h4>4.9.3.8 GetFileTimeLocal</h4>
+<pre>內部檔案 用戶變量(高位DWORD輸出) 用戶變量(低位DWORD輸出</pre>
+
+<p>類似於 GetFileTime，但它僅用於取得安裝程式內部檔案的訊息(它實際上編譯為兩個 StrCpy 命令)。</p>
+<a name="4.9.3.9"></a><h4>4.9.3.9 GetFullPathName</h4>
+<pre>[/SHORT] 用戶變量(輸出) 路經或檔案</pre>
+
+<p>把指定的檔案完整路徑訊息輸出到用戶變量。如果參數的部分路徑未找到，則會放置一個錯誤位標記並清除輸出變量。如果指定了 /SHORT，路經將會被轉換為短檔案名稱格式。</p>
+<a name="4.9.3.10"></a><h4>4.9.3.10 GetTempFileName</h4>
+<pre>用戶變量(輸出) [基本路徑]</pre>
+
+<p>把一個臨時檔案的名稱輸出到用戶變量。該檔案會自動建立，所以你可以隨時的覆蓋它。該臨時檔案的名稱唯一。如果你希望這個臨時檔案建立在另一個目錄而不是 Windows 臨時目錄的話指定一個 「基本路徑」 給它。該臨時檔案需要在完成之後手動刪除。</p>
+<pre>GetTempFileName $0
+File /oname=$0 something.dat
+# 其它一些關於 something.dat 的操作
+Delete $0
+</pre>
+<a name="4.9.3.11"></a><h4>4.9.3.11 SearchPath</h4>
+<pre>用戶變量(輸出) 檔案名稱</pre>
+
+<p>由第二個參數指定的檔案名稱的全路徑輸出到用戶變量。如果該檔案不存在則會置一個錯誤位標記並清除輸出的變量。使用 SearchPath() 來在系統目錄裡搜尋檔案。</p>
+<a name="4.9.3.12"></a><h4>4.9.3.12 SetFileAttributes</h4>
+<pre>檔案名稱 屬性1|屬性2|...
+</pre>
+
+<p>設定檔案的屬性。多從屬性可用 | 隔開，有效的屬性為:</p>
+<ul>
+<li><em>NORMAL</em> 或 <em>FILE_ATTRIBUTE_NORMAL</em> (你可以把該項縮寫為 0)</li>
+<li><em>ARCHIVE</em> 或<em>FILE_ATTRIBUTE_ARCHIVE</em></li><li><em>HIDDEN</em> 或<em>FILE_ATTRIBUTE_HIDDEN</em></li><li><em>OFFLINE</em> 或<em>FILE_ATTRIBUTE_OFFLINE</em></li><li><em>READONLY</em> 或<em>FILE_ATTRIBUTE_READONLY</em></li><li><em>SYSTEM</em> 或<em>FILE_ATTRIBUTE_SYSTEM</em></li><li><em>TEMPORARY</em> 或<em>FILE_ATTRIBUTE_TEMPORARY</em></li></ul>
+
+<p>如果檔案的屬性不能被設定則置一個錯誤的標記(例如檔案不存在，或者你沒有足夠的權限)。你只能進行屬性設定，而不能移除屬性，如果你想移除的話請使用 NORMAL。這樣所有的屬性都會被擦除，該命令不支援通配符。</p>
+<a name="4.9.3.13"></a><h4>4.9.3.13 RegDLL</h4>
+<pre>DLL檔案 [入口點名稱]
+</pre>
+
+<p>載入指定的 DLL 並且調用 DllRegisterServer (或入口點名稱，當指定之後)。當產生一個錯誤的時候會置一個錯誤標記(例如不能載入 DLL，不能初始化 OLE，不能找到入口點，或者函數返回任何其它錯誤 ERROR_SUCCESS (=0))。</p>
+
+<p>當某些要註冊的 DLL 要依靠其它的位於同目錄或 Windows 目錄下的 DLL 時請用 <a href="Section4.9.html#4.9.1.9">SetOutPath</a> 來設定目前目錄。例如，如果 foo.dll 依靠位於 $INSTDIR 的 bar.dll 時用e:</p>
+<pre> SetOutPath $INSTDIR
+ RegDLL $INSTDIR\foo.dll
+</pre>
+<a name="4.9.3.14"></a><h4>4.9.3.14 UnRegDLL</h4>
+<pre>DLL檔案</pre>
+
+<p>載入指定的 DLL 並且調用 DllUnregisterServer。當產生一個錯誤的時候會置一個錯誤標記(例如不能載入 DLL，不能初始化 OLE，不能找到入口點，或者函數返回任何其它錯誤 ERROR_SUCCESS (=0))。</p>
+<a name="4.9.4"></a>
+<h3>4.9.4 流程控制指令</h3>
+<a name="4.9.4.1"></a><h4>4.9.4.1 Abort</h4>
+<pre>[用戶訊息]</pre>
+
+<p>取消安裝，停止執行腳本，並且在狀態顯示裡顯示用戶訊息。注意: 你可以用於<a href="Section4.7.html#4.7.2">回調函數</a>來實現一些特殊功能。<a href="Section4.5.html#4.5">頁面回調</a>也可以用 Abort 來實現特殊目的。</p>
+<pre>Abort
+Abort &quot;不能安裝&quot;
+</pre>
+<a name="4.9.4.2"></a><h4>4.9.4.2 Call</h4>
+<pre>函數名 | :標記名 | 變量(輸入)</pre>
+
+<p>調用 <em>函數名</em> 函數或調用 <em>標記名</em> 的標記，或者包含位置的一個變量。位置值可以由 <a href="Section4.9.html#4.9.4.4">GetCurrentAddress</a>, <a href="Section4.9.html#4.9.4.5">GetFunctionAddress</a> 或 <a href="Section4.9.html#4.9.4.6">GetLabelAddress</a> 返回。當使用了 <a href="Section4.9.html#4.9.4.16">Return</a> 指令後調用將返回。區段和函數可以自動結束於 <a href="Section4.9.html#4.9.4.16">Return</a> 指令。卸載函數不能由安裝區段或函數調用，反之亦然。</p>
+<pre>Function func
+  Call :label
+  DetailPrint &quot;#1: This will only appear 1 time.&quot;
+label:
+  DetailPrint &quot;#2: This will appear before and after message #1.&quot;
+  Call :.global_label
+FunctionEnd
+
+Section
+  Call func
+  Return
+
+.global_label:
+  DetailPrint &quot;#3: The global label was called&quot;
+SectionEnd
+</pre>
+<a name="4.9.4.3"></a><h4>4.9.4.3 ClearErrors</h4>
+
+<p>清除錯誤位標記。</p>
+<pre>ClearErrors
+IfErrors 0 +2
+  MessageBox MB_OK &quot;this message box will never show&quot;
+</pre>
+<a name="4.9.4.4"></a><h4>4.9.4.4 GetCurrentAddress</h4>
+<pre>用戶變量(輸出)
+</pre>
+
+<p>取得目前指令的位置 (GetCurrentAddress) 並且把它儲存到用戶輸出變量。該用戶變量可以傳遞到 Call 或 Goto。</p>
+<pre>Function func
+  DetailPrint &quot;function&quot;
+  IntOp $0 $0 + 2
+  Call $0
+  DetailPrint &quot;function end&quot;
+FunctionEnd
+
+Section
+  DetailPrint &quot;section&quot;
+  DetailPrint &quot;section&quot;
+  GetCurrentAddress $0
+  Goto callFunc
+
+  DetailPrint &quot;back to section&quot;
+  Return
+
+callFunc:
+  Call func
+  DetailPrint &quot;section end&quot;
+SectionEnd
+</pre>
+<a name="4.9.4.5"></a><h4>4.9.4.5 GetFunctionAddress</h4>
+<pre>用戶變量(輸出) 函數名</pre>
+
+<p>取得函數位置並且把它儲存到用戶輸出變量。該用戶變量可以傳遞到 Call 或 Goto。注意如果你 Goto 一個由 GetFunctionAddress 輸出的位置，你的函數將不能返回(當你 Goto 的函數要返回時，你應該立即返回)。</p>
+<pre>Function func
+  DetailPrint &quot;function&quot;
+FunctionEnd
+
+Section
+  GetFunctionAddress $0 func
+  Call $0
+SectionEnd
+</pre>
+<a name="4.9.4.6"></a><h4>4.9.4.6 GetLabelAddress</h4>
+<pre>用戶變量(輸出) 標記</pre>
+
+<p>取得標記位置並且把它儲存到用戶輸出變量。該用戶變量可以傳遞到 Call 或 Goto。需要注意的是你可能僅能從你的函數里隨標記調用該指令，但是你可以從任何地方調用它 (可能存在不穩定因素)。需要注意的是如果你調用(Call)了 GetLabelAddress 的輸出，那麼直到它返回時才會被執行 (明確或隱含在一個函數的結尾)，然後你將回到 Call 指令的狀態。.</p>
+<pre>label:
+DetailPrint &quot;label&quot;
+GetLabelAddress $0 label
+IntOp $0 $0 + 4
+Goto $0
+DetailPrint &quot;done&quot;
+</pre>
+<a name="4.9.4.7"></a><h4>4.9.4.7 Goto</h4>
+<pre>要跳轉的標記 | +偏移| -偏移| 用戶變量(目標位置)
+</pre>
+
+<p>如果指定了標記，則轉移到 「要跳轉的標記:」。</p>
+
+<p>如果指定了 +偏移 或 -偏移 ，跳轉會根據偏移指令相對的跳轉。Goto +1 轉移到下一條指令，Goto -1 轉移到上一條指令，等等。</p>
+
+<p>如果指定了用戶變量，則轉移到絕對位置(通常你可以從一個函數比如 GetLabelAddress 來取得該值)。編譯器標記命令和 SectionIn 不是指令所以跳轉對它們無效。</p>
+<pre>Goto label
+Goto +2
+Goto -2
+Goto $0
+</pre>
+<a name="4.9.4.8"></a><h4>4.9.4.8 IfAbort</h4>
+<pre>登出時要跳轉的標記 [不是登出時要跳轉的標記]
+</pre>
+
+<p>如果調用登出時它將返回 true。這種情況可能發生在當一個檔案不能建立(或覆蓋)失敗而用戶選擇登出時或者當用戶手動登出時。該函數僅能在 instfiles <a href="Section4.5.html#4.5.4">頁面</a>的離開函數里調用。</p>
+<pre>Page instfiles &quot;&quot; &quot;&quot; instfilesLeave
+
+Function instfilesLeave
+  IfAbort 0 +2
+    MessageBox MB_OK &quot;user aborted&quot;
+FunctionEnd
+</pre>
+<a name="4.9.4.9"></a><h4>4.9.4.9 IfErrors</h4>
+<pre>錯誤時跳轉的標記 [沒有錯誤時跳轉的標記]
+</pre>
+
+<p>檢測並清除錯誤標記，如果設了錯誤標記，則轉移到 「錯誤時跳轉的標記」，否則轉移到 「沒有錯誤時跳轉的標記」。錯誤標記由其它指令在產生一個錯誤是設定的(比如試圖去刪除一個正在使用的檔案)。</p>
+<pre>ClearErrors
+File file.dat
+IfErrors 0 +2
+  Call ErrorHandler
+</pre>
+<a name="4.9.4.10"></a><h4>4.9.4.10 IfFileExists</h4>
+<pre>要檢測的檔案 檔案存在時跳轉的標記 [檔案不存在時跳轉的標記]
+</pre>
+
+<p>檢測「要檢測的檔案」是否存在(可以用通配符，或目錄)，並當檔案存在時轉移到「檔案存在時跳轉」，否則轉移到「檔案不存在時跳轉」。如果你要檢測目標是檔案還是目錄請使用 IfFileExists 目錄\*.*</p>
+<pre>IfFileExists $WINDIR\notepad.exe 0 +2
+  MessageBox MB_OK &quot;notepad is installed&quot;
+</pre>
+<a name="4.9.4.11"></a><h4>4.9.4.11 IfRebootFlag</h4>
+<pre>已設時跳轉的標記 [未設時跳轉的標記]
+</pre>
+
+<p>至少需要一個參數。檢測重啟標記，如果設定了重啟標記則轉移到「已設時跳轉」，否則轉移到「未設時跳轉」。重啟標記可以在 Delete 河 Rename，或手動設定的 <a href="Section4.9.html#4.9.11.2">SetRebootFlag</a> 指令裡設定。</p>
+<pre>IfRebootFlag 0 noreboot
+  MessageBox MB_YESNO &quot;A reboot is required to finish the installation. Do you wish to reboot now?&quot; IDNO noreboot
+    Reboot
+noreboot:
+</pre>
+<a name="4.9.4.12"></a><h4>4.9.4.12 IfSilent</h4>
+<pre>靜默安裝時跳轉的標記 [非靜默安裝時跳轉的標記]
+</pre>
+
+<p>至少需要一個參數。檢測靜默安裝標記，如果安裝程式是靜默安裝時轉移到「靜默安裝時跳轉」，否則轉移到「非靜默安裝時跳轉」。靜默安裝標記可以由 <a href="Section4.8.html#4.8.1.35">SilentInstall</a>、<a href="Section4.8.html#4.8.1.36">SilentUninstall</a>、<a href="Section4.9.html#4.9.14.16">SetSilent</a> 和用戶使用 /S 命令行啟動來設定。</p>
+<pre>IfSilent +2
+  ExecWait '&quot;$INSTDIR\nonsilentprogram.exe&quot;'
+</pre>
+<a name="4.9.4.13"></a><h4>4.9.4.13 IntCmp</h4>
+<pre>值1 值2 相等時跳轉的標記 [值1小時跳轉的標記] [值1大時跳轉的標記]
+</pre>
+
+<p>比較兩個整數 值1 和 值2。如果 值1 和 值2 相等，則轉移到「相等時跳轉的標記」，否則如果 值1 &lt; 值2，轉移到「值1小時跳轉的標記」，否則如果 值1 &gt; 值2 ，轉移到「值1大時跳轉的標記」。</p>
+<pre>IntCmp $0 5 is5 lessthan5 morethan5
+is5:
+  DetailPrint &quot;$$0 == 5&quot;
+  Goto done
+lessthan5:
+  DetailPrint &quot;$$0 &lt; 5&quot;
+  Goto done
+morethan5:
+  DetailPrint &quot;$$0 &gt; 5&quot;
+  Goto done
+done:
+</pre>
+<a name="4.9.4.14"></a><h4>4.9.4.14 IntCmpU</h4>
+<pre>值1 值2 相等時跳轉的標記 [值1小時跳轉的標記] [值1大時跳轉的標記]
+</pre>
+
+<p>比較兩個無符號整數 值1 和 值2。如果 值1 和 值2 相等，則轉移到「相等時跳轉的標記」，否則如果 值1 &lt; 值2，轉移到「值1小時跳轉的標記」，否則如果 值1 &gt; 值2 ，轉移到「值1大時跳轉的標記」。比較時作為無符號整數來比較。</p>
+<a name="4.9.4.15"></a><h4>4.9.4.15 MessageBox</h4>
+<pre>消息框選項列表 消息框文字 [/SD 返回] [檢測返回值 轉移到標記] [檢測返回值2 轉移到標記2]
+</pre>
+
+<p>顯示一個包含「消息框文字」的消息框。「消息框選項列表」必須為下面的一個或多個，多個使用 | 來隔開(例如 MB_YESNO|MB_ICONSTOP)。</p>
+<ul>
+<li><em>MB_OK</em> - 顯示 OK 按鈕</li>
+<li><em>MB_OKCANCEL</em> - 顯示 OK 和取消按鈕</li>
+<li><em>MB_ABORTRETRYIGNORE</em> - 顯示登出、重試、忽略按鈕</li>
+<li><em>MB_RETRYCANCEL</em> - 顯示重試和取消按鈕</li>
+<li><em>MB_YESNO</em> - 顯示是和否按鈕</li>
+<li><em>MB_YESNOCANCEL</em> - 顯示是、否、取消按鈕</li>
+<li><em>MB_ICONEXCLAMATION</em> - 顯示驚歎號圖檔</li>
+<li><em>MB_ICONINFORMATION</em> - 顯示訊息圖檔</li>
+<li><em>MB_ICONQUESTION</em> - 顯示問號圖檔</li>
+<li><em>MB_ICONSTOP</em> - 顯示結束圖檔</li>
+<li><em>MB_TOPMOST</em> - 使消息框在最前端顯示</li>
+<li><em>MB_SETFOREGROUND</em> - 設定前景</li>
+<li><em>MB_RIGHT</em> - 右對齊文字</li>
+<li><em>MB_RTLREADING</em> - RTL 閱讀次序</li>
+<li><em>MB_DEFBUTTON1</em> - 預設為按鈕 1</li>
+<li><em>MB_DEFBUTTON2</em> - 預設為按鈕 2 </li>
+<li><em>MB_DEFBUTTON3</em> - 預設為按鈕 3 </li>
+<li><em>MB_DEFBUTTON4</em> - 預設為按鈕 4 </li>
+</ul>
+
+<p>「檢測返回值」可以為 0(或空，或保留關閉)，或下列之一:</p>
+<ul>
+<li><em>IDABORT</em> - 登出按鈕</li>
+<li><em>IDCANCEL</em> - 取消按鈕</li>
+<li><em>IDIGNORE</em> - 忽略按鈕</li>
+<li><em>IDNO</em> - 否按鈕</li>
+<li><em>IDOK</em> - OK 按鈕</li>
+<li><em>IDRETRY</em> - 重試按鈕</li>
+<li><em>IDYES</em> - 是按鈕</li>
+</ul>
+
+<p>如果消息框的返回值為「檢測返回值」，則安裝程式執行跳轉。</p>
+
+<p>用 /SD 來指定一個上面列出的返回值當在安裝程式靜默安裝時作為返回值。詳細訊息請觀看 <a href="Section4.12.html#4.12">section 4.12</a>。</p>
+<pre>MessageBox MB_OK &quot;簡單消息框&quot;
+MessageBox MB_YESNO &quot;真的嗎？&quot; IDYES true IDNO false
+true:
+  DetailPrint &quot;是真的！&quot;
+  Goto next
+false:
+  DetailPrint &quot;是假的&quot;
+next:
+MessageBox MB_YESNO &quot;真的嗎？(靜默安裝時預設為是)&quot; /SD IDYES IDNO false2
+  DetailPrint &quot;是真的 (或靜默)！&quot;
+  Goto next2
+false2:
+  DetailPrint &quot;是假的&quot;
+next2:
+</pre>
+<a name="4.9.4.16"></a><h4>4.9.4.16 Return</h4>
+
+<p>從一個函數或區段返回。</p>
+<pre>Function func
+  StrCmp $0 &quot;return now&quot; 0 +2
+    Return
+  # do stuff
+FunctionEnd
+
+Section
+  Call func
+  ;&quot;Return&quot; will return here
+SectionEnd
+</pre>
+<a name="4.9.4.17"></a><h4>4.9.4.17 Quit</h4>
+
+<p>使得安裝程式立即登出。在調用 Quit 後，安裝程式將登出(且沒有回調函數可以運行)。</p>
+<a name="4.9.4.18"></a><h4>4.9.4.18 SetErrors</h4>
+
+<p>設定錯誤標記。</p>
+<pre>SetErrors
+IfErrors 0 +2
+  MessageBox MB_OK &quot;this message box will always show&quot;
+</pre>
+<a name="4.9.4.19"></a><h4>4.9.4.19 StrCmp</h4>
+<pre>字串1 字串2 相同時跳轉的標記 [不相同時跳轉的標記]
+</pre>
+
+<p>比較(不區分大小寫)「字串1」和「字串2」。如果兩者相等，轉移到「相同時跳轉的標記」，否則轉移到「不相同時跳轉的標記」。</p>
+<pre>StrCmp $0 &quot;a string&quot; 0 +3
+  DetailPrint '$$0 == &quot;a string&quot;'
+  Goto +2
+  DeteailPrint '$$0 != &quot;a string&quot;'
+</pre>
+<a name="4.9.5"></a>
+<h3>4.9.5 檔案指令</h3>
+<a name="4.9.5.1"></a><h4>4.9.5.1 FileClose</h4>
+<pre>句柄</pre>
+
+<p>關閉一個由 FileOpen 開啟的檔案句柄。</p>
+<a name="4.9.5.2"></a><h4>4.9.5.2 FileOpen</h4>
+<pre>用戶變量(句柄輸出) 檔案名稱 開啟模式</pre>
+
+<p>開啟一個「檔案名稱」的檔案，並且把句柄設定為句柄輸出變量。「開啟模式」 為 r (只讀)、w (寫入，檔案的所有內容將被清除)或 a (附加，保持檔案內容並附加寫入)其中之一。在所有的開啟模式裡，檔案指針都置於檔案開始位置。如果檔案不能被開啟，則句柄輸出變量為空，並放置一個錯誤標記。</p>
+
+<p>如果沒有指定絕對路徑則使用目前路徑。目前路徑由 <a href="Section4.9.html#4.9.1.9">SetOutPath</a> 設定。如果之前沒有使用 <a href="Section4.9.html#4.9.1.9">SetOutPath</a> 則目前路徑為 <a href="Section4.2.html#4.2.2">$EXEDIR</a>。</p>
+<pre>FileOpen $0 $INSTDIR\file.dat r
+FileClose $0
+</pre>
+<a name="4.9.5.3"></a><h4>4.9.5.3 FileRead</h4>
+<pre>句柄 用戶變量(輸出) [最大長度]
+</pre>
+
+<p>讀取一個由 FileOpen 開啟的檔案的字串。該字串一直讀取到新的一行為止(或Enter新行)。或直到讀取到空的字元為止，或者直到讀取的字串滿足了「最大長度」(如果指定了的話)。字串的最大長度被限定在 1024 字元之內。如果讀取到了檔案的結尾卻沒有有效的資料則輸出字串被清除，並放置一個錯誤標記。</p>
+<pre>ClearErrors
+FileOpen $0 $INSTDIR\file.dat r
+IfErrors done
+FileRead $0 $1
+DetailPrint $1
+FileClose $0
+done:
+</pre>
+<a name="4.9.5.4"></a><h4>4.9.5.4 FileReadByte</h4>
+<pre>句柄 用戶變量(輸出)</pre>
+
+<p>讀取一個由 FileOpen 開啟的檔案的字元。讀取的字元作為一個整數(0-255)儲存在輸出變量裡。如果讀取到了檔案的結尾卻沒有有效的資料則輸出字串被清除，並放置一個錯誤標記。</p>
+<pre>ClearErrors
+FileOpen $0 $INSTDIR\file.dat r
+IfErrors done
+FileReadByte $0 $1
+FileReadByte $0 $2
+DetailPrint &quot;$1 $2&quot;
+FileClose $0
+done:
+</pre>
+<a name="4.9.5.5"></a><h4>4.9.5.5 FileSeek</h4>
+<pre>句柄 偏移 [模式] [用戶變量(新位置)]
+</pre>
+
+<p>定位一個由 FileOpen 開啟的檔案。如果 「模式」 忽略或指定為 SET，則檔案指針定位到 「偏移」。如果 「模式」 指定為 CUR，則檔案指針向後移動 「偏移」。如果檔案指定為 END，則指針定位到相對於檔案結尾 EOF(End of file)處。如果指定了最後一個參數 「用戶變量(新位置)」，則新檔案位置將儲存在該變量中。</p>
+<pre>ClearErrors
+FileOpen $0 $INSTDIR\file.dat r
+IfErrors done
+FileSeek $0 -5 END
+FileRead $0 $1
+DetailPrint $1
+FileClose $0
+done:
+</pre>
+<a name="4.9.5.6"></a><h4>4.9.5.6 FileWrite</h4>
+<pre>句柄 字串</pre>
+
+<p>寫入一個字串到 FileOpen 開啟的檔案。如果寫入時產生了錯誤，則置一個錯誤標記。</p>
+<pre>ClearErrors
+FileOpen $0 $INSTDIR\file.dat w
+IfErrors done
+FileWrite $0 &quot;some text&quot;
+FileClose $0
+done:
+</pre>
+<a name="4.9.5.7"></a><h4>4.9.5.7 FileWriteByte</h4>
+<pre>句柄 字串</pre>
+
+<p>寫入 「字串」 解釋為整數的值到 FileOpen 開啟的檔案。當然你也可以直接輸入整數值。下面的代碼寫入一個 「Enter/換行」 - 輸入到檔案。</p>
+<pre>FileWriteByte 檔案句柄 &quot;13&quot; ;Enter，相當於 $\r
+FileWriteByte 檔案句柄 &quot;10&quot; ;換行，相當於 $\n
+</pre>
+
+<p>如果寫入時產生了錯誤，則置一個錯誤標記。需要注意的是低字元的整數已經被使用，例如: 寫入 256 和寫入 0 一樣，等等。</p>
+<a name="4.9.5.8"></a><h4>4.9.5.8 FindClose</h4>
+<pre>句柄</pre>
+
+<p>關閉一個由 FindFirst 開啟的搜尋。</p>
+<a name="4.9.5.9"></a><h4>4.9.5.9 FindFirst</h4>
+<pre>用戶變量(句柄輸出) 用戶變量(檔案輸出) 檔案規範</pre>
+
+<p>對 「檔案規範」 執行一個搜尋，把第一個尋找到的檔案放置到 「用戶變量(檔案輸出)」。也可以把搜尋的句柄放到 「用戶變量(句柄輸出)」。如果未找到任何檔案，則輸出都被設為空，並且放置一個錯誤標記。比較好的用法是使用 FindNext 和 FindClose。需要注意的是 「用戶變量(檔案輸出)」 不帶有路徑。</p>
+<pre>FindFirst $0 $1 $INSTDIR\*.txt
+loop:
+  StrCmp $1 &quot;&quot; done
+  DetailPrint $1
+  FindNext $0 $1
+  Goto loop
+done:
+</pre>
+<a name="4.9.5.10"></a><h4>4.9.5.10 FindNext</h4>
+<pre>句柄 用戶變量(檔案輸出)</pre>
+
+<p>繼續一個由 FindFirst 開始的搜尋。句柄應該為 FindFirst 返回的值。如果搜尋已完成(沒有更多檔案)，「用戶變量(檔案輸出)」 將被設為空，並且置一個錯誤標記。需要注意的是 「用戶變量(檔案輸出)」 不帶有路徑。</p>
+<a name="4.9.6"></a>
+<h3>4.9.6 卸載程式指令</h3>
+<a name="4.9.6.1"></a><h4>4.9.6.1 WriteUninstaller</h4>
+<pre>[路徑\]可執行檔案名稱.exe
+</pre>
+
+<p>由指定的檔案名稱(路徑為可選項)寫入卸載程式。僅在一個安裝區段或函數里有效，並且你的腳本裡必須有一個卸載區段。也可以參考卸載配置。你可以調用一次或多次來寫入一個或多個卸載程式(副本)。</p>
+<pre>WriteUninstaller $INSTDIR\uninstaller.exe
+</pre>
+<a name="4.9.7"></a>
+<h3>4.9.7 混合指令</h3>
+<a name="4.9.7.1"></a><h4>4.9.7.1 GetErrorLevel</h4>
+<pre>變量(錯誤等級輸出)
+</pre>
+
+<p>返回由 <a href="Section4.9.html#4.9.7.4">SetErrorLevel</a> 設定的最後錯誤等級或者沒有使用過時返回 -1。</p>
+<pre>GetErrorLevel $0
+IntOp $0 $0 + 1
+SetErrorLevel $0
+</pre>
+<a name="4.9.7.2" id="4.9.7.2"></a>
+<h4>4.9.7.2 GetInstDirError</h4>
+<pre>用戶變量(錯誤輸出)
+</pre>
+
+<p>用於目錄選擇頁面的離開函數。讀取標記設定看 <a href="Section4.8.html#4.8.1.16">DirVerify leave</a> 是否已使用。可能的值:</p>
+
+<p>0: 無錯誤</p>
+
+<p>1: 無效的安裝目錄</p>
+
+<p>2: 目標驅動器沒有足夠的空間</p>
+<pre>!include LogicLib.nsh
+PageEx directory
+  DirVerify leave
+  PageCallbacks &quot;&quot; &quot;&quot; dirLeave
+PageExEnd
+
+Function dirLeave
+  GetInstDirError $0
+  ${Switch} $0
+    ${Case} 0
+      MessageBox MB_OK &quot;valid installation directory&quot;
+      ${Break}
+    ${Case} 1
+      MessageBox MB_OK &quot;invalid installation directory!&quot;
+      Abort
+      ${Break}
+    ${Case} 2
+      MessageBox MB_OK &quot;not enough free space!&quot;
+      Abort
+      ${Break}
+  ${EndSwitch}
+FunctionEnd
+</pre>
+<a name="4.9.7.3" id="4.9.7.3"></a>
+<h4>4.9.7.3 InitPluginsDir</h4>
+
+<p>初始化插件目錄(<a href="Section4.2.html#4.2.3">$PLUGINSDIR</a>)當之前沒有初始化時，可以多次使用。</p>
+<pre>InitPluginsDir
+File /oname=$PLUGINSDIR\image.bmp image.bmp
+</pre>
+<a name="4.9.7.4"></a><h4>4.9.7.4 SetErrorLevel</h4>
+<pre>錯誤等級</pre>
+
+<p>把安裝程式或卸載程式的錯誤等級設為<strong>錯誤等級</strong>。更多訊息請觀看 <a href="SectionD.1.html#D.1">Error Levels</a>。</p>
+<pre>IfRebootFlag 0 +2
+  SetErrorLevel 4
+</pre>
+<a name="4.9.7.5" id="4.9.7.5"></a>
+<h4>4.9.7.5 SetShellVarContext</h4>
+<pre><b>current</b>|all
+</pre>
+
+<p>設定 $SMPROGRAMS 的內容或其他命令解釋程式目錄。如果設為 current (預設值)，則使用目前用戶的命令解釋程式目錄。如果設為 all，則使用所有用戶的命令解釋程式目錄。所有用戶目錄可能不能被所有的作業系統支援。如果所有用戶的目錄找不到則使用目前用戶代替。請考慮一個普通用戶或遊客是否有正確的權限在所有用戶目錄裡操作。僅僅管理員才有完全的權限瀏覽所有用戶目錄。你可以用 UserInfo 來觀看用戶身份。詳細訊息請觀看 Contrib\UserInfo\UserInfo.nsi 例子。</p>
+<pre>SetShellVarContext current
+StrCpy $0 $DESKTOP
+SetShellVarContext all
+StrCpy $1 $DESKTOP
+MessageBox MB_OK $0$\n$1
+</pre>
+<a name="4.9.7.6" id="4.9.7.6"></a>
+<h4>4.9.7.6 Sleep</h4>
+<pre>休眠時間(單位為毫秒)</pre>
+
+<p>在安裝程式裡暫停執行 「休眠時間(單位為毫秒)」 時間。「休眠時間(單位為毫秒)」 可以是一個變量，例如 $0 或一個數字，比如 666。</p>
+<pre>DetailPrint &quot;正在睡覺...^_^&quot;
+Sleep 3000
+DetailPrint &quot;返回繼續運行&quot;
+</pre>
+<a name="4.9.8"></a>
+<h3>4.9.8 字串操作指令</h3>
+<a name="4.9.8.1"></a><h4>4.9.8.1 StrCpy</h4>
+<pre>用戶變量(目標) 字串 [最大長度] [開始偏移]
+</pre>
+
+<p>字串複製指令。注意 「字串」 可以包含另一個變量，或該用戶變量會被設定(可以用來連接字串等等)。如果指定了 「最大長度」 則限定了要複製字串的最大長度 (如果 「最大長度」 是負數，則會從字串尾部截去 「最大長度」 的絕對值個字元)。如果指定了開始偏移，則字串偏移到該處作為開始(如果「開始偏移」是負數，則會從尾部開始偏移)。</p>
+<pre>StrCpy $0 &quot;a string&quot;         ;$0 = &quot;a string&quot;
+StrCpy $0 &quot;a string&quot; 3       ;$0 = &quot;a s&quot;
+StrCpy $0 &quot;a string&quot; -1      ;$0 = &quot;a strin&quot;
+StrCpy $0 &quot;a string&quot; &quot;&quot; 2    ;$0 = &quot;string&quot;
+StrCpy $0 &quot;a string&quot; &quot;&quot; -3   ;$0 = &quot;ing&quot;
+StrCpy $0 &quot;a string&quot; 3 -4    ;$0 = &quot;rin&quot;<br />;連接字串<br />StrCpy $0 &quot;字串1&quot;<br />StrCpy $0 &quot;$0 + 字串2&quot;       ;$0 = &quot;字串1 + 字串2&quot;</pre>
+<a name="4.9.8.2"></a>
+<h4>4.9.8.2 StrLen</h4>
+<pre>用戶變量(長度輸出) 字串</pre>
+
+<p>取得字串的長度。</p>
+<pre>StrLen $0 &quot;123456&quot;            ;$0 = 6
+</pre>
+<a name="4.9.9"></a>
+<h3>4.9.9 堆棧支援</h3>
+<a name="4.9.9.1"></a><h4>4.9.9.1 Exch</h4>
+<pre>[用戶變量 | 堆棧索引]
+</pre>
+
+<p>當不指定參數時，交換堆棧頂部的兩個單元。當指定了一個參數並且是一個用戶變量時，交換堆棧頂部的單元和該變量的值。當指定了一個參數並且是正整數時，Exch 將會交換堆棧頂部單元和根據參數從堆棧頂部偏移到指定單元的值。如果堆棧裡沒有足夠的單元來完成交換時，會產生一個致命的錯誤(來幫助你調試你的代碼)。</p>
+<pre>Push 1
+Push 2
+Exch
+Pop $0 # = 1
+</pre>
+<pre>Push 1
+Push 2
+Push 3
+Exch 2
+Pop $0 # = 1
+</pre>
+<pre>StrCpy $0 1
+Push 2
+Exch $0 # = 2
+Pop $1 # = 1
+</pre>
+<a name="4.9.9.2"></a><h4>4.9.9.2 Pop</h4>
+<pre>用戶變量(輸出)
+</pre>
+
+<p>從堆棧裡彈出一個字串到用戶變量 $x。如果堆棧是空的，則會置一個錯誤標記。</p>
+<pre>Push 1
+Pop $0 # = 1
+</pre>
+<a name="4.9.9.3"></a><h4>4.9.9.3 Push</h4>
+<pre>字串</pre>
+
+<p>把一個字串壓入堆棧。該字串可隨後從堆棧裡彈出。</p>
+<pre>Push &quot;a string&quot;
+</pre>
+<a name="4.9.10"></a>
+<h3>4.9.10 整數支援</h3>
+<a name="4.9.10.1"></a><h4>4.9.10.1 IntFmt</h4>
+<pre>用戶變量(輸出) 格式 數字字串</pre>
+
+<p>用 「格式」 格式格式化 「數字字串」 中的數字，並把輸出設為用戶變量 $x。例如格式化字串包含 &quot;%08X&quot; &quot;%u&quot;。<br />
+  這個指令其實就是 C++ 裡的 wsprintf 函數，常用的格式為 %x - 十六進制數(小寫)、%X - 十六進制數(大寫) 、%d - 十進制數、%u - 無符號整數、%c 單個字元。</p>
+<pre>IntFmt $0 &quot;0x%08X&quot; 195948557
+IntFmt $0 &quot;%c&quot; 0x41
+</pre>
+<a name="4.9.10.2"></a><h4>4.9.10.2 IntOp</h4>
+<pre>用戶變量(輸出) 值1 操作 [值2]
+</pre>
+
+<p>數字運算。操作定義為下列之一:</p>
+<ul>
+<li><em>+</em> 值1 加 值2</li>
+<li><em>-</em> 值1 減 值2</li>
+<li><em>*</em> 值1 乘 值2</li>
+<li><em>/</em> 值1 除 值2</li>
+<li><em>%</em> 由 值2 取 值1 的模</li>
+<li><em>|</em> 值1 和 值2 二進制「或」</li>
+<li><em>&amp;</em> 值1 和 值2 二進制「與」</li>
+<li><em>^</em> 值1 和 值2 二進制「異或」</li>
+<li><em>&gt;&gt;</em> 值1 按位右移 值2 個位</li>
+<li><em>&lt;&lt;</em> 值1 按位左移 值2 個位</li>
+<li><em>~</em> ~ 按位取反 值1(例如 7 變為 4294917288)</li>
+<li><em>!</em> 邏輯取反 值1(例如 7 變為 0)</li>
+<li><em>||</em> 值1 和 值2 邏輯「或」</li>
+<li><em>&amp;&amp;</em> 值1 和 值2 邏輯「與」</li>
+</ul>
+<pre>IntOp $0 1 + 1
+IntOp $0 $0 + 1
+IntOp $0 $0 &lt;&lt; 2
+IntOp $0 $0 ~
+IntOp $0 $0 &amp; 0xF
+</pre>
+<a name="4.9.11"></a>
+<h3>4.9.11 重啟指令</h3>
+<a name="4.9.11.1"></a><h4>4.9.11.1 Reboot</h4>
+
+<p>重啟電腦。請小心使用該指令。如果失敗，則 <a href="Section4.7.html#4.7.2.1.7">.onRebootFailed</a> 函數會被調用。無論如何該指令都不會返回，就像 <a href="Section4.9.html#4.9.4.17">Quit</a>。</p>
+<pre>MessageBox MB_YESNO|MB_ICONQUESTION &quot;你希望重啟系統嗎？&quot; IDNO +2
+  Reboot
+</pre>
+<a name="4.9.11.2"></a><h4>4.9.11.2 SetRebootFlag</h4>
+<pre>true|false
+</pre>
+
+<p>設定重啟標記為 true 或 false。該標記值可以由 <a href="Section4.9.html#4.9.4.11">IfRebootFlag</a> 讀取並作判斷。</p>
+<pre>SetRebootFlag true
+IfRebootFlag 0 +2
+  MessageBox MB_OK &quot;this message box will always show&quot;
+</pre>
+<a name="4.9.12"></a>
+<h3>4.9.12 安裝記錄指令</h3>
+<a name="4.9.12.1"></a><h4>4.9.12.1 LogSet</h4>
+<pre>on|<b>off</b>
+</pre>
+
+<p>設定安裝記錄到 $INSTDIR\install.log。在你調用該函數之前 $INSTDIR 必須有一個值否則該指令將無效。需要注意的是在編譯的時候編譯配置檔案(config.h)必須設定 <em>NSIS_CONFIG_LOG</em> (預設未設定)來支援該指令。關於重新編譯 NSIS 的詳細訊息請觀看 <a href="AppendixG.html#G">構建 NSIS</a>。</p>
+<a name="4.9.12.2"></a><h4>4.9.12.2 LogText</h4>
+<pre>文字</pre>
+
+<p>如果啟用了安裝程式記錄，插入「文字」 文字到記錄檔案。</p>
+<pre>IfFileExists $WINDIR\notepad.exe 0 +2
+  LogText &quot;$$WINDIR\notepad.exe exists&quot;
+</pre>
+<a name="4.9.13"></a>
+<h3>4.9.13 區段管理</h3>
+<a name="4.9.13.1"></a><h4>4.9.13.1 SectionSetFlags</h4>
+<pre>區段索引 區段標記</pre>
+
+<p>設定區段標記。標記為 32 位整數。第一位(低位)代表該區段目前是否選中，第二位代表該區段是否是一個區段組(請不要修改這裡除非你真的很瞭解)，第三位代表該區段是否是一個區段組的結尾(同樣，請不要修改)，第四位代表該區段文字是否描黑顯示，第五位代表該區段是否是只讀，第六位代表區段組是否自動展開，第七位代表區段組是部分選定的，第八位是部分選定區段組切換內部使用，第九位是用來反映區段名稱更改。如果指定了超出範圍的區段則會放置一個錯誤的標記。</p>
+
+<p>應用的一個例子請看 <a href="#" onclick="parser('../Examples/one-section.nsi')">one-section.nsi</a> 。</p>
+<a name="4.9.13.2"></a><h4>4.9.13.2 SectionGetFlags</h4>
+<pre>區段索引 用戶變量(輸出)
+</pre>
+
+<p>取得該區段的標記。標記的描述請看上面。如果指定了超出範圍的區段則會放置一個錯誤的標記。</p>
+<a name="4.9.13.3"></a><h4>4.9.13.3 SectionSetText</h4>
+<pre>區段索引 區段文字</pre>
+
+<p>設定 「區段索引」 區段的描述。如果文字設為 &quot;&quot; 則該區段將會隱藏。如果指定了超出範圍的區段則會置一個錯誤的標記。</p>
+<a name="4.9.13.4"></a><h4>4.9.13.4 SectionGetText</h4>
+<pre>區段索引 區段文字</pre>
+
+<p>把 「區段索引」 區段的描述儲存在輸出變量。如果區段為隱藏，則儲存的變量為空。如果指定了超出範圍的區段則會置一個錯誤的標記。</p>
+<a name="4.9.13.5"></a><h4>4.9.13.5 SectionSetInstTypes</h4>
+<pre>區段索引 安裝類型</pre>
+
+<p>設定區段在安裝類型中的預設啟用狀態。需要注意的是區段索引從零開始。「安裝類型」 的每一位都是一個告訴該區段是否屬於這個安裝類型的標記。例如，如果你有 3 個安裝類型並且你希望第一個區段包含在類型 1 和 3，則命令如下:</p>
+<pre>SectionSetInstTypes 0 5
+</pre>
+
+<p>因為 5 的二進制值為 00000101。如果指定了超出範圍的區段則會放置一個錯誤的標記。</p>
+<a name="4.9.13.6"></a><h4>4.9.13.6 SectionGetInstTypes</h4>
+<pre>區段索引 用戶變量(輸出)</pre>
+
+<p>取得一個區段的安裝類型標記。如何處理輸出的描述請看上面的關於 SectionSetInstTypes 的解釋。如果指定了超出範圍的區段則會放置一個錯誤的標記。</p>
+<a name="4.9.13.7"></a><h4>4.9.13.7 SectionSetSize</h4>
+<pre>區段索引 新大小</pre>
+
+<p>設定某個區段的大小。需要注意的是索引從零開始。容量的單位為 KB 且僅支援整數。</p>
+<a name="4.9.13.8"></a><h4>4.9.13.8 SectionGetSize</h4>
+<pre>區段索引 用戶變量</pre>
+
+<p>取得區段的大小並把值儲存在指定的用戶變量裡。需要注意的是索引從零開始。</p>
+<a name="4.9.13.9"></a><h4>4.9.13.9 SetCurInstType</h4>
+<pre>安裝類型索引</pre>
+
+<p>設定目前安裝類型。「安裝類型索引」 介於 0 到 31 之間。如果使用了一個超出範圍的安裝類型則<strong>不</strong>會放置一個錯誤標記。</p>
+
+<a name="4.9.13.10"></a>
+<h4>4.9.13.10 GetCurInstType</h4>
+<pre>用戶變量</pre>
+
+<p>取得目前的安裝類型並儲存到變量裡。如果選擇了第一個類型，則變量值為 0，如果選擇了第二個類型，則變量值為 1，依次類推。${NSIS_MAX_INST_TYPES} (預設為 32) 的值則意味著選擇了自定義安裝類型。</p>
+<a name="4.9.13.11"></a><h4>4.9.13.11 InstTypeSetText</h4>
+<pre>安裝類型索引 文字</pre>
+
+<p>設定指定的安裝類型的文字。如果設定的文字為空則移除該安裝類型。通過使用一個以前未使用的 「安裝類型索引」 序號你可以建立一個新的安裝類型。要在新的安裝類型裡新增、刪除區段請看 <a href="Section4.9.html#4.9.13.5">SectionSetInstTypes</a>。與 <a href="Section4.6.html#4.6.1.4">SectionIn</a> 不同的是該索引從零開始，這意味著第一個安裝類型索引為 0。</p>
+<a name="4.9.13.12"></a><h4>4.9.13.12 InstTypeGetText</h4>
+<pre>安裝類型索引 用戶變量</pre>
+
+<p>取得指定的安裝類型的文字。</p>
+<a name="4.9.14"></a>
+<h3>4.9.14 用戶介面指令</h3>
+<a name="4.9.14.1"></a><h4>4.9.14.1 BringToFront</h4>
+
+<p>使安裝程式視窗可見並把它帶到其它視窗的最前端。如果一個應用程式已經執行且顯示在安裝程式的前面，BringToFront 將把安裝程式帶回到焦點。</p>
+
+<p>近期的 Windows 版本限制了前景視窗的設定。如果在安裝的時候用戶正在運行其他的應用程式，也許會通知該用戶使用一種不同的方式。</p>
+<a name="4.9.14.2"></a><h4>4.9.14.2 CreateFont</h4>
+<pre>用戶變量(句柄輸出) 字型名 [高] [寬] [/ITALIC] [/UNDERLINE] [/STRIKE]
+</pre>
+
+<p>建立一個字型並把句柄儲存在用戶變量裡。關於不同參數的更多訊息請看 <a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/gdi/fontext_8fp0.asp">MSDN 關於 Win32 API 函數 CreateFont()</a>。</p>
+<p>你可以通過 ^Font 和 ^FontSize <a href="Section4.9.html#4.9.15.2">LangString</a> 來取得目前使用的字型。</p>
+<pre>!include WinMessages.nsh
+GetDlgItem $$0 $HWNDPARENT 1
+CreateFont $1 &quot;Times New Roman&quot; &quot;7&quot; &quot;700&quot; /UNDERLINE
+SendMessage $0 ${WM_SETFONT} $1 1
+</pre>
+<a name="4.9.14.3"></a><h4>4.9.14.3 DetailPrint</h4>
+<pre>訊息</pre>
+
+<p>新增 「訊息」 字串到安裝程式的安裝訊息觀看視窗。</p>
+<pre>DeteailPrint &quot;this message will show on the installation window&quot;
+</pre>
+<a name="4.9.14.4"></a><h4>4.9.14.4 EnableWindow</h4>
+<pre>視窗句柄(HWND) (1|0)
+</pre>
+
+<p>對指定的視窗或控件允許或禁止鼠標和鍵盤輸入。可用的狀態為 0(禁止) 或 1(允許)。</p>
+<pre>GetDlgItem $0 $HWNDPARENT 1
+EnableWindow $0 0
+Sleep 1000
+EnableWindow $0 1
+</pre>
+<a name="4.9.14.5"></a><h4>4.9.14.5 FindWindow</h4>
+<pre>用戶變量(視窗句柄輸出) 視窗類名 [視窗標題] [父視窗句柄] [childafter]
+</pre>
+
+<p>尋找一個視窗。類似於 Win32 FindWindowEx()。由視窗類名來尋找(和/或視窗標題，如果指定的話)。如果指定了 「父視窗句柄」 或 childafter，則尋找會受到限制。如果視窗類名或視窗標題指定為 &quot;&quot;，則它們將不能用於尋找。如果視窗未找到，用戶變量將返回 0 值。要實現舊式 FindWindow 行為，請和 SendMessage 一起使用。</p>
+<pre>FindWindow $0 &quot;#32770&quot; &quot;&quot; $HWNDPARENT
+FIndWindow $0 &quot;my window class&quot; &quot;my window title&quot;
+</pre>
+<a name="4.9.14.6"></a><h4>4.9.14.6 GetDlgItem</h4>
+<pre>用戶變量(輸出) 視窗句柄 控件ID</pre>
+
+<p>在指定的對話框上根據控件ID獲得控件句柄。如果你想獲得安裝程式內部的控件句柄，請先使用 FindWindow 用戶變量(視窗句柄輸出) &quot;#32770&quot; &quot;&quot; $HWNDPARENT 來取得視窗句柄。</p>
+<pre>GetDlgItem $0 $HWNDPARENT 1 # 下一步、安裝按鈕</pre>
+<a name="4.9.14.7"></a><h4>4.9.14.7 HideWindow</h4>
+
+<p>隱藏安裝程式。</p>
+<a name="4.9.14.8"></a><h4>4.9.14.8 IsWindow</h4>
+<pre>視窗句柄 是視窗時跳轉的標記 [不是視窗時跳轉的標記]
+</pre>
+
+<p>如果 「視窗句柄」 是一個視窗，則轉移到 「是視窗時跳轉的標記」，否則轉移到 「不是視窗時跳轉的標記」(如果指定了的話)。</p>
+<pre>GetDlgItem $0 $HWNDPARENT 1
+IsWindow 0 +3
+  MessageBox MB_OK &quot;找到視窗&quot;
+  Goto +2
+  MessageBox MB_OK &quot;無視窗&quot;
+</pre>
+<a name="4.9.14.9"></a><h4>4.9.14.9 LockWindow</h4>
+<pre>on|off
+</pre>
+
+<p><strong>LockWindow on</strong> 使得主視窗在更改或更新時不會自動重繪。使用了 <strong>LockWindow off</strong> 之後使得應用了 <strong>LockWindow on</strong> 的視窗的所有控件可以自動重繪。這可以有效的避免頁面的閃爍，因為現在是一組控件同時重繪而不是一個控件一個控件的重繪。個別的控件在老的電腦上也會閃爍。如果你在區段裡使用了循環，你也可以用來阻止進度條來回閃動。</p>
+<a name="4.9.14.10"></a><h4>4.9.14.10 SendMessage</h4>
+<pre>視窗句柄 消息 第一個消息參數 第二個消息參數 [用戶變量(返回值)] [/TIMEOUT=毫秒]
+</pre>
+
+<p>發送消息到 「視窗句柄」。如果指定了一個用戶變量 $x 作為最後一個參數(或在 /TIMEOUT 之前的最後一個參數)，SendMessage 的返回值將儲存在該變量裡。需要注意的是當指定 「消息」 時你只能用消息的整數值。如果你需要發送字串請使用 「STR:字串」 作為 「第一個消息參數」 或 「第二個消息參數」。</p>
+<ul>
+<li><em>WM_CLOSE</em> 16</li><li><em>WM_COMMAND</em> 273</li><li><em>WM_USER</em> 1024</li></ul>
+
+<p>Include WinMessages.nsh 來獲得所有 Windows 消息定義。</p>
+
+<p>要發送一個字串參數的話，在參數前面加入 STR: ，例如: &quot;STR:一些字串&quot; 。</p>
+
+<p>使用 /TIMEOUT=毫秒 來指定持續時間，單位為毫秒。</p>
+<pre>!include WinMessages.nsh
+FindWindow $0 &quot;Winamp v1.x&quot;
+SendMessage $0 ${WM_CLOSE} 0 0
+</pre>
+<a name="4.9.14.11"></a><h4>4.9.14.11 SetAutoClose</h4>
+<pre>true|false
+</pre>
+
+<p>取代預設的視窗自動關閉標記(由 <a href="Section4.8.html#4.8.1.3">AutoCloseWindow</a> 指定，且對於寫在程式為 false)。指定 true 將使得安裝程式在安裝完成時立即關閉視窗，或者 false 來使它需要手動關閉。</p>
+<a name="4.9.14.12"></a><h4>4.9.14.12 SetBrandingImage</h4>
+<pre>[/IMGID=對話裡的ID項] [/RESIZETOFIT] 位圖.bmp
+</pre>
+
+<p>把目前位圖作為標誌圖檔顯示。如果沒有指定 IMGID 則使用第一個找到的圖檔控件，或由 <a href="Section4.8.html#4.8.1.1">AddBrandingImage</a> 建立的圖檔控件。需要注意的是位圖必須預先存在於目前用戶的機器上。可以先使用 File 指令把它釋放。如果指定了 /RESIZETOFIT 則圖檔會自動改變容量到圖檔控件的大小。如果你使用了 <a href="Section4.8.html#4.8.1.1">AddBrandingImage</a> 你可以得到它的大小，通過編譯你的腳本並察看 <a href="Section4.8.html#4.8.1.1">AddBrandingImage</a> 的輸出，它會告訴你控件的大小。SetBrandingImage 在 .onInit 或 .onInit 調用的函數里無效。</p>
+<a name="4.9.14.13"></a><h4>4.9.14.13 SetDetailsView</h4>
+<pre>show|hide
+</pre>
+
+<p>顯示或隱藏詳細訊息，取決於你使用什麼樣的參數。它可以覆蓋預設的由 <a href="Section4.8.html#4.8.1.33">ShowInstDetails</a> 設定的詳細訊息察看屬性。</p>
+<a name="4.9.14.14"></a><h4>4.9.14.14 SetDetailsPrint</h4>
+<pre>none|listonly|textonly|both|lastused
+</pre>
+
+<p>為命令輸出的狀態訊息設定一個顯示模式。None 為不輸出，listonly 僅在列表框顯示，textonly 僅在狀態條顯示，both 則兩者都顯示(預設)。對於釋放很多小的檔案，推薦使用 textonly(特別在 Win9X 下啟用了平滑捲動)。</p>
+<pre>SetDetailsPrint none
+File &quot;secret file.dat&quot;
+SetDetailsPrint both
+</pre>
+<a name="4.9.14.15"></a><h4>4.9.14.15 SetCtlColors</h4>
+<pre>句柄 [/BRANDING] [文字顏色] [transparent|背景顏色]
+</pre>
+
+<p>對一個靜態控件、編輯控件、按鈕或一個對話框設定一個背景顏色和文字顏色。<em>文字顏色</em> 和 <em>背景顏色</em> 不能使用變量。使用 GetDlgItem 來取得控件的句柄。如果要使得控件透明你可以指定 transparent 作為背景顏色值。你也可以指定 /BRANDING 並帶或不帶文字顏色和背景顏色來使得控件完全灰白(或其他你選擇的顏色)。在 MUI 裡用來顯示標誌牌。</p>
+<pre>FindWindow $0 &quot;#32770&quot; &quot;&quot; $HWNDPARENT
+GetDlgItem $0 $0 1006
+SetCtlColors $0 0xFF0000 0x00FF00
+</pre>
+<a name="4.9.14.16"></a><h4>4.9.14.16 SetSilent</h4>
+<pre>silent | normal
+</pre>
+
+<p>設定安裝程式為靜默模式或普通模式。關於靜默安裝的詳細訊息請看 <a href="Section4.8.html#4.8.1.35">SilentInstall</a>。僅能在 <a href="Section4.7.html#4.7.2.1.2">.onInit</a> 裡使用。</p>
+
+<a name="4.9.14.17"></a><h4>4.9.14.17 ShowWindow</h4>
+<pre>視窗句柄 顯示狀態</pre>
+
+<p>設定一個視窗的顯示程度。可用的顯示狀態和 <a href="http://msdn.microsoft.com/library/en-us/winui/winui/windowsuserinterface/windowing/windows/windowreference/windowfunctions/showwindow.asp">Windows 的 ShowWindow</a> 函數相同。SW_* 常量定義於 <a href="#" onclick="parser('../Include/WinMessages.nsh')">Include\WinMessages.nsh</a>。</p>
+<pre>!include WinMessages.nsh
+GetDlgItem $0 $HWNDPARENT 1
+ShowWindow $0 ${SW_HIDE}
+Sleep 1000
+ShowWindow $0 ${SW_SHOW}
+</pre>
+<a name="4.9.15"></a>
+<h3>4.9.15 多語言指令</h3>
+<a name="4.9.15.1"></a><h4>4.9.15.1 LoadLanguageFile</h4>
+<pre>語言檔案.nlf
+</pre>
+
+<p>給一個語言表的結構載入一個語言檔案。所有的語言檔案在 <a href="#" onclick="parser('../Contrib/Language files')">Contrib\Language Files</a></p>
+
+<p>在你插入一個語言檔案後 ${LANG_langfile} 將會被定義為語言 ID(例如: ${LANG_ENGLISH} 將會被定義為 1033)。你可以把它用於 <a href="Section4.9.html#4.9.15.2">LangString</a>、<a href="Section4.9.html#4.9.15.3">LicenseLangString</a>、LangDLL 和 <a href="Section4.8.html#4.8.3.1">VIAddVersionKey</a>。</p>
+<a name="4.9.15.2"></a><h4>4.9.15.2 LangString</h4>
+<pre>名稱 語言ID 字串</pre>
+
+<p>定義一個使用多種語言的字串。這意味著它的值將不同於每個語言。這允許你容易的使你的安裝程式多語言化為不需要再腳本裡使用大量的開關語句。</p>
+
+<p>每一個語言字串都有一個特定的名字和一個用於安裝程式的分配給每一個語言的值。他們可以在腳本裡用於任何運行時字串。要使用一個語言字串你所需要做的就是把 $(LangString_名稱) 插入到你想插入字串的地方。</p>
+
+<p><b>注意:</b></p>
+<ul>
+<li>不像定義使用花括號 - {} 一樣，語言字串使用圓括號 - ()。</li>
+<li>如果你想在 .onInit 函數里更改語言，需要注意的是在 .onInit 裡的語言字串將仍舊使用基於用戶的預設 Windows 語言檢測到的語言，因為語言的初始化在 .onInit 之後。</li>
+<li>總是在你的腳本裡為所有語言設定語言字串。.</li>
+<li>如果你把語言 ID 設為 0 則使用 LangString 或 <a href="Section4.9.html#4.9.15.1">LoadLanguageFile</a> 最後使用的語言。</li>
+</ul>
+
+<p><b>使用的例子:</b></p>
+<pre> LangString message ${LANG_ENGLISH} &quot;英語訊息&quot;
+ LangString message ${LANG_SIMPCHINESE} &quot;簡體中文訊息&quot;
+ LangString message ${LANG_TRADCHINESE} &quot;繁體中文訊息&quot;
+
+ MessageBox MB_OK &quot;已翻譯的訊息: $(message)&quot;
+</pre>
+<a name="4.9.15.3"></a>
+<h4>4.9.15.3 LicenseLangString</h4>
+<pre>名稱 語言ID 許可檔案路徑</pre>
+
+<p>用法和 <a href="Section4.9.html#4.9.15.2">LangString</a> 一樣，但它僅從一個文字、RTF 檔案載入字串並且定義一個特別的僅能用於 <a href="Section4.8.html#4.8.1.26">LicenseData</a> 的 LangString。</p>
+<pre>LicenseLangString license ${LANG_ENGLISH} license-english.txt
+LicenseLangString license ${LANG_SIMPCHINESE} license-simpchinese.txt
+LicenseLangString license ${LANG_TRADCHINESE} license-tradchinese.txt
+</pre>
+<pre>LicenseData $(license)
+</pre>
+<p><a href='Section4.8.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.10.html'>下一頁</a></p>
+
+<hr />
+<div align="left">
+<script async src="../../pagead2.googlesyndication.com/pagead/js/f.txt"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2153907722668011"
+     data-ad-slot="3767461681"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.9.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+</html>

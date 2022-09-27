@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section2.3.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:27 GMT -->
+<head>
+<title>腳本結構</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='Section2.2.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section2.4.html'>下一頁</a></p>
+<a name="2.3"></a>
+<h2>2.3 腳本結構</h2>
+
+<p> 一個 NSIS 腳本應該包括安裝程式屬性和區段、函數。
+
+
+ 你也可以使用編譯器命令在編譯的時候進行指定。
+
+
+
+
+ 所必需的是
+
+<a href="Section4.8.html#4.8.1.30">OutFile</a> 指令
+
+
+ （該命令告訴 NSIS 安裝程式輸出路徑）
+
+和一個區段。</p>
+<a name="2.3.1"></a>
+<h3>2.3.1 安裝程式屬性</h3>
+
+<p> 安裝程式屬性確定你的安裝程式的性能、外觀和習慣。由這些屬性你可以更改安裝的時候顯示的文字、安裝類型的數量等。這些命令大多數在運行時僅被設定並且不能更改。 </p>
+
+<p> 其他基本的指令為 <a href="Section4.8.html#4.8.1.29">Name</a> 和 <a href="Section4.8.html#4.8.1.20">InstallDir</a>。</p>
+
+<p> 關於安裝程式屬性更多的訊息，可以參閱 <a href="Section4.8.html#4.8">安裝程式屬性</a>。</p>
+<a name="2.3.2"></a>
+<h3>2.3.2 頁面</h3>
+
+<p> 一個非靜默安裝程式需要嚮導頁面來指導用戶運行安裝程式，你可以通過 <a href="Section4.5.html#4.5.4">Page</a> 命令 (
+
+
+或更多高級設定如 <a href="Section4.5.html#4.5.6">PageEx</a> )。
+
+
+ 來設定哪個頁面顯示。一個典型的設定像這樣：</p>
+<pre>Page license
+Page components
+Page directory
+Page instfiles
+UninstPage uninstConfirm
+UninstPage instfiles
+</pre>
+<a name="2.3.3"></a>
+<h3>2.3.3 區段</h3>
+
+<p> 在一個普通的安裝包裡用戶需要安裝許多東西。例如在 NSIS 分配安裝包裡你可以選擇安裝源碼、附加插件、腳本樣例或其他。裡面的每個組件都有它自己的代碼塊，當用戶選擇了安裝該組件，那麼安裝程式就會執行對應的代碼。在腳本裡，這些代碼稱為區段。每個可見的區段都可以作為一個組件給用戶選擇是否安裝，在這裡我們暫不討論不可見的區段。你可以只使用一個區段來構建安裝包，但是如果你想要使用組件頁來讓用戶選擇可選的組件，那你就需要使用多個區段。 </p>
+
+<p>卸載程式也可以有多個區段。卸載程式區段名前要加上前綴「un.」。例如：</p>
+<pre>Section &quot;Installer Section&quot;
+SectionEnd
+
+Section &quot;un.Uninstaller Section&quot;
+SectionEnd
+</pre>
+
+<p> 使用在段裡的指令和安裝程式屬性指令不一樣，他們在用戶電腦運行環境裡執行。這些指令可以解壓檔案讀取和寫入註冊表、INI檔案或普通檔案，建立目錄，建立快捷方式和更多功能。你可以在 <a href="Section4.9.html#4.9">指令</a> 找到更多。</p>
+
+<p> 更多的基本用法說明 <a href="Section4.9.html#4.9.1.9">SetOutPath</a> 告訴安裝程式要把檔案輸出到哪裡，和要解壓哪些 <a href="Section4.9.html#4.9.1.5">檔案</a>。</p>
+
+<p>例:</p>
+<pre>Section &quot;My Program&quot;
+  SetOutPath $INSTDIR
+  File &quot;My Program.exe&quot;
+  File &quot;Readme.txt&quot;
+SectionEnd
+</pre>
+
+<p>關於區段更詳細的訊息請看 <a href="Section4.6.html#4.6">區段</a>。</p>
+<a name="2.3.4"></a>
+<h3>2.3.4 函數</h3>
+
+<p> 函數和區段類似，也包含了代碼。 區段和函數所不同的是他們被調用的形式。一共有兩種函數類型：用戶函數和回調函數。 </p>
+
+<p> 用戶函數可以從一個區段裡或另一個函數使用 <a href="Section4.9.html#4.9.4.2">Call</a> 指令。
+
+
+ 用戶函數不能直接執行而只能調用它。在函數內的代碼都會被執行然後安裝程式會繼續執行 Call 指令後面的指令，除非你在函數里面使用了登出指令。用戶函數當你在安裝程式裡需要多次、多處使用一組指令的時候非常有用。如果你把代碼放到一個函數里你可以節省拷貝的次數並且更容易的去修改、更新代碼。</p>
+
+<p>回調函數可以在某些定義事件之前被調用比如當安裝程式開始運行時。回調是可選的。例如你想歡迎用戶使用你的安裝程式你可以定義一個名為 .onInit 的函數。NSIS 編譯器會由它的名字知道它是一個回調函數並且會在安裝程式開始時調用它。 </p>
+<pre>Function .onInit
+  MessageBox MB_YESNO &quot;即將安裝我的程式，要繼續嗎？&quot; IDYES gogogo
+    Abort
+  gogogo:
+FunctionEnd
+</pre>
+
+<p><a href="Section4.9.html#4.9.4.1">Abort</a> 在回調函數里有特殊含義。每個回調函數都有它自己的含義，詳細情況請觀看
+
+<a href="Section4.7.html#4.7.2">回調函數</a> 。 
+
+
+ 在上面的例子中 Abort 告訴安裝程式停止初始化安裝並立即登出。</p>
+
+<p> 關於函數更詳細的訊息請參閱 <a href="Section4.7.html#4.7">函數</a>。</p>
+<a name="2.3.5"></a>
+<h3>2.3.5 腳本的工作方式</h3>
+<a name="2.3.5.1"></a>
+<h4>2.3.5.1 變量</h4>
+
+<p> 你可以用 <a href="Section4.2.html#4.2.1.1">Var</a> 命令來聲明自己的變量($VARNAME)。
+
+
+
+
+變量是全局的並且可以在任何區段或函數中使用。</p>
+
+<p> 聲明並使用一個用戶變量 :</p>
+<pre>Var BLA ;聲明變量
+
+Section bla
+
+  StrCpy $BLA &quot;123&quot; ;現在你可以使用該變量 $BLA
+
+SectionEnd
+</pre>
+
+<p>另外堆棧可以用來作臨時存儲。
+
+
+使用 <a href="Section4.9.html#4.9.9.3">Push</a> 和 <a href="Section4.9.html#4.9.9.2">Pop</a> 命令來瀏覽堆棧。Push把一個值新增到堆棧，Pop 移除一個值並且設定該變量。 </p>
+
+<p> 對於公共代碼，這裡有 <a href="Section4.2.html#4.2.2">20 個已註冊的變量</a> (如 $0 和 $R0)。
+
+
+ 這些靜態的變量你不需要聲明並且你不應使任何名字與之相衝突。
+
+如果你想在公共代碼裡使用這些變量，你可以把原始的值存儲在堆棧並隨後還原原始值。</p>
+
+<p> 在調用函數後，變量包含原來的值。需要注意使用多個變量時的次序(後進先出): </p>
+<pre>Function bla
+
+  Push $R0
+  Push $R1
+
+    ...code...
+
+  Pop $R1
+  Pop $R0
+
+FunctionEnd
+</pre>
+<a name="2.3.5.2"></a>
+<h4>2.3.5.2 調試腳本</h4>
+
+<p> 如果你要實現更多的功能那麼你的腳本就會變得更複雜。這將會增加出錯的可能性，特別是當你使用了很多變量的時候。以下將有可能會對你的腳本調試有所幫助。
+
+
+使用<a href="Section4.9.html#4.9.4.15">MessageBoxes</a> 或 <a href="Section4.9.html#4.9.14.3">DetailPrint</a> 來顯示變量內容。 
+
+
+對所有變量使用 <a href="http://nsis.sourceforge.net/wiki/DumpState">DumpState</a> 插件來勾畫總體大綱。 
+
+
+預設情況下安裝程式會把所有的操作顯示在記錄視窗上，你可以把記錄的文字複製到剪貼簿裡(Ctrl+C 或使用鼠標右鍵的複製選單)，當然也有方法把它直接寫到一個檔案裡，看 <a href="SectionD.4.html#D.4">這裡</a>。</p>
+<a name="2.3.6"></a>
+<h3>2.3.6 編譯器命令</h3>
+
+<p>編譯器命令會在你編譯時在你的電腦上執行。他們可以用於條件編輯、包含頭檔案、運行一個應用程式、改變工作目錄和更多。最常見的用法是定義，定義是編譯時的常量，你可以定義你的產品版本號並在你的腳本裡使用。例如：</p>
+<pre>!define VERSION &quot;1.0.3&quot;
+Name &quot;My Program ${VERSION}&quot;
+OutFile &quot;My Program Installer - ${VERSION}.exe&quot;
+</pre>
+
+<p>關於定義更詳細的訊息請看 <a href="Section5.4.html#5.4">條件編輯</a>。</p>
+
+<p>另一個常見的命令是宏。宏用於在編譯時插入代碼，依賴於定義並使用定義的值。一個關於宏的例子是 <a href="SectionB.11.html#B.11">升級 DLL</a>， 你可以用來升級一個 DLL 檔案。宏的命令在編譯時會插入。這樣你只需要寫一個通用的代碼並只需要作為小的更改就可以多次的使用。例如：</p>
+<pre>!macro MyFunc UN
+Function ${UN}MyFunc
+  Call ${UN}DoRegStuff
+  ReadRegStr $0 HKLM Software\MyProgram key
+  DetailPrint $0
+FunctionEnd
+!macroend
+!insertmacro MyFunc &quot;&quot;
+!insertmacro MyFunc &quot;un.&quot;
+</pre>
+
+<p>宏幫助你避免在安裝部分和卸載部分寫重複的代碼。上面兩個 !insertmacros 插入了兩個函數，一個是 MyFunc 用於安裝部分，另一個是 un.MyFunc 用於卸載部分，但他們做的是同一件事。</p>
+
+<p>更多訊息請看 <a href="Chapter5.html#5">編譯時命令</a>。</p>
+<p><a href='Section2.2.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section2.4.html'>下一頁</a></p>
+
+<hr />
+<div align="left">
+<script async src="../../pagead2.googlesyndication.com/pagead/js/f.txt"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2153907722668011"
+     data-ad-slot="3767461681"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section2.3.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:32 GMT -->
+</html>

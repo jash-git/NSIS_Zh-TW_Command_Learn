@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionC.4.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+<head>
+<title>在字串裡尋找</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='SectionC.3.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionC.5.html'>下一頁</a></p>
+<a name="C.4"></a>
+<h2>C.4 在字串裡尋找</h2>
+<pre> ; StrStr
+ ; 輸入，堆棧頂 = 要尋找的字串
+ ;        堆棧頂-1 = 在該字串中尋找
+ ; 輸出，堆棧頂 (替換為字串剩餘部分)
+ ; 不改變其它變量值。
+ ;
+ ; 用法:
+ ;   Push &quot;this is a long ass string&quot;
+ ;   Push &quot;ass&quot;
+ ;   Call StrStr
+ ;   Pop $R0
+ ;  ($R0 在這裡為 &quot;ass string&quot;)
+
+ Function StrStr
+   Exch $R1 ; st=haystack,old$R1, $R1=needle
+   Exch    ; st=old$R1,haystack
+   Exch $R2 ; st=old$R1,old$R2, $R2=haystack
+   Push $R3
+   Push $R4
+   Push $R5
+   Push $R6
+   StrLen $R3 $R1
+   StrLen $R6 $R2
+   StrCpy $R4 0
+   ; $R1=needle
+   ; $R2=haystack
+   ; $R3=len(needle)
+   ; $R4=cnt
+   ; $R5=tmp
+   loop:
+     StrCpy $R5 $R2 $R3 $R4
+     StrCmp $R5 $R1 done
+     IntCmp $R4 $R6 done
+     IntOp $R4 $R4 + 1
+     Goto loop
+ done:
+   StrCpy $R1 $R2 &quot;&quot; $R4
+   Pop $R6
+   Pop $R5
+   Pop $R4
+   Pop $R3
+   Pop $R2
+   Exch $R1
+ FunctionEnd
+</pre>
+<p><a href='SectionC.3.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionC.5.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionC.4.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.12.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+<head>
+<title>靜默安裝、卸載</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8"></head>
+
+<body>
+<p><a href='Section4.11.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Chapter5.html'>下一頁</a></p>
+<a name="4.12"></a>
+<h2>4.12 靜默安裝、卸載</h2>
+
+<p>靜默安裝在安裝過程中不需要用戶參與而且不顯示用戶介面。用戶不會看到任何對話且不會被詢問任何問題。這對於網絡管理員希望不需要用戶參與的安裝或卸載一些程式，這樣可以快速的對多台電腦執行操作。對於其他的開發者來說，把其他的安裝程式整合到自己的安裝程式並且把所有需要的訊息收集到自己的安裝程式而不是顯示兩個安裝程式時非常有用的。</p>
+
+<p>NSIS 安裝程式和卸載程式都可以靜默或非靜默。當一個安裝程式或卸載程式靜默時，不是所有的回調函數都被調用。<a href="Section4.7.html#4.7.2.1.1">.onGUIInit</a>，<a href="Section4.7.html#4.7.2.1.5">.onGUIEnd</a>，它們對應的卸載程式函數和任何涉及到特殊頁面或頁面類型的回調將不會被調用。</p>
+
+<p>有幾種方法來使得安裝或卸載程式靜默:</p>
+<ol>
+<li><a href="Section4.8.html#4.8.1.34">SilentInstall</a> 和 <a href="Section4.8.html#4.8.1.36">SilentUninstall</a></li>
+<li><a href="Section4.9.html#4.9.14.16">SetSilent</a></li>
+<li>在程式命令行裡加 /S 參數(區分大小寫)</li>
+</ol>
+
+<p>要判斷安裝、卸載程式是否靜默請使用 <a href="Section4.9.html#4.9.4.12">IfSilent</a>。</p>
+
+<p>首先你需要確認你的安裝程式是否真的需要靜默模式，在每一個需要用戶參與的命令或建立一個視窗命令之前你應該使用 <a href="Section4.9.html#4.9.4.12">IfSilent</a> 來判斷。<a href="Section4.9.html#4.9.4.15">MessageBox</a> 命令是在靜默安裝程式最常犯的，應該使用 /SD 開關來為靜默安裝程式指定一個預設的回答。如果你希望你的安裝程式可以完全的靜默你就應該使用這個開關。使所有內部的 NSIS 訊息對話框都有一個靜默安裝的預設值。<a href="#" onclick="parser('../Examples/silent.nsi')">silent.nsi 實例 </a>演示了這個主題的所有方面問題。</p>
+
+<p>因為安裝目錄選擇頁面在靜默安裝的時候不會顯示，所以用戶可以新增一個命令行選項來指定安裝程式安裝目錄(也可以在非靜默安裝、卸載程式裡使用)。用戶只需要使用 /D 開關象下面這樣的例子:</p>
+<pre>foo.exe /S /D=C:\Program Files\Foo
+</pre>
+
+<p>如果你的安裝程式在靜默模式時需要更多的訊息，你可以讓你的用戶在命令行裡指定並在 .onInit 函數里進行處理，比如:</p>
+<pre>Function .onInit
+  Call GetParameters
+  Pop $2
+  # 尋找引號 /USERNAME
+  StrCpy $1 '&quot;'
+  Push $2
+  Push '&quot;/USERNAME='
+  Call StrStr
+  Pop $0
+  StrCpy $0 $0 &quot;&quot; 1 # skip quote
+  StrCmp $0 &quot;&quot; &quot;&quot; next
+    # 尋找非引號 /USERNAME
+    StrCpy $1 ' '
+    Push $2
+    Push '/USERNAME='
+    Call StrStr
+    Pop $0
+next:
+  StrCmp $0 &quot;&quot; done
+    # 複製 /USERNAME= 後面的值
+    StrCpy $0 $0 &quot;&quot; 10
+  # 尋找下一個參數
+  Push $0
+  Push $1
+  Call StrStr
+  Pop $1
+  StrCmp $1 &quot;&quot; done
+  StrLen $1 $1
+  StrCpy $0 $0 -$1
+done:
+FunctionEnd
+</pre>
+
+<p>上面的例子將會把 /USERNAME= 後面的值複製到 $0。這樣可以讓用戶在命令行指定必須的參數訊息而不需要用戶參與的用戶介面。用戶可以使用:</p>
+<pre>foo.exe /S /USERNAME=Bar /D=C:\Program Files\Foo
+</pre>
+
+<p>或:</p>
+<pre>foo.exe /S &quot;/USERNAME=字串&quot; /D=C:\Program Files\Foo
+</pre>
+
+<p><a href="SectionC.3.html#C.3">GetParameters</a> 和 <a href="SectionC.4.html#C.4">StrStr</a> 可以在 <a href="AppendixC.html#C">appendix C </a> 裡找到。</p>
+
+<p>如果你的安裝程式、卸載程式需要大量的訊息並且你希望能靜默安裝，你就應該讓用戶間建立一個應答檔案，把需要的訊息都寫在裡面。這樣比把所有的訊息都寫到命令行裡更好一些。</p>
+<p><a href='Section4.11.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Chapter5.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section4.12.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+</html>

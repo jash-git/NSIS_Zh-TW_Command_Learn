@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Chapter4.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:32 GMT -->
+<head>
+<title>腳本參考</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8"></head>
+
+<body>
+<p><a href='Section3.2.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.1.html'>下一頁</a></p>
+<a name="4"></a>
+<h1>第四章: 腳本參考</h1>
+<ul>
+<li><a href="Section4.1.html#4.1">腳本檔案格式</a></li>
+<li><a href="Section4.2.html#4.2">變量</a></li>
+<ul>
+<li><a href="Section4.2.html#4.2.1">用戶變量</a></li>
+<li><a href="Section4.2.html#4.2.2">其他可寫的變量</a></li>
+<li><a href="Section4.2.html#4.2.3">常量</a></li>
+<li><a href="Section4.2.html#4.2.4">在字串裡使用常量</a></li>
+</ul>
+<li><a href="Section4.3.html#4.3">標記</a></li>
+<li><a href="Section4.4.html#4.4">相對跳轉</a></li>
+<li><a href="Section4.5.html#4.5">頁面</a></li>
+<ul>
+<li><a href="Section4.5.html#4.5.1">次序</a></li>
+<li><a href="Section4.5.html#4.5.2">頁面選項</a></li>
+<li><a href="Section4.5.html#4.5.3">回調</a></li>
+<li><a href="Section4.5.html#4.5.4">Page</a></li>
+<li><a href="Section4.5.html#4.5.5">UninstPage</a></li>
+<li><a href="Section4.5.html#4.5.6">PageEx</a></li>
+<li><a href="Section4.5.html#4.5.7">PageExEnd</a></li>
+<li><a href="Section4.5.html#4.5.8">PageCallbacks</a></li>
+</ul>
+<li><a href="Section4.6.html#4.6">區段</a></li>
+<ul>
+<li><a href="Section4.6.html#4.6.1">區段命令</a></li>
+<li><a href="Section4.6.html#4.6.2">卸載區段</a></li>
+</ul>
+<li><a href="Section4.7.html#4.7">函數</a></li>
+<ul>
+<li><a href="Section4.7.html#4.7.1">函數命令</a></li>
+<li><a href="Section4.7.html#4.7.2">回調函數</a></li>
+</ul>
+<li><a href="Section4.8.html#4.8">安裝程式屬性</a></li>
+<ul>
+<li><a href="Section4.8.html#4.8.1">慣用屬性</a></li>
+<li><a href="Section4.8.html#4.8.2">編譯器標記</a></li>
+<li><a href="Section4.8.html#4.8.3">版本訊息</a></li>
+</ul>
+<li><a href="Section4.9.html#4.9">指令用法說明</a></li>
+<ul>
+<li><a href="Section4.9.html#4.9.1">基本指令</a></li>
+<li><a href="Section4.9.html#4.9.2">註冊表、INI 檔案指令</a></li>
+<li><a href="Section4.9.html#4.9.3">慣用用途指令</a></li>
+<li><a href="Section4.9.html#4.9.4">流程控制指令</a></li>
+<li><a href="Section4.9.html#4.9.5">檔案指令</a></li>
+<li><a href="Section4.9.html#4.9.6">卸載程式指令</a></li>
+<li><a href="Section4.9.html#4.9.7">混合指令</a></li>
+<li><a href="Section4.9.html#4.9.8">字串操作指令</a></li>
+<li><a href="Section4.9.html#4.9.9">堆棧支援</a></li>
+<li><a href="Section4.9.html#4.9.10">整數支援</a></li>
+<li><a href="Section4.9.html#4.9.11">重啟指令</a></li>
+<li><a href="Section4.9.html#4.9.12">安裝記錄指令</a></li>
+<li><a href="Section4.9.html#4.9.13">區段管理</a></li>
+<li><a href="Section4.9.html#4.9.14">用戶介面指令</a></li>
+<li><a href="Section4.9.html#4.9.15">多語言指令</a></li>
+</ul>
+<li><a href="Section4.10.html#4.10">多語言</a></li>
+<ul>
+<li><a href="Section4.10.html#4.10.1">語言的選擇</a></li>
+<li><a href="Section4.10.html#4.10.2">LangDLL 插件</a></li>
+<li><a href="Section4.10.html#4.10.3">RTL 語言</a></li>
+</ul>
+<li><a href="Section4.11.html#4.11">插件 DLL</a></li>
+<ul>
+<li><a href="Section4.11.html#4.11.1">使用插件命令</a></li>
+<li><a href="Section4.11.html#4.11.2">禁止插件卸載</a></li>
+<li><a href="Section4.11.html#4.11.3">手動調用插件</a></li>
+</ul>
+<li><a href="Section4.12.html#4.12">靜默安裝、卸載</a></li>
+</ul>
+<p><a href='Section3.2.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Section4.1.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Chapter4.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:32 GMT -->
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionC.11.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+<head>
+<title>禁止多個安裝程式實例</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='SectionC.10.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionC.12.html'>下一頁</a></p>
+<a name="C.11"></a>
+<h2>C.11 禁止多個安裝程式實例</h2>
+
+<p>把下列代碼放到你的 <a href="Section4.7.html#4.7.2.1.2">.onInit 函數</a>:</p>
+<pre> System::Call 'kernel32::CreateMutexA(i 0, i 0, t &quot;myMutex&quot;) i .r1 ?e'
+ Pop $R0
+ 
+ StrCmp $R0 0 +3
+   MessageBox MB_OK|MB_ICONEXCLAMATION &quot;安裝程式已經在運行。&quot;
+   Abort
+</pre>
+
+<p>myMutex 應該替換為你自己的唯一標識值。</p>
+<p><a href='SectionC.10.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionC.12.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionC.11.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+</html>

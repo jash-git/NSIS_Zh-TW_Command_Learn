@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionC.6.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+<head>
+<title>取得 Internet Explorer 版本</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='SectionC.5.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionC.7.html'>下一頁</a></p>
+<a name="C.6"></a>
+<h2>C.6 取得 Internet Explorer 版本</h2>
+<pre> ; GetIEVersion
+ ;
+ ; 基於 Yazno 的函數，http://yazno.tripod.com/powerpimpit/
+ ; 返回到堆棧頂
+ ; 1-6 (已安裝的 IE 版本)
+ ; 或
+ ; '' (IE 未安裝)
+ ;
+ ; 用法:
+ ;   Call GetIEVersion
+ ;   Pop $R0
+ ;   ; 在這裡 $R0 為 &quot;5&quot; 或其它
+
+ Function GetIEVersion
+ Push $R0
+   ClearErrors
+   ReadRegStr $R0 HKLM &quot;Software\Microsoft\Internet Explorer&quot; &quot;Version&quot;
+   IfErrors lbl_123 lbl_456
+
+   lbl_456: ; ie 4+
+     Strcpy $R0 $R0 1
+   Goto lbl_done
+
+   lbl_123: ; 老版本 IE
+     ClearErrors
+     ReadRegStr $R0 HKLM &quot;Software\Microsoft\Internet Explorer&quot; &quot;IVer&quot;
+     IfErrors lbl_error
+
+       StrCpy $R0 $R0 3
+       StrCmp $R0 '100' lbl_ie1
+       StrCmp $R0 '101' lbl_ie2
+       StrCmp $R0 '102' lbl_ie2
+
+       StrCpy $R0 '3' ; 如果不是 100、101 或 102 則預設為 IE3
+       Goto lbl_done
+         lbl_ie1:
+           StrCpy $R0 '1'
+         Goto lbl_done
+         lbl_ie2:
+           StrCpy $R0 '2'
+         Goto lbl_done
+     lbl_error:
+       StrCpy $R0 ''
+   lbl_done:
+   Exch $R0
+ FunctionEnd
+</pre>
+<p><a href='SectionC.5.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionC.7.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionC.6.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+</html>

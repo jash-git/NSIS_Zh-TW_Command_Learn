@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section3.2.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:32 GMT -->
+<head>
+<title>安裝程式的使用</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='Section3.1.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Chapter4.html'>下一頁</a></p>
+<a name="3.2"></a>
+<h2>3.2 安裝程式的使用</h2>
+<p>生成的安裝程式和卸載程式接受一些命令行的參數。這些參數可以讓用戶在安裝過程中對安裝程式作部分控制。</p>
+<a name="3.2.1"></a>
+<h3>3.2.1 公共選項</h3>
+<ul>
+<li>/NCRC 禁止 CRC 檢測，除非在腳本裡強制使用了 <a href="Section4.8.html#4.8.1.12"><code>CRCCheck</code></a><code>。</code></li>
+<li>/S 靜默運行安裝程式或卸載程式。更多訊息請參看 <a href="Section4.12.html#4.12">4.12 章</a>。</li>
+<li>/D 指定預設的安裝目錄 (<a href="Section4.2.html#4.2.2">$INSTDIR</a>)，可以越過 <a href="Section4.8.html#4.8.1.21">InstallDir</a> 和 <a href="Section4.8.html#4.8.1.22">InstallDirRegKey</a>。這個參數必須是最後一個參數並且不能帶任何引號即使路徑帶有空格。</li>
+</ul>
+<a name="3.2.2"></a>
+<h3>3.2.2 卸載程式特殊選項</h3>
+<ul>
+<li>_?= 指定 $INSTDIR。這也會阻止卸載程式把它自己複製到臨時檔案夾再運行。這將可以使用 <a href="Section4.9.html#4.9.1.4">ExecWait</a> 來運行卸載程式並等待它完成。這個參數必須是最後一個參數並且不能帶任何引號即使路徑帶有空格。</li>
+</ul>
+<a name="3.2.3"></a>
+<h3>3.2.3 例子</h3>
+<pre>installer.exe /NCRC
+</pre>
+<pre>installer.exe /S
+</pre>
+<pre>installer.exe /D=C:\Program Files\NSIS
+</pre>
+<pre>installer.exe /NCRC /S /D=C:\Program Files\NSIS
+</pre>
+<pre>uninstaller.exe /S _?=C:\Program Files\NSIS
+</pre>
+<pre># 靜默卸載舊版本並等待它完成後才繼續
+ExecWait '&quot;$INSTDIR\uninstaller.exe&quot; /S _?=$INSTDIR'
+</pre>
+<p><a href='Section3.1.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='Chapter4.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/Section3.2.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:32 GMT -->
+</html>

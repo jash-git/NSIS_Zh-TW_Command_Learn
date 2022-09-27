@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml'>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionD.1.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+<head>
+<title>錯誤等級</title>
+<meta name="generator" content="Halibut version 1.0 (NSIS Custom Build) xhtml-backend" />
+<link rel="stylesheet" href="style.css" type='text/css' /><script language="JavaScript" type="text/javascript" src="chmlink.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+</head>
+
+<body>
+<p><a href='AppendixD.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionD.2.html'>下一頁</a></p>
+<a name="D.1"></a>
+<h2>D.1 錯誤等級</h2>
+
+<p> 像其它應用程式一樣，由 NSIS 生成的安裝程式執行時，會返回錯誤等級。如果你要用其它應用程式或安裝程式調用一個 NSIS 安裝程式，那麼檢查錯誤等級就會很有用。 </p>
+<ul>
+<li> 0 - 正常執行 (沒有錯誤)</li>
+<li> 1 - 安裝被用戶結束 (取消按鈕)</li>
+<li> 2 - 安裝由腳本結束</li>
+</ul>
+
+<p>從 NSIS 2.01 以後，你可以使用<a href="Section4.9.html#4.9.7.4">SetErrorLevel</a> 自行設定錯誤等級。</p>
+
+<p>需要注意的是卸載程式會把它本身複製到臨時檔案夾並從那裡執行以使得原來的卸載程式可以被刪除。這意味著卸載程式的執行程序的錯誤等級是無效的，除非它模擬該複製過程並執行複製的卸載程式。要模擬該過程，使用:</p>
+<pre>CopyFiles $INSTDIR\uninstaller.exe $TEMP
+ExecWait '&quot;$TEMP\uninstaller.exe&quot; _?=$INSTDIR' $0
+DetailPrint &quot;卸載程式設定錯誤等級為 $0&quot;
+</pre>
+
+<p>如果你不這樣做，那麼你就只能知道卸載程式是否複製本身到臨時檔案夾失敗。</p>
+<p><a href='AppendixD.html'>上一頁</a> | <a href='Contents.html'>目錄</a> | <a href='SectionD.2.html'>下一頁</a></p>
+
+<hr />
+
+<address>
+</address>
+</body>
+
+
+<!-- Mirrored from omega.idv.tw/nsis/SectionD.1.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 27 Sep 2022 06:29:33 GMT -->
+</html>
